@@ -13,7 +13,7 @@
     .order-page-card2 {
         border-radius: 11.992px;
         border: 1.036px solid #E1E1E1;
-        background: #FEF0E9;
+        background: #daecdc;
     }
 
     .order-page-card3 {

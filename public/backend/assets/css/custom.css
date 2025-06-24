@@ -800,7 +800,7 @@ border-spacing: 0 15px;
 }
 .recent-orders-select-box {
     border-radius: 16px;
-    background: #fef0e9;
+    background: #daecdc;
     color: #313131;
     font-family: Inter;
     font-size: 12px;
@@ -828,7 +828,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu > li.active > a {
 }
 .card .card-header h4 + .card-header-action .btn.active {
     box-shadow: none;
-    background: #fef0e9;
+    background: #daecdc;
     color: #f96421;
     font-family: Inter;
     font-style: normal;
@@ -852,7 +852,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu > li.active > a {
 }
 .card-svg_item {
     border-radius: 11.575px;
-    background: #fef0e9;
+    background: #daecdc;
     width: 40.513px;
     height: 40.513px;
     flex-shrink: 0;

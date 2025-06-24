@@ -1982,7 +1982,7 @@ header {
 
 .mobile-filters_wrapper .SumoSelect > .CaptionCont {
     border-radius: 6px;
-    background: rgba(247, 141, 30, 0.1) !important;
+    background: #daecdc !important;
     height: 46px;
     display: flex;
     align-items: center;
@@ -1999,12 +1999,12 @@ header {
 
 .mobile-filters_wrapper .SumoSelect > .optWrapper ul,
 .SumoSelect.open .search-txt {
-    background: rgba(247, 141, 30, 0.1);
+    background: #daecdc;
 }
 
 .mobile-sort_options select {
     border-radius: 6px;
-    background: rgba(247, 141, 30, 0.1);
+    background: #daecdc;
     height: 46px;
     width: 100%;
     color: #667B68;
@@ -2479,7 +2479,7 @@ button:active {
 }
 
 .mobile-filters_wrapper .accordion {
-    --bs-accordion-bg: rgba(247, 141, 30, 0.1);
+    --bs-accordion-bg: #daecdc;
 }
 
 .mobile-filters_wrapper .accordion-item {
@@ -2489,10 +2489,10 @@ button:active {
     font-style: normal;
     font-weight: 500;
     line-height: 100%; /* 16px */
-    background-color: rgba(247, 141, 30, 0.1) !important;
+    background-color: #daecdc !important;
 }
 .mobile-filters_wrapper .accordion-button:not(.collapsed) {
-    background-color: rgba(247, 141, 30, 0.1) !important;
+    background-color: #daecdc !important;
 }
 
 .mobile-filters_wrapper .accordion-button {
@@ -2865,13 +2865,13 @@ input[type="radio"] {
 }
 
 .mobile-filters_wrapper .accordion-button::after {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' viewBox='0 0 19 9' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M2.00873 0.269467L9.47495 6.51791L16.9913 0.269467C17.9934 -0.588161 19.6971 0.800382 18.695 1.65801L10.1765 8.76408C9.82571 9.04996 9.17429 9.0908 8.82353 8.80492L0.305036 1.65801C-0.69714 0.800382 1.00656 -0.588161 2.00873 0.269467Z' fill='%23F78D1E'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' viewBox='0 0 19 9' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M2.00873 0.269467L9.47495 6.51791L16.9913 0.269467C17.9934 -0.588161 19.6971 0.800382 18.695 1.65801L10.1765 8.76408C9.82571 9.04996 9.17429 9.0908 8.82353 8.80492L0.305036 1.65801C-0.69714 0.800382 1.00656 -0.588161 2.00873 0.269467Z' fill='%23667B68'/%3E%3C/svg%3E");
 }
 
 .mobile-filters_wrapper .accordion-item {
     border: none !important;
     border-radius: 6px !important;
-    background: rgba(247, 141, 30, 0.1);
+    background: #daecdc;
 }
 
 .main-mega-nav ul .sub-arrow {
@@ -3495,7 +3495,7 @@ table tr {
 .myaccount-page .nav-pills .nav-link.active,
 .myaccount-page .nav-pills .show > .nav-link {
     border-radius: 6px;
-    background: rgba(247, 141, 30, 0.1);
+    background: #daecdc;
     color: #667B68;
     font-family: Inter;
     font-size: 14px;
@@ -3534,7 +3534,7 @@ table tr {
 
 @media (min-width: 768px) {
     .myaccount-page .nav-pills .nav-link.active::before {
-        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='10' viewBox='0 0 13 14' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M0.473531 14L12.4209 7.12121L0.47353 0.242426C2.30385 4.64726 2.30385 9.57505 0.473531 14Z' fill='%23F78D1E'/%3E%3C/svg%3E");
+        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='10' viewBox='0 0 13 14' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M0.473531 14L12.4209 7.12121L0.47353 0.242426C2.30385 4.64726 2.30385 9.57505 0.473531 14Z' fill='%23667B68'/%3E%3C/svg%3E");
         display: inline-block;
         margin-right: 8px; /* Adjust margin as needed */
     }
@@ -3638,7 +3638,7 @@ table tr {
 
 .myaccount-page .custom-select-box {
     border-radius: 19.5px;
-    background: #fef0e9;
+    background: #daecdc;
     border: none !important;
     outline: none !important;
     padding: 5px;
@@ -3768,13 +3768,13 @@ table tr {
 }
 .custom-date-input_wrapper {
     border-radius: 19.5px;
-    background: #fef0e9;
+    background: #daecdc;
     padding: 5px 10px;
 }
 
 .custom-date-input {
     border: none;
-    background: #fef0e9 !important;
+    background: #daecdc !important;
     font-size: 14px;
 }
 
@@ -3843,7 +3843,7 @@ div.dataTables_processing div {
 
 .custom-card .btn.active {
     box-shadow: none;
-    background: #fef0e9;
+    background: #daecdc;
     color: #f96421;
     font-family: Inter;
     font-style: normal;
@@ -3950,7 +3950,7 @@ div.dataTables_processing div {
     background: #ebe0ff;
 }
 .dashboard-cards_wrapper .dashboard__cards .card2 {
-    background: #fef0e9;
+    background: #daecdc;
 }
 .dashboard-cards_wrapper .dashboard__cards .card3 {
     background: #e8faf5;
