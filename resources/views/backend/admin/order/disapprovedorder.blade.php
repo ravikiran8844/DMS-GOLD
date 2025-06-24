@@ -44,7 +44,7 @@
 
     td[colspan="10"] {
         border-radius: 8px;
-        border: 1px solid #1D3B2D;
+        border: 1px solid #667B68;
         background: #FFF;
         box-shadow: 0px 4px 12px 0px rgba(174, 174, 174, 0.46);
     }
@@ -292,7 +292,7 @@
     }
 
     table input[type='checkbox']:checked {
-        background-color: #1D3B2D;
+        background-color: #667B68;
     }
 
     table input[type='checkbox']:checked:after {
@@ -310,7 +310,7 @@
         height: 24px !important;
         appearance: none;
         border-radius: 10%;
-        border: 1px solid #1D3B2D;
+        border: 1px solid #667B68;
         box-shadow: none;
         font-size: 1em;
         margin: auto;

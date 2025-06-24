@@ -73,7 +73,7 @@ body {
 .dms_login_page_button,
 .dms_login_page_button:hover {
     border-radius: 4.264px;
-    background: #1D3B2D !important;
+    background: #667B68 !important;
     color: #fff !important;
     text-align: center;
     font-family: Inter;
@@ -115,7 +115,7 @@ body {
 }
 .resend-otp-text,
 .resend-otp-text:hover {
-    color: #1D3B2D;
+    color: #667B68;
     font-family: Inter;
     font-size: 14px;
     font-style: normal;
@@ -1070,7 +1070,7 @@ transition: all 0.3s ease;
     color: #2d2d2d;
 }
 .settings-page .nav-pills .nav-link.active {
-    background-color: #1D3B2D;
+    background-color: #667B68;
     color: #fff !important;
 }
 .settings-page .nav-link i {
@@ -1099,7 +1099,7 @@ transition: all 0.3s ease;
     cursor: pointer;
 }
 .select-zones input[type="radio"]:checked + label {
-    background-color: #1D3B2D;
+    background-color: #667B68;
     color: #fff !important;
     padding: 5px 20px;
     border-radius: 4px;

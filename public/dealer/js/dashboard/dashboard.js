@@ -55,7 +55,7 @@ function newchart1(totalWeight, month) {
                 backgroundColor: "#7BD3EA",
                 borderColor: "transparent",
                 data: totalWeight,
-                pointHoverBackgroundColor: "#1D3B2D",
+                pointHoverBackgroundColor: "#667B68",
                 pointBorderColor: "transparent",
                 pointHoverBorderColor: "#fff",
                 pointHoverBorderWidth: 5,
@@ -89,7 +89,7 @@ function newchart1(totalWeight, month) {
                         },
                     },
                     intersect: false,
-                    backgroundColor: "#1D3B2D",
+                    backgroundColor: "#667B68",
                     title: {
                         fontFamily: "Poppins",
                         color: "#8F92A1",

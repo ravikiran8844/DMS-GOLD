@@ -199,7 +199,7 @@
 
     .select2-container--bootstrap4 .select2-results__option--highlighted,
     .select2-container--bootstrap4 .select2-results__option--highlighted.select2-results__option[aria-selected="true"] {
-        background: #1D3B2D !important;
+        background: #667B68 !important;
     }
 
     .sign-up-page-form_wrapper select {

@@ -194,7 +194,7 @@
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M13.175 7.89166L7.97597 13L2.78171 7.89166C-1.80869 3.38511 3.39428 -1.7171 7.98072 2.78945C12.6344 -1.78295 17.8334 3.31927 13.1797 7.89779L13.175 7.89166Z"
-                                            stroke="#1D3B2D" stroke-width="1.5" stroke-linejoin="round" />
+                                            stroke="#667B68" stroke-width="1.5" stroke-linejoin="round" />
                                     </svg>
                                 </span></a>
                         </div> --}}

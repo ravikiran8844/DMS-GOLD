@@ -832,13 +832,13 @@ Shop - Emerald OMS
 		datasets: [{
 			label: "Total Weight",
 			backgroundColor: "transparent",
-			borderColor: "#1D3B2D",
+			borderColor: "#667B68",
 			data: [
 			226000, 289000, 389000, 189000, 289000, 389000, 726000, 189000, 289000, 389000, 189000,
 			289000
 			],
 			pointBackgroundColor: "transparent",
-			pointHoverBackgroundColor: "#1D3B2D",
+			pointHoverBackgroundColor: "#667B68",
 			pointBorderColor: "transparent",
 			pointHoverBorderColor: "#fff",
 			pointHoverBorderWidth: 5,
@@ -868,7 +868,7 @@ Shop - Emerald OMS
 						},
 					},
 					intersect: false,
-					backgroundColor: "#1D3B2D",
+					backgroundColor: "#667B68",
 					title: {
 						fontFamily: "Poppins",
 						color: "#8F92A1",

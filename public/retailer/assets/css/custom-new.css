@@ -5,13 +5,13 @@
 
 .new-arrivals-btn{
     border-radius: 17.556px;
-    border: 1px solid #1D3B2D !important;
-    color: #1D3B2D;
+    border: 1px solid #667B68 !important;
+    color: #667B68;
     font-size: 12px;
 }
 .ready-stock-btn{
     border-radius: 17.556px;
-    background: #1D3B2D;
+    background: #667B68;
     color: #FFF;
     font-size: 12px;
 }
@@ -37,7 +37,7 @@
   
   }
   .home-image-slider-section .swiper-pagination-bullet, .home-image-slider-section .swiper-pagination-bullet-active {
-    background-color: #1D3B2D !important;
+    background-color: #667B68 !important;
     width: 20px;
     border-radius: 8px;
     height: 6px;

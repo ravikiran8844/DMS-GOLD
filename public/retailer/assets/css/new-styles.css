@@ -25,7 +25,7 @@ main {
 }
 
 .home-main-img-slider-section .splide__pagination__page.is-active {
-    background-color: #1D3B2D;
+    background-color: #667B68;
     transform: scale(1.1);
 }
 
@@ -88,7 +88,7 @@ main {
 .home-products-grid .btn-outline-warning {
     border-radius: 4px;
     border: 1px solid #cfcfcf;
-    color: #1D3B2D;
+    color: #667B68;
     background-color: #fff;
     font-family: Inter;
     font-size: 14px;
@@ -102,7 +102,7 @@ main {
     border-radius: 4px;
     border: 1px solid #cfcfcf;
     color: #fff;
-    background-color: #1D3B2D;
+    background-color: #667B68;
     font-family: Inter;
     font-size: 14px;
     font-style: normal;
@@ -190,7 +190,7 @@ main {
 }
 
 .lds-hourglass {
-    color: #1D3B2D;
+    color: #667B68;
 }
 
 .lds-hourglass,
@@ -248,7 +248,7 @@ main {
 
 /* 15 */
 .ready-stock-btn {
-    background: #1D3B2D !important;
+    background: #667B68 !important;
     color: #fff !important;
     border: none;
     z-index: 1;
@@ -262,7 +262,7 @@ main {
     top: 0;
     right: 0;
     z-index: -1;
-    background-color: #1D3B2D !important;
+    background-color: #667B68 !important;
     border-radius: 5px;
     box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
         7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1) !important;
@@ -321,7 +321,7 @@ main {
     border: none;
     z-index: 1;
     border-radius: 4.487px;
-    border: 1.122px solid #1D3B2D;
+    border: 1.122px solid #667B68;
     text-transform: uppercase;
     font-weight: 500;
     color: #2d2d2d;
@@ -329,13 +329,13 @@ main {
 }
 
 .rk-custom-btn:hover {
-    border: 1.122px solid #1D3B2D;
-    background: #1D3B2D !important;
+    border: 1.122px solid #667B68;
+    background: #667B68 !important;
     color: #fff !important;
 }
 
 .rk-custom-btn.active {
-    background: #1D3B2D !important;
+    background: #667B68 !important;
     color: #fff !important;
 }
 
@@ -405,14 +405,14 @@ input[type="number"] {
 .view-all-btn {
     width: 120px !important;
     border-radius: 4px;
-    background: #1D3B2D;
+    background: #667B68;
     color: #fff;
 }
 
 .view-all-btn:hover {
     border-radius: 4px;
-    color: #1D3B2D;
-    background: #2d2d2d;
+    color: #fff !important;
+    background: #667B68 !important;
     transform: scale(1.05);
 }
 
@@ -477,7 +477,7 @@ header .profile-pic-dropdown .dropdown-toggle.show::after {
 }
 
 .text-warning {
-    color: #1D3B2D !important;
+    color: #667B68 !important;
 }
 
 

@@ -269,7 +269,7 @@ Cart Page - Emerald OMS
                         <div class="mb-2 fw-medium fs-6">For Queries:</div>
                         <div>
                             <a href="tel:+918220017619" class="btn btn-dark px-4 py-2 rounded-5">
-                                <span class="text-orange fw-semibold">Vivin - +9182200 17619</span>
+                                <span class="text-white fw-semibold">Vivin - +9182200 17619</span>
                             </a>
                         </div>
                     </div>
@@ -304,7 +304,7 @@ Cart Page - Emerald OMS
     width: 40px;
     height: 40px;
     border: 4px #ddd solid;
-    border-top: 4px #1D3B2D solid;
+    border-top: 4px #667B68 solid;
     border-radius: 50%;
     animation: sp-anime 0.8s infinite linear;
 }
