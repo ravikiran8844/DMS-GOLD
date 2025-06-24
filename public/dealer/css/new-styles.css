@@ -21,7 +21,7 @@ main {
     height: 5px;
 }
 .home-main-img-slider-section .splide__pagination__page.is-active {
-    background-color: #f78d1e;
+    background-color: #1D3B2D;
     transform: scale(1.1);
 }
 .home-products-grid {
@@ -77,7 +77,7 @@ main {
 .home-products-grid .btn-outline-warning {
     border-radius: 4px;
     border: 1px solid #cfcfcf;
-    color: #f78d1e;
+    color: #1D3B2D;
     background-color: #fff;
     font-family: Inter;
     font-size: 14px;
@@ -91,7 +91,7 @@ main {
     border-radius: 4px;
     border: 1px solid #cfcfcf;
     color: #fff;
-    background-color: #f78d1e;
+    background-color: #1D3B2D;
     font-family: Inter;
     font-size: 14px;
     font-style: normal;
@@ -171,7 +171,7 @@ main {
 }
 
 .lds-hourglass {
-    color: #f78d1e;
+    color: #1D3B2D;
 }
 
 .lds-hourglass,
@@ -224,7 +224,7 @@ main {
 
 /* 15 */
 .ready-stock-btn {
-    background: #f78d1e !important;
+    background: #1D3B2D !important;
     color: #fff !important;
     border: none;
     z-index: 1;
@@ -237,7 +237,7 @@ main {
     top: 0;
     right: 0;
     z-index: -1;
-    background-color: #f78d1e !important;
+    background-color: #1D3B2D !important;
     border-radius: 5px;
     box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
         7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1) !important;
@@ -289,7 +289,7 @@ main {
     border: none;
     z-index: 1;
     border-radius: 4.487px;
-    border: 1.122px solid #f78d1e;
+    border: 1.122px solid #1D3B2D;
     text-transform: uppercase;
     font-weight: 500;
     color: #2d2d2d;
@@ -297,13 +297,13 @@ main {
   }
   
   .rk-custom-btn:hover {
-    border: 1.122px solid #f78d1e;
-    background: #f78d1e !important;
+    border: 1.122px solid #1D3B2D;
+    background: #1D3B2D !important;
     color: #fff !important;
   }
   
   .rk-custom-btn.active {
-    background: #f78d1e !important;
+    background: #1D3B2D !important;
     color: #fff !important;
   }
 
@@ -366,13 +366,13 @@ input[type="number"] {
   .view-all-btn {
     width: 120px !important;
     border-radius: 4px;
-    background: #f78d1e;
+    background: #1D3B2D;
     color: #fff;
   }
   
   .view-all-btn:hover {
     border-radius: 4px;
-    color: #f78d1e;
+    color: #1D3B2D;
     background: #2d2d2d;
     transform: scale(1.05);
   }
@@ -436,7 +436,7 @@ input[type="number"] {
   }
   
   .text-warning {
-    color: #f78d1e !important;
+    color: #1D3B2D !important;
   }
   
 

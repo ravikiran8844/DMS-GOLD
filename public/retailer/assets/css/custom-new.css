@@ -5,13 +5,13 @@
 
 .new-arrivals-btn{
     border-radius: 17.556px;
-    border: 1px solid #F78D1E !important;
-    color: #F78D1E;
+    border: 1px solid #1D3B2D !important;
+    color: #1D3B2D;
     font-size: 12px;
 }
 .ready-stock-btn{
     border-radius: 17.556px;
-    background: #F78D1E;
+    background: #1D3B2D;
     color: #FFF;
     font-size: 12px;
 }
@@ -37,7 +37,7 @@
   
   }
   .home-image-slider-section .swiper-pagination-bullet, .home-image-slider-section .swiper-pagination-bullet-active {
-    background-color: #F78D1E !important;
+    background-color: #1D3B2D !important;
     width: 20px;
     border-radius: 8px;
     height: 6px;

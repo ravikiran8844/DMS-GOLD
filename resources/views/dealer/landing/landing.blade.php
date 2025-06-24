@@ -401,7 +401,7 @@ Home Page - Emerald DMS
 
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="80" height="3" viewBox="0 0 124 3" fill="none">
-                            <path d="M0 1.43994H123.816" stroke="#F78D1E" stroke-width="2.21101" />
+                            <path d="M0 1.43994H123.816" stroke="#1D3B2D" stroke-width="2.21101" />
                         </svg>
                     </div>
                 </div>

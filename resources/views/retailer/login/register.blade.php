@@ -48,7 +48,7 @@
        alt></a> -->
                         <div class="fs-4 brittany-font mt-3 mb-3">Retailer Program</div>
                         <div class="mt-3">Already have an account? <span class="fw-bold"><a
-                                    class="text-decoration-none text-orange" style="color: #f78d1e"
+                                    class="text-decoration-none text-orange" style="color: #1D3B2D"
                                     href="{{ route('retailerlogin') }}">Sign in
                                     now</a></span>
                         </div>
@@ -419,7 +419,7 @@
 
         .login-page_card-btn {
             border-radius: 4.264px;
-            background: #F78D1E !important;
+            background: #1D3B2D !important;
             color: #FFF !important;
             text-align: center;
             font-size: 16px;
@@ -440,7 +440,7 @@
 
         .sign-up-text,
         .resend-text {
-            color: #F78D1E;
+            color: #1D3B2D;
 
         }
 
@@ -482,7 +482,7 @@
 
         .sign-up-page_btn {
             border-radius: 4.264px;
-            background: #F78D1E !important;
+            background: #1D3B2D !important;
             height: 48px;
             width: 100%;
             color: #FFF !important;
@@ -502,7 +502,7 @@
 
         .select2-container--bootstrap4 .select2-results__option--highlighted,
         .select2-container--bootstrap4 .select2-results__option--highlighted.select2-results__option[aria-selected="true"] {
-            background: #F78D1E !important;
+            background: #1D3B2D !important;
         }
 
         .sign-up-page-form_wrapper select {

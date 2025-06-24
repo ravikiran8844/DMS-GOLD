@@ -44,7 +44,7 @@
 
     td[colspan="10"] {
         border-radius: 8px;
-        border: 1px solid #F78D1E;
+        border: 1px solid #1D3B2D;
         background: #FFF;
         box-shadow: 0px 4px 12px 0px rgba(174, 174, 174, 0.46);
     }
@@ -71,7 +71,7 @@
     }
 
     .order-cards-title {
-        color: #F78D1E;
+        color: #1D3B2D;
         font-family: Inter;
         font-size: 14px;
         font-style: normal;
@@ -367,7 +367,7 @@ aria-labelledby="myLargeModalLabel" aria-hidden="true">
 }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background-color: #F78D1E !important;
+    background-color: #1D3B2D !important;
 
 }
 
@@ -388,7 +388,7 @@ table textarea.form-control {
 }
 
 table input[type='checkbox']:checked {
-    background-color: #F78D1E;
+    background-color: #1D3B2D;
 }
 
 table input[type='checkbox']:checked:after {
@@ -406,7 +406,7 @@ table input[type='checkbox'] {
     height: 24px !important;
     appearance: none;
     border-radius: 10%;
-    border: 1px solid #F78D1E;
+    border: 1px solid #1D3B2D;
     box-shadow: none;
     font-size: 1em;
     margin: auto;

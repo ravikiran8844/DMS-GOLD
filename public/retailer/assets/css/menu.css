@@ -183,7 +183,7 @@
   .sm-blue a:hover, .sm-blue a:focus, .sm-blue a:active, .sm-blue a.highlighted {
     background: #F1F1F1;
     /* background-image: linear-gradient(to bottom, #2d89b4, #297ca3); */
-    color: #F78D1E;
+    color: #1D3B2D;
 
   }
   .sm-blue a.current {
@@ -206,7 +206,7 @@
     height: 0;
     border-width: 5px;
     border-style: solid dashed dashed dashed;
-    border-color: #F78D1E transparent transparent transparent;
+    border-color: #1D3B2D transparent transparent transparent;
     background: transparent;
     border-radius: 0;
   }
@@ -245,7 +245,7 @@
   }
   .sm-blue ul a:hover, .sm-blue ul a:focus, .sm-blue ul a:active, .sm-blue ul a.highlighted {
     background: #F1F1F1;    
-    color: #F78D1E;
+    color: #1D3B2D;
 }
   .sm-blue ul a.current {
     /* background: #006892; */
@@ -411,7 +411,7 @@
   .sm-blue a:hover, .sm-blue a:focus, .sm-blue a:active, .sm-blue a.highlighted {
     background: transparent;
     /* background-image: linear-gradient(to bottom, #2d89b4, #297ca3); */
-    color: #F78D1E;
+    color: #1D3B2D;
 
   }
 }

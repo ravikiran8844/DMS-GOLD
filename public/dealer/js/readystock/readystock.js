@@ -269,7 +269,7 @@ function getCollectionWiseProducts(id, page = 1) {
                                                                   fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                   <path
                                                                       d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                                      stroke="#F78D1E" stroke-width="1.5"
+                                                                      stroke="#1D3B2D" stroke-width="1.5"
                                                                       stroke-linejoin="round" />
                                                               </svg>
                                                           </button>
@@ -677,7 +677,7 @@ function getWeightRange(id, page = 1) {
                                                     fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path
                                                         d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                        stroke="#F78D1E" stroke-width="1.5"
+                                                        stroke="#1D3B2D" stroke-width="1.5"
                                                         stroke-linejoin="round" />
                                                         </svg>
                                                         </button>
@@ -1055,7 +1055,7 @@ function getsubcollectionproduct(id, page = 1) {
                                                         fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path
                                                             d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                            stroke="#F78D1E" stroke-width="1.5"
+                                                            stroke="#1D3B2D" stroke-width="1.5"
                                                             stroke-linejoin="round" />
                                                     </svg>
                                                 </button>
@@ -1410,7 +1410,7 @@ function getclassificationproduct(id, page = 1) {
                                                         fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path
                                                             d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                            stroke="#F78D1E" stroke-width="1.5"
+                                                            stroke="#1D3B2D" stroke-width="1.5"
                                                             stroke-linejoin="round" />
                                                     </svg>
                                                 </button>
