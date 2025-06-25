@@ -261,7 +261,7 @@
 
         .login-page_card-btn {
             border-radius: 4.264px;
-            background: #667B68 !important;
+            background: #003836 !important;
             color: #FFF !important;
             text-align: center;
             font-size: 16px;
@@ -282,7 +282,7 @@
 
         .sign-up-text,
         .resend-text {
-            color: #667B68;
+            color: #003836;
 
         }
 

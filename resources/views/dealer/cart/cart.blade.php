@@ -310,7 +310,7 @@
         width: 40px;
         height: 40px;
         border: 4px #ddd solid;
-        border-top: 4px #667B68 solid;
+        border-top: 4px #003836 solid;
         border-radius: 50%;
         animation: sp-anime 0.8s infinite linear;
     }

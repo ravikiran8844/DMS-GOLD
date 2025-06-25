@@ -21,7 +21,7 @@
             </div>
 
             <div class="mt-4 p-3 p-lg-4"
-                style="border: 0.78px solid #667B68; background: #667B6833; border-radius: 10px;">
+                style="border: 0.78px solid #003836; background: #00383633; border-radius: 10px;">
                 <ul class="fs-6 gap-2 thankyou-page_list">
                     <li>We will be checking your order against the dealer you have selected or with any of our
                         authorised dealers near you.</li>
@@ -29,7 +29,7 @@
                     <li>The order will be sent to you through our authorised dealers in your area.</li>
                 </ul>
 
-                <div class="mt-4 p-3 text-white" style=" background: #667B68; border-radius: 10px; ">
+                <div class="mt-4 p-3 text-white" style=" background: #003836; border-radius: 10px; ">
                     <div>NOTE: Due to high demand, there are chances that one or more of the items that you have ordered
                         cannot be fulfilled. You will receive a call incase of such a cancellation occurs.</div>
                 </div>
