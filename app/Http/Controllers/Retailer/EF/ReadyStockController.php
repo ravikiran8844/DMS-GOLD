@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ReadyStockController extends Controller
 {
@@ -145,10 +147,17 @@ class ReadyStockController extends Controller
             })
             ->orderBy('products.qty', 'DESC');
 
+        // Secret key for AES encryption
+        $secret = 'EmeraldAdmin';
         // Get all the results and filter out products without an image
-        $filteredProducts = $product->get()->filter(function ($product) {
-            return File::exists(public_path("upload/product/{$product->product_image}"));
-        });
+        $filteredProducts = $product->get()
+            // ->filter(function ($product) {
+            //     return File::exists(public_path("upload/product/{$product->product_image}"));
+            // })
+            ->map(function ($product) use ($secret) {
+                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                return $product;
+            });
 
         // Manually paginate the filtered products
         $page = request()->get('page', 1);
@@ -171,6 +180,53 @@ class ReadyStockController extends Controller
         $decryptedProjectId = Projects::ELECTROFORMING;
         $request->session()->forget('ret_ses');
         return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+    }
+
+    public function getToken()
+    {
+        $response = Http::get('http://imageurl.ejindia.com/api/token');
+        return response()->json($response->json());
+    }
+
+    public function secureImage(Request $request)
+    {
+        $token = $request->header('Authorization');
+
+        if (!$token) {
+            return response()->json(['error' => 'Authorization token missing'], 401);
+        }
+
+        Log::info('Received token in header:', [$token]);
+
+        $response = Http::withHeaders([
+            'Authorization' => $token,
+            'Accept' => 'application/json',
+        ])->post('http://imageurl.ejindia.com/api/image/secure', [
+            'secureFilename' => $request->input('secureFilename')
+        ]);
+
+        return response($response->body(), $response->status())
+            ->header('Content-Type', $response->header('Content-Type', 'application/json'));
+    }
+
+    private function cryptoJsAesEncrypt($passphrase, $plaintext)
+    {
+        $salt = openssl_random_pseudo_bytes(8);
+        $salted = '';
+        $dx = '';
+
+        while (strlen($salted) < 48) {
+            $dx = md5($dx . $passphrase . $salt, true);
+            $salted .= $dx;
+        }
+
+        $key = substr($salted, 0, 32);
+        $iv = substr($salted, 32, 16);
+
+        $encrypted = openssl_encrypt($plaintext, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+        $ciphertext = 'Salted__' . $salt . $encrypted;
+
+        return urlencode(base64_encode($ciphertext));
     }
 
     function siReadyStock(Request $request)
@@ -345,6 +401,7 @@ class ReadyStockController extends Controller
     {
         ini_set('max_execution_time', 1800); //3 minutes
         $decryptedId = decrypt($id);
+
         $product = Product::select(
             'products.*',
             'metal_types.metal_name',
@@ -363,6 +420,12 @@ class ReadyStockController extends Controller
             ->where('products.is_active', 1)
             ->whereNull('products.deleted_at')
             ->first();
+
+
+        if ($product) {
+            $secret = 'EmeraldAdmin'; // make sure you define this
+            $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+        }
         // dd($product);
         $stock = 1;
         $relatedProducts = $this->getproducts(Auth::user()->id)
@@ -498,13 +561,13 @@ class ReadyStockController extends Controller
     {
         DB::beginTransaction();
         try {
-            $currentcartcount = Cart::where('product_id', $request->product_id)
-                ->where('user_id', Auth::user()->id)
-                ->value('qty');
+
             $existingCartlist = Cart::where('user_id', Auth::user()->id)
                 ->where('product_id', $request->product_id)
                 ->first();
-
+            $actualcartcount = Cart::where('product_id', $request->product_id)
+                ->where('user_id', Auth::user()->id)
+                ->value('qty');
             $moq = Product::where('id', $request->product_id)->value('moq');
             $stock = Product::where('id', $request->product_id)->value('qty');
             if ($moq > $request->qty) {
@@ -521,7 +584,8 @@ class ReadyStockController extends Controller
                 if ($request->qty > $stock) {
                     $notification = array(
                         'message' => 'Please order within available stock limit',
-                        'alert' => 'error'
+                        'alert' => 'error',
+                        'actualcartcount' => $actualcartcount
                     );
                     return response()->json([
                         'notification_response' => $notification
@@ -532,7 +596,8 @@ class ReadyStockController extends Controller
                 if ($existingCartlist->qty + $request->qty >= $stock && $request->stock == 1) {
                     $notification = array(
                         'message' => 'Please order within available stock limit',
-                        'alert' => 'error'
+                        'alert' => 'error',
+                        'actualcartcount' => $actualcartcount
                     );
                     return response()->json([
                         'notification_response' => $notification
@@ -550,8 +615,7 @@ class ReadyStockController extends Controller
                         ->value('totalWeight');
 
                     $count = array(
-                        'count' => $cartcount,
-                        'currentcartcount' => $currentcartcount
+                        'count' => $cartcount
                     );
                     $notification = array(
                         'message' => 'Added to cart',
@@ -589,9 +653,13 @@ class ReadyStockController extends Controller
             }
 
             DB::commit(); // Move this outside of the else block
-
+            $currentcartcount = Cart::where('product_id', $request->product_id)
+                ->where('user_id', Auth::user()->id)
+                ->value('qty');
             return response()->json([
                 'count_response' => $count,
+                'currentcartcount' => $currentcartcount,
+                'actualcartcount' => $actualcartcount,
                 'count_qty' => $cartqtycount,
                 'count_weight' => $cartweightcount,
                 'notification_response' => $notification

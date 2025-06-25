@@ -683,10 +683,57 @@
                                         class="card-img-top d-flex align-items-center justify-content-center position-relative">
 
                                         <a href="{{ route('retailerproductdetail', encrypt($item->id)) }}">
-                                            <img class="img-fluid prouduct_card-image" width="154" height="160"
-                                                src="{{ file_exists(public_path('upload/product/' . $item->product_image)) ? asset('upload/product/' . $item->product_image) : asset('no-product-image.jpg') }}"
-                                                alt>
+                                            <img class="img-fluid prouduct_card-image load-secure-image"
+                                                width="154" height="160"
+                                                src="http://imageurl.ejindia.com/api/image/secure"
+                                                data-secure="{{ $item->secureFilename }}" alt>
                                         </a>
+
+                                        <script>
+                                            document.addEventListener("DOMContentLoaded", async function() {
+                                                try {
+                                                    const res = await fetch("/retailer/proxy/token");
+                                                    const data = await res.json();
+                                                    const token = data.token;
+
+                                                    if (!token) {
+                                                        throw new Error("Token not received from /retailer/proxy/token");
+                                                    }
+
+                                                    // Loop through all secure images
+                                                    document.querySelectorAll(".load-secure-image").forEach(async (img) => {
+                                                        const secureFilename = img.dataset.secure;
+
+                                                        try {
+                                                            const res = await fetch("/retailer/proxy/secure-image", {
+                                                                method: "POST",
+                                                                headers: {
+                                                                    "Content-Type": "application/json",
+                                                                    "Authorization": `${token}`
+                                                                },
+                                                                body: JSON.stringify({
+                                                                    secureFilename
+                                                                })
+                                                            });
+
+                                                            if (!res.ok) throw new Error("Failed to fetch image");
+
+                                                            const blob = await res.blob();
+                                                            const imageUrl = URL.createObjectURL(blob);
+                                                            img.src = imageUrl;
+                                                        } catch (error) {
+                                                            console.error("Image load failed:", error);
+                                                            img.alt = "Image load failed";
+                                                        }
+                                                    });
+                                                } catch (err) {
+                                                    console.error("Token fetch failed:", err);
+                                                }
+                                            });
+                                        </script>
+
+
+
                                         @php
                                             $purity = App\Models\SilverPurity::where('id', $item->purity_id)->value(
                                                 'silver_purity_percentage',

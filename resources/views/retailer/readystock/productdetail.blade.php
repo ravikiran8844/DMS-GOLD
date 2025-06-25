@@ -11,7 +11,7 @@
         .product-page_content_wrapper {
             background: #F6F6F6 !important;
         }
-    </style>                              
+    </style>
 @endsection
 <section class="breadcrumbs container mt-4">
     <div class="row">
@@ -46,12 +46,52 @@
 
                         </a> -->
 
-                        <img id="product-main-image" class="img-fluid product-main-image"
-                            src="{{ file_exists(public_path('upload/product/' . $product->product_image)) ? asset('upload/product/' . $product->product_image) : asset('no-product-image.jpg') }}"
-                            alt="{{ $product->product_unique_id }}">
+                        <img id="product-main-image" class="img-fluid product-main-image load-secure-image"
+                            src="http://imageurl.ejindia.com/api/image/secure" data-secure="{{ $product->secureFilename }}"
+                            alt>
 
+                        <script>
+                            document.addEventListener("DOMContentLoaded", async function() {
+                                try {
+                                    const res = await fetch("/retailer/proxy/token");
+                                    const data = await res.json();
+                                    const token = data.token;
 
+                                    if (!token) {
+                                        throw new Error("Token not received from /retailer/proxy/token");
+                                    }
 
+                                    // Loop through all secure images
+                                    document.querySelectorAll(".load-secure-image").forEach(async (img) => {
+                                        const secureFilename = img.dataset.secure;
+
+                                        try {
+                                            const res = await fetch("/retailer/proxy/secure-image", {
+                                                method: "POST",
+                                                headers: {
+                                                    "Content-Type": "application/json",
+                                                    "Authorization": `${token}`
+                                                },
+                                                body: JSON.stringify({
+                                                    secureFilename
+                                                })
+                                            });
+
+                                            if (!res.ok) throw new Error("Failed to fetch image");
+
+                                            const blob = await res.blob();
+                                            const imageUrl = URL.createObjectURL(blob);
+                                            img.src = imageUrl;
+                                        } catch (error) {
+                                            console.error("Image load failed:", error);
+                                            img.alt = "Image load failed";
+                                        }
+                                    });
+                                } catch (err) {
+                                    console.error("Token fetch failed:", err);
+                                }
+                            });
+                        </script>
 
                         <div style=" position: absolute; top: 10px; right: 10px; ">
                             <button
@@ -98,45 +138,6 @@
                             </div>
                         </div>
                         <div class="product-main-title my-3">{{ $product->product_name }}</div>
-                        {{-- @if ($product->size_id != null)
-                            <div class="product-size-options py-3">
-                                <div class="d-flex justify-content-between mb-3">
-                                    <div class="product-options-title">SIZE</div>
-                                    <div>
-                                        <!-- Button trigger modal -->
-                                        <button type="button" class="product-size-option_btn" data-bs-toggle="modal"
-                                            data-bs-target="#sizeChartModal">
-                                            <span>Size guide</span>
-                                            <i class="fas fa-angle-right"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <ul class="list-unstyled d-flex flex-wrap product-swatches">
-                                    @foreach ($sizes as $key => $size)
-                                        <li>
-                                            <input @if ($key == 0) checked @endif type="radio"
-                                                name="size" id="size{{ $size->id }}"
-                                                value="{{ $size->id }}">
-                                            <label for="size{{ $size->id }}">{{ $size->size }}</label>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif --}}
-                        {{-- <div class="product-finish-options py-3">
-								<div class="mb-3">
-									<div class="product-options-title">Finish</div>
-								</div>
-								<ul class="list-unstyled d-flex flex-wrap product-swatches-box">
-									@foreach ($finishes as $finish)
-									<li>
-										<input @if ($finish->id == $product->finish_id) checked @endif type="radio" name="finish"
-										id="finish{{ $finish->id }}" value="{{ $finish->id }}">
-                        <label for="finish{{ $finish->id }}">{{ $finish->finish_name }}</label>
-                        </li>
-                        @endforeach
-                        </ul>
-                    </div> --}}
 
                         @if ($stock == 1 && $product->qty > 0)
                             <div class="d-none d-md-block">
@@ -146,18 +147,6 @@
                             </div>
                         @endif
 
-                        {{-- @if ($product->project_id == App\Enums\Projects::SOLIDIDOL)
-							<div class="product-size-options py-3">
-								<div class="d-flex justify-content-between mb-3">
-									<div class="product-options-title">MOQ</div>
-								</div>
-								<ul class="list-unstyled d-flex flex-wrap product-swatches">
-									<li>
-										<label for="">{{ $product->moq }}</label>
-                    </li>
-                    </ul>
-                </div>
-                @endif --}}
                         <div class="my-4 my-mb-5 pt-5 d-flex gap-5 flex-row flex-wrap align-items-center"
                             style=" border-top: 1px solid #bcbcbc;">
                             <div class="product-weight_text mb-0 mb-md-0">{{ $product->weight }}gm</div>
@@ -169,8 +158,7 @@
                                     <input type="hidden" name="qty" id="qty" value="{{ $product->qty }}">
                                     <input type="hidden" name="box" id="box"
                                         value="{{ $product->style_id }}">
-                                    <input type="hidden" name="stockqty" id="stockqty"
-                                        value="{{ $stock }}">
+                                    <input type="hidden" name="stockqty" id="stockqty" value="{{ $stock }}">
                                     <input type='button' value='-' class='qtyminus' field='quantity' />
                                     <input type='text' id="quantity" name='quantity'
                                         value="{{ $currentcartcount ?? $product->moq }}" class='qty' />
@@ -252,7 +240,7 @@
                                             <div class="col-4 col-lg-3 mb-4">
                                                 <div class="product-specs-item_title mb-2">PURITY</div>
                                                 <div class="product-specs-item_text">
-                                                    {{ str_replace('SIL-','',$product->silver_purity_percentage) }}
+                                                    {{ str_replace('SIL-', '', $product->silver_purity_percentage) }}
                                                 </div>
                                             </div>
                                         @endif
@@ -296,7 +284,8 @@
                                         <input type="hidden" name="box{{ $item->id }}"
                                             id="box{{ $item->id }}" value="{{ $item->style_id }}">
                                         <div class="card shop-page_product-card">
-                                            <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
+                                            <div
+                                                class="card-img-top d-flex align-items-center justify-content-center position-relative">
                                                 <a href="{{ route('retailerproductdetail', encrypt($item->id)) }}">
                                                     <img class="img-fluid prouduct_card-image" width="154"
                                                         height="160"
@@ -304,8 +293,9 @@
                                                         alt>
                                                 </a>
                                                 <div class="position-absolute recommended-products__purity">
-                                            Purity: {{ str_replace('SIL-','',$product->silver_purity_percentage) }}
-                                                 </div>
+                                                    Purity:
+                                                    {{ str_replace('SIL-', '', $product->silver_purity_percentage) }}
+                                                </div>
                                             </div>
                                             <div class="card-body d-flex flex-column justify-content-between">
                                                 <div class="d-flex justify-content-between  gap-2 card-title_wrapper">

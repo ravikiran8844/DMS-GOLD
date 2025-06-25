@@ -73,6 +73,8 @@ Route::prefix('retailer')->group(function () {
         Route::post('addalltocart', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'addAllToCart'])->name('retaileraddalltocart');
         Route::post('repeatorder', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'repeatOrder']);
         Route::post('repeatorderByid', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'repeatorderByid']);
+        Route::get('/proxy/token', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'getToken']);
+        Route::post('/proxy/secure-image', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'secureImage'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
         //search
         Route::get('search', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'search'])->name('retailersearch');
@@ -94,7 +96,7 @@ Route::prefix('retailer')->group(function () {
 
         //boxwiseproduct
         Route::get('boxwiseproduct/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'getBoxwiseProduct'])->name('retailerboxwiseproduct');
-       
+
         //puritywiseproduct
         Route::get('puritywiseproduct/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'getPuritywiseProduct'])->name('retailerpuritywiseproduct');
 

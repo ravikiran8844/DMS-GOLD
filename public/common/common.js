@@ -284,6 +284,8 @@ function addforcart(id) {
     var finish_id = $("#finish" + id).val();
     var stock = $("#stock" + id).val();
     var box = $("#box" + id).val();
+    console.log(box);
+    
     $.ajax({
         type: "POST",
         url: "/addforcart",
