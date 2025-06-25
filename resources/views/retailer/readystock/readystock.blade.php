@@ -58,7 +58,7 @@
         ->get();
     $others = App\Models\Collection::where('is_active', 1)
         ->where('collection_name', '!=', 'GOD')
-        ->where('project_id', App\Enums\Projects::ELECTROFORMING)
+        ->where('project_id', App\Enums\Projects::EF)
         ->whereNull('deleted_at')
         ->get();
     $jewelcategories = App\Models\Category::where('is_active', 1)
@@ -79,36 +79,37 @@
         url('retailer/solid-idol/vishnu'),
     ];
     $validProjects = [
-        App\Enums\Projects::SOLIDIDOL,
-        App\Enums\Projects::ELECTROFORMING,
         App\Enums\Projects::CASTING,
-        App\Enums\Projects::UTENSIL,
-        App\Enums\Projects::INIDIANIA,
+        App\Enums\Projects::EF,
+        App\Enums\Projects::IMPREZ,
+        App\Enums\Projects::INDIANIA,
+        App\Enums\Projects::LASERCUT,
     ];
 
-    if (in_array($currentProjectId, $validProjects)) {
-        $boxes = App\Models\Style::where('is_active', 1)
-            ->where('project_id', $currentProjectId)
-            ->whereNull('deleted_at')
-            ->whereHas('products', function ($query) {
-                $query->where('qty', '>', 0);
-            })
-            ->get();
-    }
+    // if (in_array($currentProjectId, $validProjects)) {
+    //     $boxes = App\Models\Style::where('is_active', 1)
+    //         ->where('project_id', $currentProjectId)
+    //         ->whereNull('deleted_at')
+    //         ->whereHas('products', function ($query) {
+    //             $query->where('qty', '>', 0);
+    //         })
+    //         ->get();
+    // }
 
-    $purities = App\Models\SilverPurity::with([
-        'products' => function ($query) use ($currentProjectId) {
-            $query->where('qty', '>', 0)->where('project_id', $currentProjectId);
-        },
-    ])
-        ->whereHas('products', function ($query) use ($currentProjectId) {
-            $query->where('qty', '>', 0)->where('project_id', $currentProjectId);
-        })
-        ->get();
+    // $purities = App\Models\SilverPurity::with([
+    //     'products' => function ($query) use ($currentProjectId) {
+    //         $query->where('qty', '>', 0)->where('project_id', $currentProjectId);
+    //     },
+    // ])
+    //     ->whereHas('products', function ($query) use ($currentProjectId) {
+    //         $query->where('qty', '>', 0)->where('project_id', $currentProjectId);
+    //     })
+    //     ->get();
+
 @endphp
 <input type="hidden" name="decryptedProjectId" id="decryptedProjectId" value="{{ $decryptedProjectId ?? '' }}">
-<input type="hidden" name="projectSolid" id="projectSolid" value="{{ App\Enums\Projects::SOLIDIDOL }}">
-<input type="hidden" name="projectEf" id="projectEf" value="{{ App\Enums\Projects::ELECTROFORMING }}">
+{{-- <input type="hidden" name="projectSolid" id="projectSolid" value="{{ App\Enums\Projects::CASTING }}"> --}}
+<input type="hidden" name="projectEf" id="projectEf" value="{{ App\Enums\Projects::EF }}">
 <!-- Main Content -->
 
 
@@ -141,16 +142,16 @@
     <div class="my-2 text-center d-block d-lg-none">
 
 
-        <div class="mobile-filters-offcanvas" id="mobile-sticky-filter">
+        {{-- <div class="mobile-filters-offcanvas" id="mobile-sticky-filter">
             <div>
                 <button class="btn mobile-filters-trigger-btn" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasMobileFilters" aria-controls="offcanvasMobileFilters">
                     Filter By
                 </button>
             </div>
-        </div>
+        </div> --}}
 
-        <div class="offcanvas offcanvas-start mobile-filters-offcanvas" tabindex="-1" id="offcanvasMobileFilters"
+        {{-- <div class="offcanvas offcanvas-start mobile-filters-offcanvas" tabindex="-1" id="offcanvasMobileFilters"
             aria-labelledby="offcanvasMobileFiltersLabel">
             <div class="offcanvas-body">
                 <div class="d-flex justify-content-between mobile-filters-offcanvas__header">
@@ -166,19 +167,19 @@
                         <div class="mobile-filters-offcanvas__body-item-filter-labels">
                             <div class="nav flex-column" id="mob-filters-tab" role="tablist"
                                 aria-orientation="vertical">
-                                @if ($currentProjectId == App\Enums\Projects::SOLIDIDOL)
-                                    <button class="nav-link @if ($currentProjectId == App\Enums\Projects::SOLIDIDOL) active @endif"
+                                @if ($currentProjectId == App\Enums\Projects::EF)
+                                    <button class="nav-link @if ($currentProjectId == App\Enums\Projects::EF) active @endif"
                                         id="mobClassificationFilter" data-bs-toggle="pill"
                                         data-bs-target="#mobileClassificationFilter" type="button" role="tab"
                                         aria-controls="mobilClassificationFilter"
                                         aria-selected="true">Classification</button>
                                 @endif
-                                <button class="nav-link @if ($currentProjectId == App\Enums\Projects::ELECTROFORMING || $currentProjectId == App\Enums\Projects::CASTING) active @endif"
+                                <button class="nav-link @if ($currentProjectId == App\Enums\Projects::EF || $currentProjectId == App\Enums\Projects::CASTING) active @endif"
                                     id="mobWeightFilter" data-bs-toggle="pill" data-bs-target="#mobileWeightFilter"
                                     type="button" role="tab" aria-controls="mobileWeightFilter"
                                     aria-selected="true">Weight
                                     Range</button>
-                                @if ($currentProjectId != App\Enums\Projects::UTENSIL && $currentProjectId != App\Enums\Projects::INIDIANIA)
+                                @if ($currentProjectId != App\Enums\Projects::EF && $currentProjectId != App\Enums\Projects::INIDIANIA)
                                     <button class="nav-link" id="mobBoxFilter" data-bs-toggle="pill"
                                         data-bs-target="#mobileBoxFilter" type="button" role="tab"
                                         aria-controls="mobileBoxFilter" aria-selected="true">Box/Style</button>
@@ -187,14 +188,11 @@
                                     data-bs-target="#mobilePurityFilter" type="button" role="tab"
                                     aria-controls="mobilePurityFilter" aria-selected="true">Purity</button>
                                 @if (
-                                    ($currentProjectId == App\Enums\Projects::ELECTROFORMING || $currentProjectId == App\Enums\Projects::SOLIDIDOL) &&
+                                    ($currentProjectId == App\Enums\Projects::EF || $currentProjectId == App\Enums\Projects::CASTING) &&
                                         !in_array(url()->current(), $excludedUrls))
                                     @foreach ($collections as $collection)
                                         @php
-                                            $validProjects = [
-                                                App\Enums\Projects::SOLIDIDOL,
-                                                App\Enums\Projects::ELECTROFORMING,
-                                            ];
+                                            $validProjects = [App\Enums\Projects::EF, App\Enums\Projects::CASTING];
 
                                             if (in_array($currentProjectId, $validProjects)) {
                                                 $subcollections = App\Models\SubCollection::where(
@@ -203,21 +201,19 @@
                                                 )
                                                     ->where('sub_collections.collection_id', $collection->id)
                                                     ->whereHas('products', function ($query) {
-                                                        $query
-                                                            ->where('products.qty', '>', 0)
-                                                            ->whereNull('products.deleted_at');
+                                                        $query->where('products.qty', '>', 0);
                                                     });
                                             }
 
-                                            if ($currentProjectId == App\Enums\Projects::ELECTROFORMING) {
+                                            if ($currentProjectId == App\Enums\Projects::EF) {
                                                 $subcollections->where(
                                                     'sub_collections.project_id',
-                                                    App\Enums\Projects::ELECTROFORMING,
+                                                    App\Enums\Projects::EF,
                                                 );
                                             }
 
-                                            if ($currentProjectId == App\Enums\Projects::SOLIDIDOL) {
-                                                $subcollections->where('project_id', App\Enums\Projects::SOLIDIDOL);
+                                            if ($currentProjectId == App\Enums\Projects::CASTING) {
+                                                $subcollections->where('project_id', App\Enums\Projects::CASTING);
                                             }
 
                                             $subcollections = $subcollections
@@ -241,7 +237,7 @@
                                         Showing results for - <b>{{ $search }}</b>
                                     </div>
                                     <div class="mt-3">
-                                        @if ($currentProjectId == App\Enums\Projects::ELECTROFORMING)
+                                        @if ($currentProjectId == App\Enums\Projects::EF)
                                             <a href="{{ route('retailerefreadystock') }}"
                                                 class="btn btn-warning view-all-filter">VIEW ALL
                                                 GODS</a>
@@ -261,7 +257,7 @@
                                         </style>
                                     </div>
                                 @endif
-                                @if ($currentProjectId == App\Enums\Projects::ELECTROFORMING && !in_array(url()->current(), $excludedUrls))
+                                @if ($currentProjectId == App\Enums\Projects::EF && !in_array(url()->current(), $excludedUrls))
                                     <button class="nav-link" id="mobOtherFilterTab" data-bs-toggle="pill"
                                         data-bs-target="#mobileOtherFilter" type="button" role="tab"
                                         aria-controls="mobileOtherFilter" aria-selected="false">Others</button>
@@ -275,7 +271,7 @@
                         </div>
                         <div class="mobile-filters-offcanvas__body-item-filter-inputs">
                             <div class="tab-content" id="mob-filters-tabContent">
-                                <div class="tab-pane fade @if ($currentProjectId == App\Enums\Projects::ELECTROFORMING || $currentProjectId == App\Enums\Projects::CASTING) show active @endif"
+                                <div class="tab-pane fade @if ($currentProjectId == App\Enums\Projects::EF || $currentProjectId == App\Enums\Projects::CASTING) show active @endif"
                                     id="mobileWeightFilter" role="tabpanel" aria-labelledby="mobWeightFilter"
                                     tabindex="0">
                                     <div class="filter-inputs_wrapper" id="mobile-weight-filters">
@@ -283,7 +279,6 @@
                                     </div>
                                 </div>
 
-                                {{-- box --}}
                                 <div class="tab-pane fade" id="mobileBoxFilter" role="tabpanel"
                                     aria-labelledby="mobBoxFilter" tabindex="0">
                                     <div class="filter-inputs_wrapper" id="mobile-box-filters">
@@ -324,7 +319,7 @@
                                 <div class="tab-pane fade" id="mobileOtherFilter" role="tabpanel"
                                     aria-labelledby="mobileOtherFilter" tabindex="0">
                                     <div class="filter-inputs_wrapper">
-                                        @if ($currentProjectId == App\Enums\Projects::ELECTROFORMING)
+                                        @if ($currentProjectId == App\Enums\Projects::EF)
                                             @foreach ($others as $other)
                                                 <div class="form-check d-flex justify-content-between gap-2">
                                                     <div>
@@ -346,21 +341,7 @@
                                 <div class="tab-pane fade" id="mobileCategoryFilter" role="tabpanel"
                                     aria-labelledby="mobileCategoryFilter" tabindex="0">
                                     <div class="filter-inputs_wrapper">
-                                        <!-- @if ($currentProjectId == App\Enums\Projects::CASTING)
-@foreach ($jewelcategories as $jewel)
-<div class="form-check d-flex justify-content-between gap-2">
-                                                        <div>
-                                                            <input class="category form-check-input" type="checkbox"
-                                                                id="category{{ $jewel->id }}" name="category" data-id={{ $jewel->id }}
-                                                                value="{{ $jewel->category_name }}"
-                                                                onclick="getcategoryproduct({{ $jewel->id }})">
-                                                            <label class="form-check-label" for="category{{ $jewel->id }}">
-                                                                {{ $jewel->category_name }}
-                                                            </label>
-                                                        </div>
-                                                    </div>
-@endforeach
-@endif -->
+
                                     </div>
                                 </div>
                                 @foreach ($collections as $collection)
@@ -398,11 +379,11 @@
                                         </div>
                                     </div>
                                 @endforeach
-                                <div class="tab-pane fade @if ($currentProjectId == App\Enums\Projects::SOLIDIDOL) show active @endif"
+                                <div class="tab-pane fade @if ($currentProjectId == App\Enums\Projects::CASTING) show active @endif"
                                     id="mobileClassificationFilter" role="tabpanel"
                                     aria-labelledby="mobileClassificationFilter" tabindex="0">
                                     <div class="filter-inputs_wrapper">
-                                        @if ($currentProjectId == App\Enums\Projects::SOLIDIDOL)
+                                        @if ($currentProjectId == App\Enums\Projects::CASTING)
                                             @foreach ($classifications as $classification)
                                                 <div class="form-check d-flex justify-content-between gap-2">
                                                     <div>
@@ -432,11 +413,11 @@
                         data-bs-dismiss="offcanvas" aria-label="Close">APPLY</button>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     <!-- Filter Options Modal -->
-    <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
+    {{-- <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -486,42 +467,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Sort Options Modal -->
-    <div class="modal fade" id="sortModal" tabindex="-1" role="dialog" aria-labelledby="sortModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="sortModalLabel">Sort Options</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body mobile-sort_options">
-                    <!-- Add your sort options here -->
-                    <select name id>
-                        <option value>Price Low to High</option>
-                        <option value>Price High to Low</option>
-                    </select>
-                    <!-- Add more sort options as needed -->
-                </div>
-
-                <div class="modal-footer m-auto">
-                    <div class="text-center">
-                        <button type="button" class="btn btn-warning">
-                            Apply Sorting
-                        </button>
-                        <button type="button" data-bs-dismiss="modal" class="btn btn-outline-warning"
-                            data-bs-dismiss="modal">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </div> --}}
 
     <div class="d-none d-lg-block">
         <div class="shop-page-breadcrumbs mt-3 ps-lg-2">
@@ -546,7 +492,7 @@
 
     <div class="row g-0">
         {{-- Sidebar --}}
-        @include('retailer.readystock.sidebar')
+        {{-- @include('retailer.readystock.sidebar') --}}
         {{-- product list --}}
         <section class="col-lg-9 col-xxl-10">
 
@@ -804,7 +750,7 @@
                                                     </div>
                                                 @endif
                                                 <div class="d-flex flex-wrap gap-2 align-self-end">
-                                                    @if ($projectId == App\Enums\Projects::SOLIDIDOL && $projectId == App\Enums\Projects::ELECTROFORMING)
+                                                    @if ($projectId == App\Enums\Projects::CASTING && $projectId == App\Enums\Projects::EF)
                                                         <div class="card-text">MOQ: {{ $item->moq }} pcs</div>
                                                     @elseif ($stock == 1 && $item->qty != 0)
                                                         <div class="product-cart-qty-text">Stock:
