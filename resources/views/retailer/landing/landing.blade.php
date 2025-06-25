@@ -415,7 +415,7 @@
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="80" height="3" viewBox="0 0 124 3"
                             fill="none">
-                            <path d="M0 1.43994H123.816" stroke="#667B68" stroke-width="2.21101" />
+                            <path d="M0 1.43994H123.816" stroke="#003836" stroke-width="2.21101" />
                         </svg>
                     </div>
                 </div>
@@ -509,7 +509,7 @@
                 </div>
                 <div class="mt-2">
                     <a href="tel:+918220017619" class="text-decoration-none fs-5 no-login-required">
-                        <span class="text-warning fw-semibold">Vivin - +9182200 17619</span>
+                        <span class="text-white fw-semibold">Vivin - +9182200 17619</span>
                     </a>
                 </div>
             </div>
