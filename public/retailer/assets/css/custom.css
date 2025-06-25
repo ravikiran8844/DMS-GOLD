@@ -1645,7 +1645,7 @@ input[type="radio"]:checked + label button {
 @media (min-width: 340px) {
     .col-12.shop-page_product-cards.grid {
         grid-column-gap: 10px;
-        grid-template-columns: repeat(auto-fill, minmax(200px, auto));
+        grid-template-columns: repeat(auto-fill, minmax(250px, auto));
     }
 }
 
@@ -5758,6 +5758,10 @@ textarea {
     text-align: center;
 }
 
+.product-card-badge-light{
+    background: rgba(87, 148, 84, 0.50);  
+    color: #000;
+}
 .card-purity {
     border-radius: 2px;
     background: #ff2626;
@@ -5837,3 +5841,24 @@ textarea {
 .custom-date-input_wrapper .custom-date-input {
     min-width: 220px;
 }
+
+
+.multiple-size-btn{
+    border-radius: 4.83px;
+    border: 0.604px solid #838383 !important;
+    font-size: 12px;
+    color: #2D2D2D;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding:5px;
+}
+
+.rotate-180{
+    transform: rotate(180deg);
+}
+
+/* .col-12.shop-page_product-cards.grid .card{
+    max-height: fit-content;
+    margin: 0;
+} */
