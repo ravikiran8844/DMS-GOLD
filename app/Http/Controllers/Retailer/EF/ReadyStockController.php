@@ -125,15 +125,16 @@ class ReadyStockController extends Controller
         return view('retailer.readystock.readystock', compact('product', 'allProduct', 'stock', 'search', 'breadcrumUrl', 'breadcrum', 'project_id'));
     }
 
-    function efReadyStock(Request $request)
+    public function efReadyStock(Request $request)
     {
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
+
         $subQuery = DB::table('products')
             ->select('id')
             ->where('project', Projects::EF);
 
-        $product = Product::select('products.*', 'wishlists.is_favourite')
+        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
             ->leftJoin('wishlists', function ($join) use ($user_id) {
                 $join->on('wishlists.product_id', '=', 'products.id')
                     ->where('wishlists.user_id', '=', $user_id);
@@ -143,37 +144,43 @@ class ReadyStockController extends Controller
             })
             ->orderBy('products.qty', 'DESC');
 
-        // Secret key for AES encryption
         $secret = 'EmeraldAdmin';
-        // Get all the results and filter out products without an image
-        $filteredProducts = $product->get()
+
+        $groupedProducts = $productQuery->get()
             ->map(function ($product) use ($secret) {
                 $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
                 return $product;
+            })
+            ->groupBy('DesignNo')
+            ->map(function ($group) {
+                return [
+                    'count' => $group->count(),
+                    'products' => $group,
+                ];
             });
 
-        // Manually paginate the filtered products
-        $page = request()->get('page', 1);
+        $page = $request->get('page', 1);
         $perPage = $this->paginate;
-        $paginatedProducts = new LengthAwarePaginator(
-            $filteredProducts->forPage($page, $perPage),
-            $filteredProducts->count(),
+        $paginated = new LengthAwarePaginator(
+            $groupedProducts->forPage($page, $perPage)->values(),
+            $groupedProducts->count(),
             $perPage,
             $page,
             ['path' => request()->url(), 'query' => request()->query()]
         );
 
-        $product = $paginatedProducts;
-
+        $product = $paginated;
         $project_id = Projects::EF;
         $allProduct = Product::select('id')->where('project', Projects::EF)->get();
         $stock = 1;
-        $breadcrum = 'EF Idol Ready Stock';
+        $breadcrum = 'EF';
         $breadcrumUrl = route('retailerefreadystock');
         $decryptedProjectId = Projects::EF;
         $request->session()->forget('ret_ses');
+
         return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
     }
+
 
     public function getToken()
     {
@@ -227,23 +234,7 @@ class ReadyStockController extends Controller
         ini_set('max_execution_time', 1800); //3 minutes
         $decryptedId = decrypt($id);
 
-        $product = Product::select(
-            'products.*',
-            'metal_types.metal_name',
-            'platings.plating_name',
-            'categories.category_name',
-            'projects.project_name',
-            'silver_purities.silver_purity_percentage'
-        )
-            ->join('metal_types', 'metal_types.id', 'products.metal_type_id')
-            ->join('platings', 'platings.id', 'products.plating_id')
-            // ->join('finishes', 'finishes.id', 'products.finish_id')
-            ->join('projects', 'projects.id', 'products.project_id')
-            ->join('categories', 'categories.id', 'products.category_id')
-            ->join('silver_purities', 'silver_purities.id', 'products.purity_id')
-            ->where('products.id', $decryptedId)
-            ->where('products.is_active', 1)
-            ->whereNull('products.deleted_at')
+        $product = Product::where('products.id', $decryptedId)
             ->first();
 
 
@@ -253,24 +244,12 @@ class ReadyStockController extends Controller
         }
         // dd($product);
         $stock = 1;
-        $relatedProducts = $this->getproducts(Auth::user()->id)
-            ->where('products.id', '!=', $decryptedId)
-            ->where('category_id', $product->category_id)
-            ->where('project_id', $product->project_id)
-            ->where('qty', '>', 0)
-            ->limit(20)
-            ->get()
-            ->filter(function ($product) {
-                // Check if the image exists in the public/upload/product directory
-                $imagePath = public_path('upload/product/' . $product->product_image);
-                return file_exists($imagePath) && !empty($product->product_image);
-            });
         $sizes = Size::where('is_active', 1)->get();
         $weights = Weight::where('is_active', 1)->get();
         $colors = Color::where('is_active', 1)->whereNull('deleted_at')->get();
         $finishes = Finish::where('is_active', 1)->where('project_id', $product->project_id)->whereNull('deleted_at')->get();
         $currentcartcount = Cart::where('user_id', Auth::user()->id)->where('product_id', $product->id)->value('qty');
-        return view('retailer.readystock.productdetail', compact('product', 'sizes', 'weights', 'colors', 'finishes', 'stock', 'relatedProducts', 'currentcartcount'));
+        return view('retailer.readystock.productdetail', compact('product', 'sizes', 'weights', 'colors', 'finishes', 'stock', 'currentcartcount'));
     }
 
     public function addToCart(Request $request)
@@ -281,17 +260,7 @@ class ReadyStockController extends Controller
                 ->where('product_id', $request->product_id)
                 ->first();
 
-            $moq = Product::where('id', $request->product_id)->value('moq');
             $stock = Product::where('id', $request->product_id)->value('qty');
-            if ($moq > $request->qty) {
-                $notification = array(
-                    'message' => 'Please Check the MINIMUM QUANTITY ORDER (moq)',
-                    'alert' => 'error'
-                );
-                return response()->json([
-                    'notification_response' => $notification
-                ]);
-            }
             if ($request->readyStock == 1) {
                 if ($request->qty > $stock) {
                     $notification = array(
@@ -338,13 +307,9 @@ class ReadyStockController extends Controller
                     'user_id' => Auth::user()->id,
                     'product_id' => $request->product_id,
                     'qty' => $request->qty,
-                    // 'size_id' => $request->size_id,
-                    'color_id' => $request->color_id,
-                    'weight' => $request->weight_id,
-                    'plating_id' => $request->plating_id,
-                    'finish_id' => $request->finish_id,
-                    'box_id' => $request->box_id,
-                    'is_ready_stock' => $request->readyStock
+                    'size' => $request->size,
+                    'weight' => $request->weight,
+                    'box' => $request->box,
                 ]);
 
                 $cartcount = Cart::where('user_id', Auth::user()->id)->count();

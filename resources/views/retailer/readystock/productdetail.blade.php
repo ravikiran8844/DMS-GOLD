@@ -5,7 +5,6 @@
 @endsection
 @section('header')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" /> -->
     <style>
         body,
         .product-page_content_wrapper {
@@ -20,10 +19,10 @@
                 <ol class="breadcrumb px-0">
                     <li class="breadcrumb-item"><a href="{{ route('retailerlanding') }}">HOME</a></li>
                     <li class="breadcrumb-item"><a
-                            href="{{ $product->project_id == App\Enums\Projects::ELECTROFORMING ? route('retailerefreadystock') : ($product->project_id == App\Enums\Projects::SOLIDIDOL ? route('retailersireadystock') : route('retailerjewelleryreadystock')) }}">
-                            {{ $product->project_id == App\Enums\Projects::ELECTROFORMING ? 'ELECTROFORMING' : ($product->project_id == App\Enums\Projects::SOLIDIDOL ? 'SOLIDIDOL' : 'JEWELLERY') }}
+                            href="{{ $product->project_id == App\Enums\Projects::EF ? route('retailerefreadystock') : ($product->project_id == App\Enums\Projects::CASTING ? route('retailersireadystock') : route('retailerjewelleryreadystock')) }}">
+                            {{ $product->project_id == App\Enums\Projects::EF ? 'EF' : ($product->project_id == App\Enums\Projects::CASTING ? 'CASTING' : 'CASTING') }}
                         </a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ $product->product_unique_id }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ $product->DesignNo }}</li>
                 </ol>
             </nav>
         </div>
@@ -37,18 +36,10 @@
             <div class="row g-4">
                 <div class="col-12 col-lg-6 mb-lg-0">
                     <div class="single-images-block position-relative">
-                        <!-- <a data-fancybox
-                            href="{{ file_exists(public_path('upload/product/' . $product->product_image)) ? asset('upload/product/' . $product->product_image) : asset('no-product-image.jpg') }}"
-                            data-caption="{{ $product->product_unique_id }}">
-                            <img class="img-fluid product-main-image" width="1000" height="1000"
-                                src="{{ file_exists(public_path('upload/product/' . $product->product_image)) ? asset('upload/product/' . $product->product_image) : asset('no-product-image.jpg') }}"
-                                alt="{{ $product->product_unique_id }}">
-
-                        </a> -->
 
                         <img id="product-main-image" class="img-fluid product-main-image load-secure-image"
-                            src="http://imageurl.ejindia.com/api/image/secure" data-secure="{{ $product->secureFilename }}"
-                            alt>
+                            src="http://imageurl.ejindia.com/api/image/secure"
+                            data-secure="{{ $product->secureFilename }}" alt>
 
                         <script>
                             document.addEventListener("DOMContentLoaded", async function() {
@@ -120,8 +111,7 @@
                     <div class="product-page_content_wrapper d-flex flex-column h-100 justify-content-center">
                         <div class="d-flex flex-wrap gap-2 align-items-center">
                             <div class="product-design_title">Design
-                                Code: <span
-                                    class="product-design_content me-2">{{ $product->product_unique_id }}</span>
+                                Code: <span class="product-design_content me-2">{{ $product->DesignNo }}</span>
                             </div>
                             <div class="ml-auto ml-sm-5 ">
                                 @if ($product->qty > 0)
@@ -165,7 +155,6 @@
                                     <input type='button' value='+' class='qtyplus' field='quantity' />
                                 </div>
                             </div>
-                            {{-- @if (Auth::user()->role_id != App\Enums\Roles::Admin) --}}
                             <div>
                                 @php
                                     $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
@@ -192,7 +181,6 @@
                                     @endif
                                 </div>
                             </div>
-                            {{-- @endif --}}
                         </div>
                         <div id="accordion">
                             <div class="accordion product-specs-accordian">
@@ -248,135 +236,17 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
-
-
-
-            <div class="row">
-                <div class="col-12 py-5 mt-lg-5 you-may-like-section_wrapper">
-                    <div class="text-center mb-4">
-                        <div class="fs-3 fw-semibold ">You may also like</div>
-                    </div>
-                    <div class="col-12" id="product_page">
-                        <div class="swiper recommended-products-slider">
-                            <div class="swiper-wrapper">
-                                @foreach ($relatedProducts as $item)
-                                    <div class="swiper-slide">
-
-                                        <input type="hidden" name="weight{{ $item->id }}"
-                                            id="weight{{ $item->id }}" value="{{ $item->weight }}">
-                                        <input type="hidden" name="finish{{ $item->id }}"
-                                            id="finish{{ $item->id }}" value="{{ $item->finish_id }}">
-                                        <input type="hidden" name="size{{ $item->id }}"
-                                            id="size{{ $item->id }}" value="{{ $item->size_id }}">
-                                        <input type="hidden" name="plating{{ $item->id }}"
-                                            id="plating{{ $item->id }}" value="{{ $item->plating_id }}">
-                                        <input type="hidden" name="color{{ $item->id }}"
-                                            id="color{{ $item->id }}" value="{{ $item->color_id }}">
-                                        <input type="hidden" name="encrypt{{ $item->id }}"
-                                            id="encrypt{{ $item->id }}" value="1">
-                                        <input type="hidden" name="stock{{ $item->id }}"
-                                            id="stock{{ $item->id }}" value="{{ $stock }}">
-                                        <input type="hidden" name="box{{ $item->id }}"
-                                            id="box{{ $item->id }}" value="{{ $item->style_id }}">
-                                        <div class="card shop-page_product-card">
-                                            <div
-                                                class="card-img-top d-flex align-items-center justify-content-center position-relative">
-                                                <a href="{{ route('retailerproductdetail', encrypt($item->id)) }}">
-                                                    <img class="img-fluid prouduct_card-image" width="154"
-                                                        height="160"
-                                                        src="{{ file_exists(public_path('upload/product/' . $item->product_image)) ? asset('upload/product/' . $item->product_image) : asset('no-product-image.jpg') }}"
-                                                        alt>
-                                                </a>
-                                                <div class="position-absolute recommended-products__purity">
-                                                    Purity:
-                                                    {{ str_replace('SIL-', '', $product->silver_purity_percentage) }}
-                                                </div>
-                                            </div>
-                                            <div class="card-body d-flex flex-column justify-content-between">
-                                                <div class="d-flex justify-content-between  gap-2 card-title_wrapper">
-                                                    <div class="card-title"><a
-                                                            href="{{ route('retailerproductdetail', encrypt($item->id)) }}">{{ $item->product_unique_id }}</a>
-                                                    </div>
-                                                    @if ($item->weight)
-                                                        <div class="card-text">{{ $item->weight }}g</div>
-                                                    @endif
-                                                    <button
-                                                        class="ml-2 custom-icon-btn wishlist-svg @if ($item->is_favourite == 1) active @endif"
-                                                        onclick="addtowishlist({{ $item->id }})">
-                                                        <svg width="26" height="23" viewBox="0 0 26 23"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                                stroke="#003836" stroke-width="1.5"
-                                                                stroke-linejoin="round" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                                <input type="hidden" name="moq{{ $item->id }}"
-                                                    id="moq{{ $item->id }}" value="{{ $item->moq }}">
-                                                <input type="hidden" name="quantity{{ $item->id }}"
-                                                    id="quantity{{ $item->id }}" value="1">
-                                                <input type="hidden" name="box{{ $item->id }}"
-                                                    id="box{{ $item->id }}" value="{{ $item->style_id }}">
-                                                <div>
-                                                    @php
-                                                        $electroFormingProject = App\Models\Project::where(
-                                                            'project_name',
-                                                            'ELECTRO FORMING',
-                                                        )->first();
-                                                    @endphp
-
-                                                    <div class="mt-3">
-                                                        {{-- @if (Auth::user()->role_id == App\Enums\Roles::Dealer) --}}
-                                                        <div class="mt-3">
-                                                            <button onclick="addforcart({{ $item->id }})"
-                                                                class="btn add-to-cart-btn mr-2 spinner-button">
-                                                                <span class="submit-text">ADD TO CART</span>
-                                                                <span class="d-none spinner">
-                                                                    <span class="spinner-grow spinner-grow-sm"
-                                                                        aria-hidden="true"></span>
-                                                                    <span role="status">Adding...</span>
-                                                                </span>
-                                                            </button>
-                                                        </div>
-                                                        {{-- @endif --}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="custom-buttons d-flex gap-4 align-items-center">
-                            <div class="recommended-products-slider-scrollbar swiper-scrollbar position-relative">
-                            </div>
-                            <div class="d-flex gap-2">
-                                <div class="swiper-button-prev"></div>
-                                <div class="swiper-button-next"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
+        </section>
     </div>
-
 </div>
-
-
 
 @section('scripts')
     <script src="{{ asset('retailer/assets/lib/js/jquery.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{{ asset('retailer/assets/js/readystock/product_detail.js') }}"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script> -->
     <script src="{{ asset('retailer/assets/lib/js/jquery.ez-plus.js') }}"></script>
 
     <script>
@@ -415,11 +285,5 @@
             });
         });
     </script>
-
-    <!-- <script>
-        Fancybox.bind('[data-fancybox]', {
-            //
-        });
-    </script> -->
 @endsection
 @endsection

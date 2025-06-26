@@ -437,11 +437,6 @@
                                 src="{{ asset('retailer/assets/img/new-home/logo-section-img2.png') }}"
                                 alt="">
                         </div>
-                        {{-- <div class="swiper-slide">
-                            <img width="191" height="135" class="img-fluid"
-                                src="{{ asset('retailer/assets/img/new-home/logo-section-img3.png') }}"
-                                alt="">
-                        </div> --}}
                         <div class="swiper-slide">
                             <img width="191" height="135" class="img-fluid"
                                 src="{{ asset('retailer/assets/img/new-home/logo-section-img4.png') }}"
@@ -456,42 +451,6 @@
                     </div>
                     <div class="swiper-pagination"></div>
                 </div>
-
-
-                {{-- <div class="splide accreditations-slider" id="accreditations-slider" role="group" aria-label="Accreditations Slider">
-                    <div class="splide__track">
-                        <ul class="splide__list">
-                            <li class="splide__slide">
-                                <img width="191" height="135" class="img-fluid"
-                                    src="{{ asset('retailer/assets/img/new-home/logo-section-img1.png') }}"
-                alt="">
-                </li>
-                <li class="splide__slide">
-                    <img width="135" height="135" class="img-fluid"
-                        src="{{ asset('retailer/assets/img/new-home/logo-section-img2.png') }}" alt="">
-                </li>
-                <li class="splide__slide">
-                    <img width="135" height="135" class="img-fluid"
-                        src="{{ asset('retailer/assets/img/new-home/logo-section-img3.png') }}" alt="">
-                </li>
-                <li class="splide__slide">
-                    <img width="135" height="135" class="img-fluid"
-                        src="{{ asset('retailer/assets/img/new-home/logo-section-img4.png') }}" alt="">
-                </li>
-                <li class="splide__slide">
-                    <img width="135" height="135" class="img-fluid"
-                        src="{{ asset('retailer/assets/img/new-home/logo-section-img5.png') }}" alt="">
-                </li>
-                <li class="splide__slide">
-                    <img width="135" height="135" class="img-fluid"
-                        src="{{ asset('retailer/assets/img/new-home/logo-section-img6.png') }}" alt="">
-                </li>
-
-
-
-                </ul>
-            </div>
-        </div> --}}
             </div>
             <div class="col-12 text-center my-5 d-none d-sm-block">
                 <a href="tel:+918220017619" class="btn btn-warning px-4 py-2 rounded-5 no-login-required">
