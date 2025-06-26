@@ -16,7 +16,7 @@ function qtyplusminus() {
         var container = $(this);
         var qtyInput = container.find(".qty");
         var productId = container.data("product-id");
-        var moq = $("#moq" + productId).val();
+        var moq = parseInt($("#moq" + productId).val()) || 1;
         var qty = $("#qty" + productId).val();
         var stock = $("#stockqty").val();
 
