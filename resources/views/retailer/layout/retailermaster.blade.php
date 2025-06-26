@@ -136,21 +136,32 @@
             <div class="main-menu-section d-none d-lg-block">
                 <ul class="container p-2 nav gap-5 justify-content-center text-white">
                     <li class="nav-item">
-                        <a href="{{ route('retailerefreadystock') }}">ElectroForming Idols</a>
+                        <a href="{{ route('retailerefreadystock') }}">EF</a>
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ route('retailersireadystock') }}">Solid
-                            Idols</a>
+                        <a href="{{ route('retailersireadystock') }}">CASTING</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('retailerjewelleryreadystock') }}">Jewellery</a>
+                        <a href="{{ route('retailerjewelleryreadystock') }}">IMPREZ</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('retailerindianiareadystock') }}">Indiania</a>
+                        <a href="{{ route('retailerindianiareadystock') }}">INDIANIA</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('retailerutensilreadystock') }}">Utensil</a>
+                        <a href="{{ route('retailerutensilreadystock') }}">LASERCUT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('retailerutensilreadystock') }}">MMD</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('retailerutensilreadystock') }}">STAMPING</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('retailerutensilreadystock') }}">TURKISH</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('retailerutensilreadystock') }}">UNIKRAFT</a>
                     </li>
                 </ul>
             </div>

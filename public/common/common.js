@@ -277,29 +277,20 @@ function addtocart(id) {
 function addforcart(id) {
     var product_id = id;
     var qty = $("#quantity" + id).val();
-    // var size_id = $("#size" + id).val();
-    var weight_id = $("#weight" + id).val();
-    var plating_id = $("#plating" + id).val();
-    var color_id = $("#color" + id).val();
-    var finish_id = $("#finish" + id).val();
-    var stock = $("#stock" + id).val();
+    var size = $("#size" + id).val();
+    var weight = $("#weight" + id).val();
     var box = $("#box" + id).val();
-    console.log(box);
     
     $.ajax({
         type: "POST",
-        url: "/addforcart",
+        url: "addforcart",
         data: {
             _token: $('meta[name="csrf-token"]').attr("content"),
             product_id: product_id,
             qty: qty,
             box: box,
-            // size_id: size_id,
-            weight_id: weight_id,
-            plating_id: plating_id,
-            color_id: color_id,
-            finish_id: finish_id,
-            stock: stock,
+            size: size,
+            weight: weight,
         },
         dataType: "json",
         success: function (data, textStatus, xhr) {
@@ -310,9 +301,6 @@ function addforcart(id) {
                 $("#navweight").text(data.count_weight + "gms");
                 $("#navqty-mob").text(data.count_qty + " Pcs");
                 $("#navweight-mob").text(data.count_weight + "gms");
-
-                // Now update the text
-                // $("#applycurrentcartcount" + id).text(data.currentcartcount);
             }
             if (data.notification_response.message) {
                 var type = data.notification_response.alert;

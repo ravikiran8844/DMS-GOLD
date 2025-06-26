@@ -9,14 +9,6 @@ $cartWeight = App\Models\Cart::select(DB::raw('SUM(carts.qty * products.weight) 
 ->value('totalWeight');
 @endphp
 <div class="container">
-    {{-- <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu"
-        aria-controls="offcanvasMenu" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-        <svg width="28" height="21" viewBox="0 0 28 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M26.6365 2.00024H2.00007" stroke="black" stroke-width="2.4977" stroke-linecap="round" />
-            <path d="M26.6365 19.4841H2.00007" stroke="black" stroke-width="2.4977" stroke-linecap="round" />
-            <path d="M18.6658 10.7422H1.99997" stroke="black" stroke-width="2.4977" stroke-linecap="round" />
-        </svg>
-    </button> --}}
     <a class="navbar-brand" href="{{ route('retailerlanding') }}">
         <picture>
             <source media="(min-width:650px)" srcset="{{ asset('retailer/assets/img/logo.svg') }}" />
@@ -27,37 +19,7 @@ $cartWeight = App\Models\Cart::select(DB::raw('SUM(carts.qty * products.weight) 
     </a>
     <div class="d-block d-xl-none">
         <ul class="d-flex align-items-center list-unstyled m-auto">
-            {{-- <li class="nav-item me-1 d-block d-lg-none">
-                <button id="scan-button" class="btn btn-link nav-link">
-                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="M5.86035 8.13964C5.86035 7.24056 6.58919 6.51172 7.48827 6.51172H11.3952C12.2943 6.51172 13.0232 7.24056 13.0232 8.13964V12.0466C13.0232 12.9457 12.2943 13.6745 11.3952 13.6745H7.48827C6.58919 13.6745 5.86035 12.9457 5.86035 12.0466V8.13964ZM7.81385 8.46522V11.721H11.0697V8.46522H7.81385Z"
-                            fill="#3F3F3F" />
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="M5.86035 17.2558C5.86035 16.3568 6.58919 15.6279 7.48827 15.6279H11.3952C12.2943 15.6279 13.0232 16.3568 13.0232 17.2558V21.1628C13.0232 22.0619 12.2943 22.7907 11.3952 22.7907H7.48827C6.58919 22.7907 5.86035 22.0619 5.86035 21.1628V17.2558ZM7.81385 17.5814V20.8372H11.0697V17.5814H7.81385Z"
-                            fill="#3F3F3F" />
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="M14.9768 8.13964C14.9768 7.24056 15.7056 6.51172 16.6047 6.51172H20.5117C21.4108 6.51172 22.1396 7.24056 22.1396 8.13964V12.0466C22.1396 12.9457 21.4108 13.6745 20.5117 13.6745H16.6047C15.7056 13.6745 14.9768 12.9457 14.9768 12.0466V8.13964ZM16.9303 8.46522V11.721H20.1861V8.46522H16.9303Z"
-                            fill="#3F3F3F" />
-                        <path
-                            d="M15.3022 16.6048C15.3022 16.2451 15.5937 15.9536 15.9534 15.9536H17.2557C17.6153 15.9536 17.9068 16.2451 17.9068 16.6048V17.9071C17.9068 18.2667 17.6153 18.5583 17.2557 18.5583H15.9534C15.5937 18.5583 15.3022 18.2667 15.3022 17.9071V16.6048Z"
-                            fill="#003836" />
-                        <path
-                            d="M19.2093 16.6048C19.2093 16.2451 19.5008 15.9536 19.8604 15.9536H21.1628C21.5224 15.9536 21.8139 16.2451 21.8139 16.6048V17.9071C21.8139 18.2667 21.5224 18.5583 21.1628 18.5583H19.8604C19.5008 18.5583 19.2093 18.2667 19.2093 17.9071V16.6048Z"
-                            fill="#003836" />
-                        <path
-                            d="M19.2093 20.5115C19.2093 20.1519 19.5008 19.8604 19.8604 19.8604H21.1628C21.5224 19.8604 21.8139 20.1519 21.8139 20.5115V21.8139C21.8139 22.1735 21.5224 22.465 21.1628 22.465H19.8604C19.5008 22.465 19.2093 22.1735 19.2093 21.8139V20.5115Z"
-                            fill="#003836" />
-                        <path
-                            d="M15.3022 20.5115C15.3022 20.1519 15.5937 19.8604 15.9534 19.8604H17.2557C17.6153 19.8604 17.9068 20.1519 17.9068 20.5115V21.8139C17.9068 22.1735 17.6153 22.465 17.2557 22.465H15.9534C15.5937 22.465 15.3022 22.1735 15.3022 21.8139V20.5115Z"
-                            fill="#003836" />
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="M3.58139 1.9535C2.68234 1.9535 1.9535 2.68234 1.9535 3.58139V8.79069C1.9535 9.33013 1.51618 9.76743 0.976743 9.76743C0.437304 9.76743 0 9.33013 0 8.79069V3.58139C0 1.60344 1.60344 0 3.58139 0H8.79069C9.33013 0 9.76743 0.437304 9.76743 0.976743C9.76743 1.51618 9.33013 1.9535 8.79069 1.9535H3.58139ZM18.2326 0.976743C18.2326 0.437304 18.6699 0 19.2093 0H24.4186C26.3966 0 28 1.60344 28 3.58139V8.79069C28 9.33013 27.5627 9.76743 27.0233 9.76743C26.4838 9.76743 26.0465 9.33013 26.0465 8.79069V3.58139C26.0465 2.68234 25.3177 1.9535 24.4186 1.9535H19.2093C18.6699 1.9535 18.2326 1.51618 18.2326 0.976743ZM0.976743 18.2326C1.51618 18.2326 1.9535 18.6699 1.9535 19.2093V24.4186C1.9535 25.3177 2.68234 26.0465 3.58139 26.0465H8.79069C9.33013 26.0465 9.76743 26.4838 9.76743 27.0233C9.76743 27.5627 9.33013 28 8.79069 28H3.58139C1.60344 28 0 26.3966 0 24.4186V19.2093C0 18.6699 0.437304 18.2326 0.976743 18.2326ZM27.0233 18.2326C27.5627 18.2326 28 18.6699 28 19.2093V24.4186C28 26.3966 26.3966 28 24.4186 28H19.2093C18.6699 28 18.2326 27.5627 18.2326 27.0233C18.2326 26.4838 18.6699 26.0465 19.2093 26.0465H24.4186C25.3177 26.0465 26.0465 25.3177 26.0465 24.4186V19.2093C26.0465 18.6699 26.4838 18.2326 27.0233 18.2326Z"
-                            fill="#3F3F3F" />
-                    </svg>
-                </button>
-            </li> --}}
+            
             <li class="nav-item me-3">
                 <a class="nav-link" aria-current="page" href="" data-bs-toggle="modal" data-bs-target="#searchModal">
                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,30 +32,6 @@ $cartWeight = App\Models\Cart::select(DB::raw('SUM(carts.qty * products.weight) 
                     </svg>
                 </a>
             </li>
-
-            <!-- <li class="nav-item me-2">
-                <a class="nav-link" href="{{ route('retailerwishlist') }}">
-                    <svg width="28" height="29"
-                        style="
-                  width: 24px;
-                  height: 24px;
-              "
-                        viewBox="0 0 28 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g clip-path="url(#clip0_7373_10539)">
-                            <path
-                                d="M21.4515 16.3377L13.8719 24.0361L6.2992 16.3377C-0.393109 9.54612 7.19228 1.85688 13.8788 8.64842C20.6634 1.75765 28.243 9.44688 21.4584 16.3469L21.4515 16.3377Z"
-                                stroke="#2D2D2D" stroke-width="1.29808" stroke-linejoin="round" />
-                        </g>
-                        <defs>
-                            <clipPath id="clip0_7373_10539">
-                                <rect width="27.6923" height="27.6923" fill="white"
-                                    transform="translate(0.0384521 0.730713)" />
-                            </clipPath>
-                        </defs>
-                    </svg>
-                </a>
-            </li> -->
-
             <li class="position-relative me-3">
                 <a class="nav-link" href="{{ route('retailercart') }}">
                     <span>
@@ -110,9 +48,6 @@ $cartWeight = App\Models\Cart::select(DB::raw('SUM(carts.qty * products.weight) 
                         {{ $cartcount }} </span>
                 </a>
             </li>
-
-
-
             <li
                 style="font-size: 12px; padding: 5px; border-radius: 6px; background: #2D2D2D; color: #fff; width: max-content; ">
                 <div style="border-bottom: 1px solid #fff;">
@@ -122,31 +57,12 @@ $cartWeight = App\Models\Cart::select(DB::raw('SUM(carts.qty * products.weight) 
                     <span>Wt: </span><span id="navweight-mob">{{ $cartWeight ?? 0 }}gms</span>
                 </div>
             </li>
-
-
         </ul>
     </div>
     <div class="collapse navbar-collapse" id="navbarScroll">
     </div>
     <ul
         class="d-none d-xl-flex top-main-nav navbar-nav navbar-right  justify-content-end w-100 align-items-center ms-auto my-2 my-lg-0">
-        <!-- <li class="nav-item me-2 me-xxl-3">
-            <a class="btn rk-custom-btn px-2 px-xxl-4 efreadystock" href="{{ route('retailerefreadystock') }}">EF
-                Idol</a>
-        </li>
-
-        <li class="nav-item me-2 me-xxl-3">
-            <a class="btn rk-custom-btn px-2 px-xxl-4 sireadystock" href="{{ route('retailersireadystock') }}">Solid
-                Idol</a>
-        </li>
-        <li class="nav-item me-2 me-xxl-3">
-            <a class="btn rk-custom-btn px-2 px-xxl-4 jewelleryreadystock"
-                href="{{ route('retailerjewelleryreadystock') }}">Jewellery</a>
-        </li>
-        <li class="nav-item me-2 me-xxl-5">
-            <a class="btn rk-custom-btn px-2 px-xxl-4 indianiareadystock"
-                href="{{ route('retailerindianiareadystock') }}">Indiania</a>
-        </li> -->
         <li>
             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 23 23" fill="none">
@@ -294,87 +210,6 @@ document.addEventListener("DOMContentLoaded", function() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous">
 </script>
 <script src="https://unpkg.com/html5-qrcode"></script>
-
-
-{{-- <script>
-    const scanButton = document.getElementById('scan-button');
-    const scannerWrapper = document.getElementById('scanner-wrapper');
-    const closeButton = document.getElementById('close-button');
-    const html5QrCode = new Html5Qrcode("reader");
-
-    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-        // Handle the decoded text here.
-        console.log(`Decoded text: ${decodedText}`);
-        // alert(`Decoded text: ${decodedText}`);
-        
-    async function fetchProductDetails(decodedText) 
-        // Stop the scanner after success
-        html5QrCode.stop().then(ignore => {
-            // QR Code scanning is stopped.
-        }).catch(err => {
-            // Stop failed, handle it.
-            console.error(`Stop failed: ${err}`);
-        });
-        scannerWrapper.style.display = 'none';
-    };
-
-    const config = { fps: 10, qrbox: 250 };
-
-    scanButton.addEventListener('click', function() {
-        scannerWrapper.style.display = 'flex';
-        html5QrCode.start(
-            { facingMode: "environment" }, // Use rear camera
-            config,
-            qrCodeSuccessCallback
-        ).catch(err => {
-            // Start failed, handle it.
-            console.error(`Unable to start scanning: ${err}`);
-        });
-    });
-
-    closeButton.addEventListener('click', function() {
-        html5QrCode.stop().then(ignore => {
-            // QR Code scanning is stopped.
-        }).catch(err => {
-            // Stop failed, handle it.
-            console.error(`Stop failed: ${err}`);
-        });
-        scannerWrapper.style.display = 'none';
-    });
-
-    scannerWrapper.addEventListener('click', function(event) {
-        if (event.target === scannerWrapper) {
-            html5QrCode.stop().then(ignore => {
-                // QR Code scanning is stopped.
-            }).catch(err => {
-                // Stop failed, handle it.
-                console.error(`Stop failed: ${err}`);
-            });
-            scannerWrapper.style.display = 'none';
-        }
-    });
-
-    async function fetchProductDetails(productId) {
-        try {
-            const response = await fetch(`/retailer/product/${productId}`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            if (data.message) {
-                alert(data.message);
-
-            } else {
-                // Display product details
-                console.log(data);
-                // Redirect to product detail page
-                window.location.href = `/retailer/productdetail/${data.encrypt}`;
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-</script> --}}
 
 <style>
 #reader {
