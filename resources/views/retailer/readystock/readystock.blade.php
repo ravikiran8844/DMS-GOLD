@@ -585,6 +585,13 @@
                                 $main = $products->first();
                             @endphp
 
+                            <input type="hidden" name="weight{{ $main->id }}" id="weight{{ $main->id }}"
+                                value="{{ $main->weight }}">
+                            <input type="hidden" name="size{{ $main->id }}" id="size{{ $main->id }}"
+                                value="{{ $main->size }}">
+                            <input type="hidden" name="box{{ $main->id }}" id="box{{ $main->id }}"
+                                value="{{ $main->style }}">
+
                             <div class="card shop-page_product-card">
                                 <div class="card-checkbox_wrapper">
                                     <input class="card-checkbox" type="checkbox" name=""
