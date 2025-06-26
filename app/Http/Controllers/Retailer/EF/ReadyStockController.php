@@ -150,20 +150,7 @@ class ReadyStockController extends Controller
             ->map(function ($product) use ($secret) {
                 $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
                 return $product;
-            })
-            ->groupBy('designNo')
-            ->map(function ($group) {
-                $main = $group->first();
-                $main->variants = $group->map(function ($item) {
-                    return [
-                        'size' => $item->size,
-                        'weight' => $item->weight,
-                        'qty' => $item->qty,
-                    ];
-                })->values();
-                return $main;
-            })
-            ->values();
+            });
 
         // Manually paginate the filtered products
         $page = request()->get('page', 1);
