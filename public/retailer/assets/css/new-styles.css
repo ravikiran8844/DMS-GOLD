@@ -371,8 +371,10 @@ input[type="number"] {
 }
 
 .quantity-input-group {
-    width: fit-content !important;
-    display: block !important;
+    /* width: fit-content !important; */
+    display: flex !important;
+    align-items: end;
+    justify-content: center;
 }
 
 /* .shop-page_product-cards.list .product-cart-qty-text {

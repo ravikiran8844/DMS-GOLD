@@ -1645,7 +1645,7 @@ input[type="radio"]:checked + label button {
 @media (min-width: 340px) {
     .col-12.shop-page_product-cards.grid {
         grid-column-gap: 10px;
-        grid-template-columns: repeat(auto-fill, minmax(250px, auto));
+        grid-template-columns: repeat(auto-fill, minmax(230px, auto));
     }
 }
 
@@ -1785,9 +1785,9 @@ input[type="radio"]:checked + label button {
 .shop-page_product-card .card-body .card-text {
     color: #818181;
     font-family: Inter;
-    font-size: 12px;
+    font-size: 11px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 600;
     line-height: 130%;
     /* 23.4px */
 }
@@ -1813,7 +1813,7 @@ input[type="radio"]:checked + label button {
 
 .shop-page_product-card .card-body .quantity-input-group {
     border: none !important;
-    /* background: #fff !important; */
+    background: transparent !important;
 }
 
 .shop-page_product-card .card-body .card-title_wrapper,
@@ -5846,12 +5846,15 @@ textarea {
 .multiple-size-btn{
     border-radius: 4.83px;
     border: 0.604px solid #838383 !important;
-    font-size: 12px;
+    font-size: 10px;
     color: #2D2D2D;
     display: flex;
     align-items: center;
     gap: 5px;
     padding:5px;
+    width: 100%;
+    justify-content: center;
+
 }
 
 .rotate-180{
@@ -5865,4 +5868,19 @@ textarea {
 
 [x-cloak] {
     display: none;
+}
+
+.grid{
+    display: grid;
+    gap: 5px;
+}
+.cols-3{
+    grid-template-columns: auto auto auto;
+}
+.cols-4{
+    grid-template-columns: auto auto auto auto;
+}
+
+.span-2{
+    grid-column: span 2;
 }
