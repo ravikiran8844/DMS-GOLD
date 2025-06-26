@@ -13,15 +13,10 @@ class Cart extends Model
         'user_id',
         'product_id',
         'qty',
-        'size_id',
+        'size',
         'weight',
-        'color_id',
-        'finish_id',
-        'plating_id',
         'remarks',
-        'box_id',
-        'box_details',
-        'others',
-        'is_ready_stock'
+        'box',
+        'others'
     ];
 }

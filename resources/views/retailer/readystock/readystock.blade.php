@@ -663,6 +663,48 @@
                                                             <span class="toggle-icon">▼</span>
                                                         </button>
                                                     </div>
+                                                @else
+                                                    <div
+                                                        class="d-flex mt-2 flex-wrap gap-3 align-items-start card-content_wrapper">
+                                                        <div class="d-flex flex-column gap-1">
+                                                            <div class="card-text text-dark">
+                                                                Size
+                                                            </div>
+                                                            <div class="product-card-badge">{{ $main->size ?? '-' }}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="d-flex flex-column gap-1">
+                                                            <div class="card-text text-dark">
+                                                                Weight
+                                                            </div>
+                                                            <div class="product-card-badge">
+                                                                {{ $main->weight ?? '-' }}g</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="d-flex flex-wrap gap-2 align-self-end">
+                                                        <div class="product-cart-qty-text">In Stock:
+                                                            <span> {{ $main->qty ?? '-' }}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="mt-2 shop-page-qty-add-to-cart-btn_wrapper">
+                                                            <div class="d-flex align-items-center">
+                                                                <label class="me-2">Qty</label>
+                                                                <div
+                                                                    class="input-group quantity-input-group quantity-container">
+                                                                    <input type="button" value="-"
+                                                                        class="qtyminus" field="quantity">
+                                                                    <input type="text" name="quantity"
+                                                                        id="" value="1" class="qty">
+                                                                    <input type="button" value="+"
+                                                                        class="qtyplus" field="quantity">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 @endif
                                             </div>
 
@@ -1121,7 +1163,7 @@
     }
 </style>
 @section('scripts')
-<!-- <script src="//unpkg.com/alpinejs" defer></script> -->
+    <!-- <script src="//unpkg.com/alpinejs" defer></script> -->
 
     <script src="{{ asset('retailer\assets\js\readystock\readystock.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
