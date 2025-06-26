@@ -280,10 +280,10 @@ function addforcart(id) {
     var size = $("#size" + id).val();
     var weight = $("#weight" + id).val();
     var box = $("#box" + id).val();
-    
+
     $.ajax({
         type: "POST",
-        url: "addforcart",
+        url: "/retailer/addforcart",
         data: {
             _token: $('meta[name="csrf-token"]').attr("content"),
             product_id: product_id,

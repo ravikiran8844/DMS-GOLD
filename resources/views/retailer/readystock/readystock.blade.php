@@ -698,7 +698,8 @@
                                                                     <input type="button" value="-"
                                                                         class="qtyminus" field="quantity">
                                                                     <input type="text" name="quantity"
-                                                                        id="" value="1" class="qty">
+                                                                        id="quantity{{ $main->id }}"
+                                                                        value="1" class="qty">
                                                                     <input type="button" value="+"
                                                                         class="qtyplus" field="quantity">
                                                                 </div>
@@ -735,7 +736,8 @@
                                                                     <input type="button" value="-"
                                                                         class="qtyminus" field="quantity">
                                                                     <input type="text" name="quantity"
-                                                                        value="1" class="qty">
+                                                                        id="quantity{{ $main->id }}"
+                                                                        value="" class="qty">
                                                                     <input type="button" value="+"
                                                                         class="qtyplus" field="quantity">
                                                                 </div>
@@ -752,28 +754,28 @@
                                             Auth::user()->role_id == App\Enums\Roles::CRM)
                                         @php
                                             $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
-                                                ->where('product_id', $item->id)
+                                                ->where('product_id', $main->id)
                                                 ->get();
 
                                         @endphp
                                         <div class="shop-page-add-to-cart-btn">
                                             @if (count($isCart))
-                                                <button onclick="addforcart({{ $item->id }})"
+                                                <button onclick="addforcart({{ $main->id }})"
                                                     class="btn added-to-cart-btn mr-2 spinner-button"
-                                                    data_id="card_id_{{ $item->id }}">
-                                                    <span class="submit-text">Added to cart</span>
+                                                    data_id="card_id_{{ $main->id }}">
+                                                    <span class="submit-text">ADDED TO CART</span>
                                                     <span class="d-none spinner">
                                                         <span class="spinner-grow spinner-grow-sm"
                                                             aria-hidden="true"></span>
                                                         <span role="status">Adding...</span>
                                                     </span>
-                                                    <span id="applycurrentcartcount{{ $item->id }}"
+                                                    <span id="applycurrentcartcount{{ $main->id }}"
                                                         class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
                                                 </button>
                                             @else
-                                                <button onclick="addforcart({{ $item->id }})"
+                                                <button onclick="addforcart({{ $main->id }})"
                                                     class="btn add-to-cart-btn mr-2 spinner-button"
-                                                    data_id="card_id_{{ $item->id }}">
+                                                    data_id="card_id_{{ $main->id }}">
                                                     <span class="submit-text">ADD TO CART</span>
 
                                                     <span class="d-none spinner">
