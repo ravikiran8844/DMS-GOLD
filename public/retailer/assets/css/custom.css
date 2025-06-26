@@ -5862,3 +5862,7 @@ textarea {
     max-height: fit-content;
     margin: 0;
 } */
+
+[x-cloak] {
+    display: none;
+}
