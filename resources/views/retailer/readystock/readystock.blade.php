@@ -606,7 +606,7 @@
                                             data-secure="{{ $main->secureFilename }}" alt>
                                     </a>
                                     <div class="position-absolute card-purity purity-list">
-                                        Purity: {{ $main->purity ?? 'N/A' }}
+                                        Purity: {{ $main->Purity ?? 'N/A' }}
                                     </div>
                                 </div>
 
@@ -737,7 +737,7 @@
                                                                         class="qtyminus" field="quantity">
                                                                     <input type="text" name="quantity"
                                                                         id="quantity{{ $main->id }}"
-                                                                        value="" class="qty">
+                                                                        value="1" class="qty">
                                                                     <input type="button" value="+"
                                                                         class="qtyplus" field="quantity">
                                                                 </div>
@@ -756,7 +756,9 @@
                                             $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
                                                 ->where('product_id', $main->id)
                                                 ->get();
-
+                                            $currentcartcount = App\Models\Cart::where('product_id', $main->id)
+                                                ->where('user_id', Auth::user()->id)
+                                                ->value('qty');
                                         @endphp
                                         <div class="shop-page-add-to-cart-btn">
                                             @if (count($isCart))
