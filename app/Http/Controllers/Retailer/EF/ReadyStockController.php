@@ -150,7 +150,20 @@ class ReadyStockController extends Controller
             ->map(function ($product) use ($secret) {
                 $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
                 return $product;
-            });
+            })
+            ->groupBy('designNo')
+            ->map(function ($group) {
+                $main = $group->first();
+                $main->variants = $group->map(function ($item) {
+                    return [
+                        'size' => $item->size,
+                        'weight' => $item->weight,
+                        'qty' => $item->qty,
+                    ];
+                })->values();
+                return $main;
+            })
+            ->values();
 
         // Manually paginate the filtered products
         $page = request()->get('page', 1);
@@ -916,11 +929,11 @@ class ReadyStockController extends Controller
             $boxData = Style::whereIn('id', $boxIds)->get();
             $boxjson = $boxData->toJson();
             $validProjects = [
-                Projects::SOLIDIDOL,
-                Projects::ELECTROFORMING,
-                Projects::CASTING,
-                Projects::UTENSIL,
-                Projects::INIDIANIA,
+                // Projects::SOLIDIDOL,
+                // Projects::ELECTROFORMING,
+                // Projects::CASTING,
+                // Projects::UTENSIL,
+                // Projects::INIDIANIA,
             ];
 
             if (in_array($request->project_id, $validProjects)) {
@@ -1093,11 +1106,11 @@ class ReadyStockController extends Controller
             $boxData = Style::whereIn('id', $boxIds)->get();
             $boxjson = $boxData->toJson();
             $validProjects = [
-                Projects::SOLIDIDOL,
-                Projects::ELECTROFORMING,
-                Projects::CASTING,
-                Projects::UTENSIL,
-                Projects::INIDIANIA,
+                // Projects::SOLIDIDOL,
+                // Projects::ELECTROFORMING,
+                // Projects::CASTING,
+                // Projects::UTENSIL,
+                // Projects::INIDIANIA,
             ];
 
             if (in_array($request->project_id, $validProjects)) {
@@ -1255,11 +1268,11 @@ class ReadyStockController extends Controller
         $boxData = Style::whereIn('id', $boxIds)->get();
         $boxjson = $boxData->toJson();
         $validProjects = [
-            Projects::SOLIDIDOL,
-            Projects::ELECTROFORMING,
-            Projects::CASTING,
-            Projects::UTENSIL,
-            Projects::INIDIANIA,
+            // Projects::SOLIDIDOL,
+            // Projects::ELECTROFORMING,
+            // Projects::CASTING,
+            // Projects::UTENSIL,
+            // Projects::INIDIANIA,
         ];
         if (in_array($request->project_id, $validProjects)) {
             $boxDefaultData = Style::where('is_active', 1)
@@ -1441,11 +1454,11 @@ class ReadyStockController extends Controller
         $boxData = Style::whereIn('id', $boxIds)->get();
         $boxjson = $boxData->toJson();
         $validProjects = [
-            Projects::SOLIDIDOL,
-            Projects::ELECTROFORMING,
-            Projects::CASTING,
-            Projects::UTENSIL,
-            Projects::INIDIANIA,
+            // Projects::SOLIDIDOL,
+            // Projects::ELECTROFORMING,
+            // Projects::CASTING,
+            // Projects::UTENSIL,
+            // Projects::INIDIANIA,
         ];
         if (in_array($request->project_id, $validProjects)) {
             $boxDefaultData = Style::where('is_active', 1)
@@ -1650,11 +1663,11 @@ class ReadyStockController extends Controller
         $boxData = Style::whereIn('id', $boxIds)->get();
         $boxjson = $boxData->toJson();
         $validProjects = [
-            Projects::SOLIDIDOL,
-            Projects::ELECTROFORMING,
-            Projects::CASTING,
-            Projects::UTENSIL,
-            Projects::INIDIANIA,
+            // Projects::SOLIDIDOL,
+            // Projects::ELECTROFORMING,
+            // Projects::CASTING,
+            // Projects::UTENSIL,
+            // Projects::INIDIANIA,
         ];
         if (in_array($request->project_id, $validProjects)) {
             $boxDefaultData = Style::where('is_active', 1)
@@ -1839,11 +1852,11 @@ class ReadyStockController extends Controller
         $boxData = Style::whereIn('id', $boxIds)->get();
         $boxjson = $boxData->toJson();
         $validProjects = [
-            Projects::SOLIDIDOL,
-            Projects::ELECTROFORMING,
-            Projects::CASTING,
-            Projects::UTENSIL,
-            Projects::INIDIANIA,
+            // Projects::SOLIDIDOL,
+            // Projects::ELECTROFORMING,
+            // Projects::CASTING,
+            // Projects::UTENSIL,
+            // Projects::INIDIANIA,
         ];
         if (in_array($request->project_id, $validProjects)) {
             $boxDefaultData = Style::where('is_active', 1)

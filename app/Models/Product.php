@@ -11,14 +11,16 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'D365_Latest_Photo_Number',
+        'DesignNo',
+        'Jeweltype',
         'product_image',
         'Project',
-        'Cateory',
+        'Category',
         'Subcategory',
         'Item',
         'Procatgory',
         'weight',
+        'Purity',
         'color',
         'size',
         'style',
