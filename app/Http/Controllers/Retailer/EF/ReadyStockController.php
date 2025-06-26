@@ -261,16 +261,14 @@ class ReadyStockController extends Controller
                 ->first();
 
             $stock = Product::where('id', $request->product_id)->value('qty');
-            if ($request->readyStock == 1) {
-                if ($request->qty > $stock) {
-                    $notification = array(
-                        'message' => 'Please order within available stock limit',
-                        'alert' => 'error'
-                    );
-                    return response()->json([
-                        'notification_response' => $notification
-                    ]);
-                }
+            if ($request->qty > $stock) {
+                $notification = array(
+                    'message' => 'Please order within available stock limit',
+                    'alert' => 'error'
+                );
+                return response()->json([
+                    'notification_response' => $notification
+                ]);
             }
 
             if ($existingCartlist) {
@@ -358,32 +356,20 @@ class ReadyStockController extends Controller
             $actualcartcount = Cart::where('product_id', $request->product_id)
                 ->where('user_id', Auth::user()->id)
                 ->value('qty');
-            $moq = Product::where('id', $request->product_id)->value('moq');
             $stock = Product::where('id', $request->product_id)->value('qty');
-            if ($moq > $request->qty) {
+
+            if ($request->qty > $stock) {
                 $notification = array(
-                    'message' => 'Please Check the MINIMUM QUANTITY ORDER (moq)',
-                    'alert' => 'error'
+                    'message' => 'Please order within available stock limit',
+                    'alert' => 'error',
+                    'actualcartcount' => $actualcartcount
                 );
                 return response()->json([
                     'notification_response' => $notification
                 ]);
             }
-
-            if ($request->stock == 1) {
-                if ($request->qty > $stock) {
-                    $notification = array(
-                        'message' => 'Please order within available stock limit',
-                        'alert' => 'error',
-                        'actualcartcount' => $actualcartcount
-                    );
-                    return response()->json([
-                        'notification_response' => $notification
-                    ]);
-                }
-            }
             if ($existingCartlist) {
-                if ($existingCartlist->qty + $request->qty >= $stock && $request->stock == 1) {
+                if ($existingCartlist->qty + $request->qty >= $stock ) {
                     $notification = array(
                         'message' => 'Please order within available stock limit',
                         'alert' => 'error',
@@ -394,8 +380,7 @@ class ReadyStockController extends Controller
                     ]);
                 } else {
                     $existingCartlist->update([
-                        'qty' => $existingCartlist->qty + $request->qty,
-                        'is_ready_stock' => $request->stock
+                        'qty' => $existingCartlist->qty + $request->qty
                     ]);
                     $cartcount = Cart::where('user_id', Auth::user()->id)->count();
                     $cartqtycount = Cart::where('user_id', Auth::user()->id)->sum('qty');
@@ -417,13 +402,9 @@ class ReadyStockController extends Controller
                     'user_id' => Auth::user()->id,
                     'product_id' => $request->product_id,
                     'qty' => $request->qty,
-                    'weight' => $request->weight_id,
-                    // 'size_id' => $request->size_id,
-                    'color_id' => $request->color_id,
-                    'plating_id' => $request->plating_id,
-                    'finish_id' => $request->finish_id,
-                    'box_id' => $request->box,
-                    'is_ready_stock' => $request->stock
+                    'weight' => $request->weight,
+                    'size' => $request->size,
+                    'box' => $request->box
                 ]);
 
                 $cartcount = Cart::where('user_id', Auth::user()->id)->count();
@@ -464,6 +445,7 @@ class ReadyStockController extends Controller
             return redirect()->back()->with($notification);
         }
     }
+
     public function addAllToCart(Request $request)
     {
         try {

@@ -51,26 +51,6 @@ function qtyplusminus() {
     });
 }
 
-// document.addEventListener("DOMContentLoaded", function () {
-//     const gridButton = document.querySelector(".grid-view");
-//     const listButton = document.querySelector(".list-view");
-//     const productCards = document.querySelector(".shop-page_product-cards");
-
-//     gridButton.addEventListener("click", function () {
-//         productCards.classList.remove("list");
-//         productCards.classList.add("grid");
-//         gridButton.classList.add("active");
-//         listButton.classList.remove("active");
-//     });
-
-//     listButton.addEventListener("click", function () {
-//         productCards.classList.remove("grid");
-//         productCards.classList.add("list");
-//         listButton.classList.add("active");
-//         gridButton.classList.remove("active");
-//     });
-// });
-
 document.addEventListener("DOMContentLoaded", function () {
     const gridButton = document.querySelector(".grid-view");
     const listButton = document.querySelector(".list-view");
