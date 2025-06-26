@@ -599,7 +599,7 @@
                                 </div>
 
                                 <div
-                                    class="card-img-top flex-grow-1 d-flex align-items-center justify-content-center position-relative">
+                                    class="card-img-top d-flex align-items-center justify-content-center position-relative">
                                     <a href="{{ route('retailerproductdetail', encrypt($main->id)) }}">
                                         <img class="img-fluid prouduct_card-image load-secure-image" width="255"
                                             height="255" src="http://imageurl.ejindia.com/api/image/secure"
@@ -630,7 +630,8 @@
                                         </div>
 
                                         <div
-                                            class="d-flex mt-2 flex-wrap gap-3 align-items-start card-content_wrapper">
+                                            class="mt-3 card-content_wrapper">
+                                            <div class="grid cols-3">
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">Colour</div>
                                                 <div class="product-card-badge product-card-badge-light">
@@ -646,26 +647,33 @@
                                                 <div class="product-card-badge product-card-badge-light">
                                                     {{ $main->style ?? '-' }}</div>
                                             </div>
+                                            </div>
                                         </div>
 
                                         <div class="card-multiple-sizes-wrapper">
                                             <div
-                                                class="d-flex mt-2 flex-wrap gap-3 align-items-end card-content_wrapper">
+                                                class="mt-3 card-content_wrapper">
+
+                                            <div class="grid cols-3">
                                                 <div class="d-flex flex-column gap-1">
                                                     <div class="card-text text-dark">Making %</div>
                                                     <div class="product-card-badge">{{ $main->making ?? '-' }}</div>
                                                 </div>
                                                 @if ($products->count() > 1)
-                                                    <div>
+                                                    <div class="span-2 d-flex align-items-end">
                                                         <button class="btn multiple-size-btn toggle-sizes"
                                                             type="button">
                                                             Multiple Sizes Available
-                                                            <span class="toggle-icon">▼</span>
+                                                            <span class="toggle-icon">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 14 8" fill="none">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9625 0.29248L6.70255 4.99906L1.37562 0.323764L0.0438118 1.53132L6.63563 7.53794L13.3271 1.59313L11.9625 0.29248Z" fill="black"/>
+                                                        </svg>
+                                                            </span>
                                                         </button>
                                                     </div>
+                                                </div>
                                                 @else
-                                                    <div
-                                                        class="d-flex mt-2 flex-wrap gap-3 align-items-start card-content_wrapper">
+                                                    
                                                         <div class="d-flex flex-column gap-1">
                                                             <div class="card-text text-dark">
                                                                 Size
@@ -683,14 +691,16 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="d-flex flex-wrap gap-2 align-self-end">
+
+
+                                                    <div class="d-flex mt-3">
                                                         <div class="product-cart-qty-text">In Stock:
-                                                            <span> {{ $main->qty ?? '-' }}</span>
+                                                            <span> {{ $main->qty ?? '-' }} Pcs</span>
                                                         </div>
                                                     </div>
 
                                                     <div>
-                                                        <div class="mt-2 shop-page-qty-add-to-cart-btn_wrapper">
+                                                        <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">
                                                             <div class="d-flex align-items-center">
                                                                 <label class="me-2">Qty</label>
                                                                 <div
@@ -713,7 +723,7 @@
                                                 <div class="multiple-sizes-content d-none">
                                                     @foreach ($products as $variant)
                                                         <div
-                                                            class="d-flex mt-2 flex-wrap gap-3 align-items-end card-content_wrapper">
+                                                            class="mt-3 grid cols-4 card-content_wrapper">
                                                             <div class="d-flex flex-column gap-1">
                                                                 <div class="card-text text-dark">Size</div>
                                                                 <div class="product-card-badge">
@@ -730,7 +740,7 @@
                                                                     class="product-card-badge product-card-badge-light">
                                                                     {{ $variant->qty ?? 0 }}</div>
                                                             </div>
-                                                            <div class="d-flex">
+                                                            
                                                                 <div
                                                                     class="input-group quantity-input-group quantity-container">
                                                                     <input type="button" value="-"
@@ -741,7 +751,7 @@
                                                                     <input type="button" value="+"
                                                                         class="qtyplus" field="quantity">
                                                                 </div>
-                                                            </div>
+                
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -760,7 +770,7 @@
                                                 ->where('user_id', Auth::user()->id)
                                                 ->value('qty');
                                         @endphp
-                                        <div class="shop-page-add-to-cart-btn">
+                                        <div class="shop-page-add-to-cart-btn mt-3">
                                             @if (count($isCart))
                                                 <button onclick="addforcart({{ $main->id }})"
                                                     class="btn added-to-cart-btn mr-2 spinner-button"
