@@ -1276,7 +1276,7 @@ Box
     }
 </style>
 @section('scripts')
-<script src="//unpkg.com/alpinejs" defer></script>
+<!-- <script src="//unpkg.com/alpinejs" defer></script> -->
 
 <script src="{{ asset('retailer\assets\js\readystock\readystock.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
