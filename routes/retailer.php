@@ -62,11 +62,15 @@ Route::prefix('retailer')->group(function () {
         //Logout
         Route::get('logout', [\App\Http\Controllers\Retailer\Login\LoginController::class, 'logout'])->name('retailerlogout');
 
-        Route::get('efreadystock', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'efReadyStock'])->name('retailerefreadystock');
-        Route::get('sireadystock', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'siReadyStock'])->name('retailersireadystock');
-        Route::get('jewelleryreadystock', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'jewelleryReadyStock'])->name('retailerjewelleryreadystock');
-        Route::get('indianiareadystock', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'indianiaReadyStock'])->name('retailerindianiareadystock');
-        Route::get('utensilreadystock', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'utensilReadyStock'])->name('retailerutensilreadystock');
+        Route::get('ef', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'ef'])->name('retailerefreadystock');
+        Route::get('casting', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'casting'])->name('retailersireadystock');
+        Route::get('imprez', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'imprez'])->name('retailerjewelleryreadystock');
+        Route::get('indiania', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'indiania'])->name('retailerindianiareadystock');
+        Route::get('lasercut', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'lasercut'])->name('retailerutensilreadystock');
+        Route::get('mmd', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'mmd'])->name('mmd');
+        Route::get('stamping', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'stamping'])->name('stamping');
+        Route::get('turkish', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'turkish'])->name('turkish');
+        Route::get('unikraft', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'unikraft'])->name('unikraft');
         Route::get('productdetail/{id}', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'productDetail'])->name('retailerproductdetail');
         Route::post('addtocart', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'addToCart'])->name('retaileraddtocart');
         Route::post('addforcart', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'addForCart'])->name('retaileraddforcart');

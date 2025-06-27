@@ -152,16 +152,16 @@
                         <a href="{{ route('retailerutensilreadystock') }}">LASERCUT</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('retailerutensilreadystock') }}">MMD</a>
+                        <a href="{{ route('mmd') }}">MMD</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('retailerutensilreadystock') }}">STAMPING</a>
+                        <a href="{{ route('stamping') }}">STAMPING</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('retailerutensilreadystock') }}">TURKISH</a>
+                        <a href="{{ route('turkish') }}">TURKISH</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('retailerutensilreadystock') }}">UNIKRAFT</a>
+                        <a href="{{ route('unikraft') }}">UNIKRAFT</a>
                     </li>
                 </ul>
             </div>
@@ -353,10 +353,9 @@
                                                             fill="#ADADAD" />
                                                     </svg>
                                                 </span>
-                                                <input required type="text" 
-                                                 id="phoneNumber"
-                                                 oninput="this.value = this.value.replace(/[^0-9]/g, '');" 
-                                                 minlength="10" maxlength="10" 
+                                                <input required type="text" id="phoneNumber"
+                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                                    minlength="10" maxlength="10"
                                                     class="form-control border-0 shadow-none"
                                                     placeholder="Enter phone number" aria-label="Phone Number"
                                                     aria-describedby="login page">
@@ -476,9 +475,9 @@
                                                 <label class="form-label fw-medium" for="signupPhoneNumber">Phone
                                                     Number<span class="text-danger">*</span></label>
                                                 <input required placeholder="Enter your phone number"
-                                                    class="form-control" type="text" 
-                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '');" 
-                                                    minlength="10" maxlength="10"  name="signupPhoneNumber"
+                                                    class="form-control" type="text"
+                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                                    minlength="10" maxlength="10" name="signupPhoneNumber"
                                                     id="signupPhoneNumber" value="{{ session('mobile') ?? '' }}" />
                                             </div>
 

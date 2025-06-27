@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class CartController extends Controller
 {
@@ -21,7 +22,7 @@ class CartController extends Controller
 
     function cart()
     {
-        $cart = Cart::select('carts.*','products.qty')
+        $cart = Cart::select('carts.*', 'products.qty', 'products.product_image')
             ->join('products', 'products.id', 'carts.product_id')
             ->where('carts.user_id', Auth::user()->id)
             ->get();
@@ -36,12 +37,37 @@ class CartController extends Controller
         return view('retailer.cart.cart', compact('cart', 'cartQty', 'cartWeight', 'previousUrl', 'dealer'));
     }
 
+    private function cryptoJsAesEncrypt($passphrase, $plaintext)
+    {
+        $salt = openssl_random_pseudo_bytes(8);
+        $salted = '';
+        $dx = '';
+
+        while (strlen($salted) < 48) {
+            $dx = md5($dx . $passphrase . $salt, true);
+            $salted .= $dx;
+        }
+
+        $key = substr($salted, 0, 32);
+        $iv = substr($salted, 32, 16);
+
+        $encrypted = openssl_encrypt($plaintext, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+        $ciphertext = 'Salted__' . $salt . $encrypted;
+
+        return urlencode(base64_encode($ciphertext));
+    }
+
     function getCartProducts()
     {
+        $secret = 'EmeraldAdmin';
         $carts = Cart::join('products', 'products.id', 'carts.product_id')
             ->where('carts.user_id', Auth::user()->id)
             ->select('carts.*', 'products.qty as stock', 'products.product_image', 'products.DesignNo', 'products.weight')
-            ->get();
+            ->get()
+            ->map(function ($product) use ($secret) {
+                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                return $product;
+            });
 
         $cartQty = Cart::join('products', 'products.id', 'carts.product_id')
             ->where('carts.user_id', Auth::user()->id)

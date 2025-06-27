@@ -125,7 +125,7 @@ class ReadyStockController extends Controller
         return view('retailer.readystock.readystock', compact('product', 'allProduct', 'stock', 'search', 'breadcrumUrl', 'breadcrum', 'project_id'));
     }
 
-    public function efReadyStock(Request $request)
+    public function ef(Request $request)
     {
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
@@ -174,6 +174,397 @@ class ReadyStockController extends Controller
         return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
     }
 
+    public function casting(Request $request)
+    {
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        $subQuery = DB::table('products')
+            ->select('id')
+            ->where('project', Projects::CASTING);
+
+        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->joinSub($subQuery, 'sub', function ($join) {
+                $join->on('products.id', '=', 'sub.id');
+            })
+            ->orderBy('products.qty', 'DESC');
+
+        $secret = 'EmeraldAdmin';
+
+        $groupedProducts = $productQuery->get()
+            ->map(function ($product) use ($secret) {
+                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                return $product;
+            });
+
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+        $paginated = new LengthAwarePaginator(
+            $groupedProducts->forPage($page, $perPage)->values(),
+            $groupedProducts->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::CASTING;
+        $allProduct = Product::select('id')->where('project', Projects::CASTING)->get();
+        $stock = 1;
+        $breadcrum = 'CASTING';
+        $breadcrumUrl = route('retailersireadystock');
+        $decryptedProjectId = Projects::CASTING;
+        $request->session()->forget('ret_ses');
+
+        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+    }
+
+    public function imprez(Request $request)
+    {
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        $subQuery = DB::table('products')
+            ->select('id')
+            ->where('project', Projects::IMPREZ);
+
+        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->joinSub($subQuery, 'sub', function ($join) {
+                $join->on('products.id', '=', 'sub.id');
+            })
+            ->orderBy('products.qty', 'DESC');
+
+        $secret = 'EmeraldAdmin';
+
+        $groupedProducts = $productQuery->get()
+            ->map(function ($product) use ($secret) {
+                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                return $product;
+            });
+
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+        $paginated = new LengthAwarePaginator(
+            $groupedProducts->forPage($page, $perPage)->values(),
+            $groupedProducts->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::IMPREZ;
+        $allProduct = Product::select('id')->where('project', Projects::IMPREZ)->get();
+        $stock = 1;
+        $breadcrum = 'IMPREZ';
+        $breadcrumUrl = route('retailersireadystock');
+        $decryptedProjectId = Projects::IMPREZ;
+        $request->session()->forget('ret_ses');
+
+        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+    }
+
+    public function indiania(Request $request)
+    {
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        $subQuery = DB::table('products')
+            ->select('id')
+            ->where('project', Projects::INDIANIA);
+
+        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->joinSub($subQuery, 'sub', function ($join) {
+                $join->on('products.id', '=', 'sub.id');
+            })
+            ->orderBy('products.qty', 'DESC');
+
+        $secret = 'EmeraldAdmin';
+
+        $groupedProducts = $productQuery->get()
+            ->map(function ($product) use ($secret) {
+                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                return $product;
+            });
+
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+        $paginated = new LengthAwarePaginator(
+            $groupedProducts->forPage($page, $perPage)->values(),
+            $groupedProducts->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::INDIANIA;
+        $allProduct = Product::select('id')->where('project', Projects::INDIANIA)->get();
+        $stock = 1;
+        $breadcrum = 'INDIANIA';
+        $breadcrumUrl = route('retailerindianiareadystock');
+        $decryptedProjectId = Projects::INDIANIA;
+        $request->session()->forget('ret_ses');
+
+        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+    }
+    
+    public function lasercut(Request $request)
+    {
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        $subQuery = DB::table('products')
+            ->select('id')
+            ->where('project', Projects::LASERCUT);
+
+        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->joinSub($subQuery, 'sub', function ($join) {
+                $join->on('products.id', '=', 'sub.id');
+            })
+            ->orderBy('products.qty', 'DESC');
+
+        $secret = 'EmeraldAdmin';
+
+        $groupedProducts = $productQuery->get()
+            ->map(function ($product) use ($secret) {
+                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                return $product;
+            });
+
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+        $paginated = new LengthAwarePaginator(
+            $groupedProducts->forPage($page, $perPage)->values(),
+            $groupedProducts->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::LASERCUT;
+        $allProduct = Product::select('id')->where('project', Projects::LASERCUT)->get();
+        $stock = 1;
+        $breadcrum = 'LASERCUT';
+        $breadcrumUrl = route('retailerindianiareadystock');
+        $decryptedProjectId = Projects::LASERCUT;
+        $request->session()->forget('ret_ses');
+
+        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+    }
+    
+    public function mmd(Request $request)
+    {
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        $subQuery = DB::table('products')
+            ->select('id')
+            ->where('project', Projects::MMD);
+
+        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->joinSub($subQuery, 'sub', function ($join) {
+                $join->on('products.id', '=', 'sub.id');
+            })
+            ->orderBy('products.qty', 'DESC');
+
+        $secret = 'EmeraldAdmin';
+
+        $groupedProducts = $productQuery->get()
+            ->map(function ($product) use ($secret) {
+                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                return $product;
+            });
+
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+        $paginated = new LengthAwarePaginator(
+            $groupedProducts->forPage($page, $perPage)->values(),
+            $groupedProducts->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::MMD;
+        $allProduct = Product::select('id')->where('project', Projects::MMD)->get();
+        $stock = 1;
+        $breadcrum = 'MMD';
+        $breadcrumUrl = route('mmd');
+        $decryptedProjectId = Projects::MMD;
+        $request->session()->forget('ret_ses');
+
+        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+    }
+
+    public function stamping(Request $request)
+    {
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        $subQuery = DB::table('products')
+            ->select('id')
+            ->where('project', Projects::STAMPING);
+
+        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->joinSub($subQuery, 'sub', function ($join) {
+                $join->on('products.id', '=', 'sub.id');
+            })
+            ->orderBy('products.qty', 'DESC');
+
+        $secret = 'EmeraldAdmin';
+
+        $groupedProducts = $productQuery->get()
+            ->map(function ($product) use ($secret) {
+                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                return $product;
+            });
+
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+        $paginated = new LengthAwarePaginator(
+            $groupedProducts->forPage($page, $perPage)->values(),
+            $groupedProducts->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::STAMPING;
+        $allProduct = Product::select('id')->where('project', Projects::STAMPING)->get();
+        $stock = 1;
+        $breadcrum = 'STAMPING';
+        $breadcrumUrl = route('stamping');
+        $decryptedProjectId = Projects::STAMPING;
+        $request->session()->forget('ret_ses');
+
+        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+    }
+
+    public function turkish(Request $request)
+    {
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        $subQuery = DB::table('products')
+            ->select('id')
+            ->where('project', Projects::TURKISH);
+
+        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->joinSub($subQuery, 'sub', function ($join) {
+                $join->on('products.id', '=', 'sub.id');
+            })
+            ->orderBy('products.qty', 'DESC');
+
+        $secret = 'EmeraldAdmin';
+
+        $groupedProducts = $productQuery->get()
+            ->map(function ($product) use ($secret) {
+                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                return $product;
+            });
+
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+        $paginated = new LengthAwarePaginator(
+            $groupedProducts->forPage($page, $perPage)->values(),
+            $groupedProducts->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::TURKISH;
+        $allProduct = Product::select('id')->where('project', Projects::TURKISH)->get();
+        $stock = 1;
+        $breadcrum = 'TURKISH';
+        $breadcrumUrl = route('turkish');
+        $decryptedProjectId = Projects::TURKISH;
+        $request->session()->forget('ret_ses');
+
+        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+    }
+
+    public function unikraft(Request $request)
+    {
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        $subQuery = DB::table('products')
+            ->select('id')
+            ->where('project', Projects::UNIKRAFT);
+
+        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->joinSub($subQuery, 'sub', function ($join) {
+                $join->on('products.id', '=', 'sub.id');
+            })
+            ->orderBy('products.qty', 'DESC');
+
+        $secret = 'EmeraldAdmin';
+
+        $groupedProducts = $productQuery->get()
+            ->map(function ($product) use ($secret) {
+                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                return $product;
+            });
+
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+        $paginated = new LengthAwarePaginator(
+            $groupedProducts->forPage($page, $perPage)->values(),
+            $groupedProducts->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::UNIKRAFT;
+        $allProduct = Product::select('id')->where('project', Projects::UNIKRAFT)->get();
+        $stock = 1;
+        $breadcrum = 'UNIKRAFT';
+        $breadcrumUrl = route('unikraft');
+        $decryptedProjectId = Projects::UNIKRAFT;
+        $request->session()->forget('ret_ses');
+
+        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+    }
 
     public function getToken()
     {
