@@ -1166,7 +1166,7 @@ input.qtyminus {
     }
 
     .product-add-to_cart-btn {
-        border-radius: 55.528px !important;
+        border-radius: 8px !important;
         border: 2.251px solid rgba(52, 115, 98, 0) !important;
         background: #003836 !important;
         width: 100%;
@@ -5885,4 +5885,14 @@ textarea {
 
 .span-2{
     grid-column: span 2;
+}
+
+.purity-badge{
+    border-radius: 4px;
+    font-weight: 500;
+    background: #FF2626;
+    width: fit-content;
+    padding: 4px 8px;
+    color: #fff;
+    font-size: 12px;
 }
