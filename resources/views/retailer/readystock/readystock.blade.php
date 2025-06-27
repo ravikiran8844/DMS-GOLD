@@ -593,8 +593,7 @@
                                             </button>
                                         </div>
 
-                                        <div class="mt-3 card-content_wrapper">
-                                            <div class="grid cols-3">
+                                        <div class="mt-3 grid cols-3 card-content_wrapper">
                                                 <div class="d-flex flex-column gap-1">
                                                     <div class="card-text text-dark">Colour</div>
                                                     <div class="product-card-badge product-card-badge-light">
@@ -610,19 +609,11 @@
                                                     <div class="product-card-badge product-card-badge-light">
                                                         {{ $main->style ?? '-' }}</div>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="card-multiple-sizes-wrapper">
-                                            <div class="mt-3 card-content_wrapper">
-
-                                                <div class="grid cols-3">
-                                                    <div class="d-flex flex-column gap-1">
+                                                <div class="d-flex flex-column gap-1">
                                                         <div class="card-text text-dark">Making %</div>
                                                         <div class="product-card-badge">{{ $main->making ?? '-' }}
                                                         </div>
                                                     </div>
-                                                </div>
                                                 <div class="d-flex flex-column gap-1">
                                                     <div class="card-text text-dark">
                                                         Size
@@ -638,7 +629,9 @@
                                                     <div class="product-card-badge">
                                                         {{ $main->weight ?? '-' }}g</div>
                                                 </div>
-                                            </div>
+                                        </div>
+
+                                        <div class="card-multiple-sizes-wrapper">
 
                                             <div class="d-flex mt-3">
                                                 <div class="product-cart-qty-text">In Stock:
@@ -665,9 +658,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                @if (Auth::user()->role_id == App\Enums\Roles::Dealer ||
+                                    @if (Auth::user()->role_id == App\Enums\Roles::Dealer ||
                                         Auth::user()->role_id == App\Enums\Roles::Retailer ||
                                         Auth::user()->role_id == App\Enums\Roles::CRM)
                                     @php
@@ -708,6 +700,9 @@
                                         @endif
                                     </div>
                                 @endif
+                                </div>
+
+                             
                             </div>
                         @endforeach
                     </div>

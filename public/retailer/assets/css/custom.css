@@ -5874,7 +5874,7 @@ textarea {
 
 .grid{
     display: grid;
-    gap: 5px;
+    gap: 10px 5px;
 }
 .cols-3{
     grid-template-columns: auto auto auto;
