@@ -68,7 +68,7 @@ class OrderController extends Controller
             foreach ($cartItems as $cart) {
                 $product = Product::where('id', $cart->product_id)->first();
                 if ($cart->qty > $product->qty) {
-                    $insufficientProducts[] = $product->product_unique_id;
+                    $insufficientProducts[] = $product->DesignNo;
                 }
             }
 
@@ -114,16 +114,15 @@ class OrderController extends Controller
                     'product_id' => $cart->product_id,
                     'qty' => $cart->qty,
                     'weight' => $cart->weight,
-                    'size_id' => $request->input('size' . $cart->id),
+                    'size' => $request->input('size' . $cart->id),
                     'finish' => $request->input('finish' . $cart->id),
                     'remarks' => $cart->remarks,
-                    'is_ready_stock' => $cart->is_ready_stock,
                 ]);
 
                 if (Auth::user()->role_id == Roles::CRM) {
                     // Decrement product stock if user is CRM
                     $product = Product::where('id', $cart->product_id)->first();
-                    Product::where('id', $cart->product_id)->where('style_id', $product->style_id)->update([
+                    Product::where('id', $cart->product_id)->update([
                         'qty' => $product->qty - $cart->qty,
                     ]);
                 }
@@ -205,16 +204,13 @@ class OrderController extends Controller
         $status = ModelsStatus::where('id', $order->status_id)->first();
         $orderdetails = OrderDetail::select(
             'order_details.*',
-            'products.product_unique_id',
+            'products.DesignNo',
             'products.product_image',
             'products.product_name',
             'colors.color_name',
-            'projects.project_name',
-            'styles.style_name'
+            'projects.project_name'
         )
             ->join('products', 'products.id', 'order_details.product_id')
-            ->join('colors', 'colors.id', 'products.color_id')
-            ->join('styles', 'styles.id', 'products.style_id')
             ->join('projects', 'projects.id', 'products.project_id')
             ->where('order_details.order_id', decrypt($order_id))
             ->get();

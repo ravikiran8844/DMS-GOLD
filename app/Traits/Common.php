@@ -119,17 +119,6 @@ trait Common
             ->leftJoin('wishlists', function ($join) use ($user_id) {
                 $join->on('wishlists.product_id', '=', 'products.id')
                     ->where('wishlists.user_id', '=', $user_id);
-            })
-            ->where('products.is_active', 1)
-            ->whereNull('products.deleted_at')
-            // ->where('product_unique_id', 'not like', '%A%')
-            // ->where('product_unique_id', 'not like', '%GP%')
-            // ->where('product_unique_id', 'not like', '%G%')
-            ->whereNotExists(function ($query) {
-                $query->selectRaw(1)
-                    ->from('products as p2')
-                    ->whereRaw('p2.product_unique_id = products.product_unique_id')
-                    ->whereRaw('p2.created_at > products.created_at');
             });
 
         return $product;

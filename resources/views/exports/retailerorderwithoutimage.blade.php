@@ -76,7 +76,6 @@
         <!-- Row for the table headers -->
         <tr>
             <th style="font-weight: bold; text-align: center;">S.No</th>
-            <th style="font-weight: bold; text-align: center;">Order</th>
             <th style="font-weight: bold; text-align: center;">Project</th>
             <th style="font-weight: bold; text-align: center;">Product SKU</th>
             <th style="font-weight: bold; text-align: center;">Purity</th>
@@ -91,15 +90,13 @@
         @foreach ($details as $detail)
             <tr>
                 <td style="text-align: center;">{{ $i }}</td>
-                <td style="text-align: center;">{{ $detail->is_ready_stock == 1 ? 'Ready Stock' : 'Made To Order' }}
-                </td>
-                <td style="text-align: center;">{{ str_replace('SIL ', '', $detail->project_name) }}</td>
-                <td style="text-align: center;">{{ $detail->product_unique_id }}</td>
-                <td style="text-align: center;">{{ str_replace('SIL-', '', $detail->silver_purity_percentage) }}</td>
+                <td style="text-align: center;">{{ $detail->projec }}</td>
+                <td style="text-align: center;">{{ $detail->DesignNo }}</td>
+                <td style="text-align: center;">{{ $detail->Purity }}</td>
                 <td style="text-align: center;">{{ $detail->qty }}</td>
                 <td style="text-align: center;">{{ $detail->weight }}</td>
                 <td style="text-align: center;">{{ $detail->weight * $detail->qty }}</td>
-                <td style="text-align: center;">{{ $detail->style_name }}</td>
+                <td style="text-align: center;">{{ $detail->style }}</td>
                 @php $i++; @endphp
             </tr>
         @endforeach

@@ -12,6 +12,7 @@ use App\Models\Color;
 use App\Models\Finish;
 use App\Models\OrderDetail;
 use App\Models\Product;
+use App\Models\Project;
 use App\Models\SilverPurity;
 use App\Models\Size;
 use App\Models\Style;
@@ -42,35 +43,30 @@ class ReadyStockController extends Controller
         ini_set('max_execution_time', 180); //3 minutes
         $search = $request->search;
         $searchSubstring = substr($search, 0, 4);
+        $secret = 'EmeraldAdmin';
 
         $products = $this->getproducts(Auth::user()->id)
-            ->whereIn('products.project_id', [Projects::EF, Projects::LASERCUT, Projects::CASTING])
-            ->where('products.qty', '>', 0)
+            ->whereIn('products.project', [Projects::EF, Projects::LASERCUT, Projects::CASTING, Projects::IMPREZ, Projects::INDIANIA, Projects::MMD, Projects::STAMPING, Projects::TURKISH, Projects::UNIKRAFT])
             ->where(function ($query) use ($search) {
-                $query->where('products.product_unique_id', 'like', '%' . $search . '%')
-                    ->orWhere('products.product_name', 'like', '%' . $search . '%')
-                    ->orWhere('products.keywordtags', 'like', '%' . $search . '%');
+                $query->where('products.DesignNo', 'like', '%' . $search . '%');
             })
-            ->where('products.is_active', 1)
-            ->orderBy('products.qty', 'DESC')
+            ->orderBy('products.DesignNo', 'ASC')
             ->get();
 
         if ($products->isEmpty()) {
             $product = $this->getproducts(Auth::user()->id)
-                ->whereIn('products.project_id', [Projects::EF, Projects::LASERCUT, Projects::CASTING])
-                ->where('products.qty', '>', 0)
-                ->where(function ($query) use ($searchSubstring) {
-                    $query->where('products.product_unique_id', 'like', '%' . $searchSubstring . '%')
-                        ->orWhere('products.product_name', 'like', '%' . $searchSubstring . '%')
-                        ->orWhere('products.keywordtags', 'like', '%' . $searchSubstring . '%');
+                ->whereIn('products.project', [Projects::EF, Projects::LASERCUT, Projects::CASTING, Projects::IMPREZ, Projects::INDIANIA, Projects::MMD, Projects::STAMPING, Projects::TURKISH, Projects::UNIKRAFT])
+                ->where(function ($query) use ($search) {
+                    $query->where('products.DesignNo', 'like', '%' . $search . '%');
                 })
-                ->where('products.is_active', 1)
-                ->orderBy('products.qty', 'DESC');
+                ->orderBy('products.DesignNo', 'ASC')
+                ->get();
 
-            // Get all the results and filter out products without an image
-            $filteredProducts = $product->get()->filter(function ($product) {
-                return File::exists(public_path("upload/product/{$product->product_image}"));
-            });
+            $filteredProducts = $product->get()
+                ->map(function ($product) use ($secret) {
+                    $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                    return $product;
+                });
 
             // Manually paginate the filtered products
             $page = request()->get('page', 1);
@@ -86,20 +82,18 @@ class ReadyStockController extends Controller
             $product = $paginatedProducts;
         } else {
             $product = $this->getproducts(Auth::user()->id)
-                ->whereIn('products.project_id', [Projects::EF, Projects::LASERCUT, Projects::CASTING])
-                ->where('products.qty', '>', 0)
+                ->whereIn('products.project', [Projects::EF, Projects::LASERCUT, Projects::CASTING, Projects::IMPREZ, Projects::INDIANIA, Projects::MMD, Projects::STAMPING, Projects::TURKISH, Projects::UNIKRAFT])
                 ->where(function ($query) use ($search) {
-                    $query->where('products.product_unique_id', 'like', '%' . $search . '%')
-                        ->orWhere('products.product_name', 'like', '%' . $search . '%')
-                        ->orWhere('products.keywordtags', 'like', '%' . $search . '%');
+                    $query->where('products.DesignNo', 'like', '%' . $search . '%');
                 })
-                ->where('products.is_active', 1)
-                ->orderBy('products.qty', 'DESC');
+                ->orderBy('products.DesignNo', 'ASC')
+                ->get();
 
-            // Get all the results and filter out products without an image
-            $filteredProducts = $product->get()->filter(function ($product) {
-                return File::exists(public_path("upload/product/{$product->product_image}"));
-            });
+            $filteredProducts = $product->get()
+                ->map(function ($product) use ($secret) {
+                    $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                    return $product;
+                });
 
             // Manually paginate the filtered products
             $page = request()->get('page', 1);
@@ -115,7 +109,7 @@ class ReadyStockController extends Controller
             $product = $paginatedProducts;
         }
 
-        $allProduct = Product::whereIn('project_id', [Projects::EF, Projects::LASERCUT, Projects::CASTING])->where('qty', '>', 0)->get();
+        $allProduct = Product::get();
         $stock = 1;
         $breadcrum = null;
         $breadcrumUrl = null;
@@ -142,7 +136,7 @@ class ReadyStockController extends Controller
             ->joinSub($subQuery, 'sub', function ($join) {
                 $join->on('products.id', '=', 'sub.id');
             })
-            ->orderBy('products.qty', 'DESC');
+            ->orderBy('products.DesignNo', 'ASC');
 
         $secret = 'EmeraldAdmin';
 
@@ -191,7 +185,7 @@ class ReadyStockController extends Controller
             ->joinSub($subQuery, 'sub', function ($join) {
                 $join->on('products.id', '=', 'sub.id');
             })
-            ->orderBy('products.qty', 'DESC');
+            ->orderBy('products.DesignNo', 'ASC');
 
         $secret = 'EmeraldAdmin';
 
@@ -240,7 +234,7 @@ class ReadyStockController extends Controller
             ->joinSub($subQuery, 'sub', function ($join) {
                 $join->on('products.id', '=', 'sub.id');
             })
-            ->orderBy('products.qty', 'DESC');
+            ->orderBy('products.DesignNo', 'ASC');
 
         $secret = 'EmeraldAdmin';
 
@@ -289,7 +283,7 @@ class ReadyStockController extends Controller
             ->joinSub($subQuery, 'sub', function ($join) {
                 $join->on('products.id', '=', 'sub.id');
             })
-            ->orderBy('products.qty', 'DESC');
+            ->orderBy('products.DesignNo', 'ASC');
 
         $secret = 'EmeraldAdmin';
 
@@ -320,7 +314,7 @@ class ReadyStockController extends Controller
 
         return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
     }
-    
+
     public function lasercut(Request $request)
     {
         ini_set('memory_limit', '1024M');
@@ -338,7 +332,7 @@ class ReadyStockController extends Controller
             ->joinSub($subQuery, 'sub', function ($join) {
                 $join->on('products.id', '=', 'sub.id');
             })
-            ->orderBy('products.qty', 'DESC');
+            ->orderBy('products.DesignNo', 'ASC');
 
         $secret = 'EmeraldAdmin';
 
@@ -369,7 +363,7 @@ class ReadyStockController extends Controller
 
         return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
     }
-    
+
     public function mmd(Request $request)
     {
         ini_set('memory_limit', '1024M');
@@ -387,7 +381,7 @@ class ReadyStockController extends Controller
             ->joinSub($subQuery, 'sub', function ($join) {
                 $join->on('products.id', '=', 'sub.id');
             })
-            ->orderBy('products.qty', 'DESC');
+            ->orderBy('products.DesignNo', 'ASC');
 
         $secret = 'EmeraldAdmin';
 
@@ -436,7 +430,7 @@ class ReadyStockController extends Controller
             ->joinSub($subQuery, 'sub', function ($join) {
                 $join->on('products.id', '=', 'sub.id');
             })
-            ->orderBy('products.qty', 'DESC');
+            ->orderBy('products.DesignNo', 'ASC');
 
         $secret = 'EmeraldAdmin';
 
@@ -485,7 +479,7 @@ class ReadyStockController extends Controller
             ->joinSub($subQuery, 'sub', function ($join) {
                 $join->on('products.id', '=', 'sub.id');
             })
-            ->orderBy('products.qty', 'DESC');
+            ->orderBy('products.DesignNo', 'ASC');
 
         $secret = 'EmeraldAdmin';
 
@@ -534,7 +528,7 @@ class ReadyStockController extends Controller
             ->joinSub($subQuery, 'sub', function ($join) {
                 $join->on('products.id', '=', 'sub.id');
             })
-            ->orderBy('products.qty', 'DESC');
+            ->orderBy('products.DesignNo', 'ASC');
 
         $secret = 'EmeraldAdmin';
 

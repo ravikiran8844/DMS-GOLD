@@ -25,15 +25,23 @@
     @elseif($currentUrl == route('sivishnu'))
         Solid Idol/Vishnu
     @elseif($currentUrl == route('retailerefreadystock'))
-        Electroforming
+        EF
     @elseif($currentUrl == route('retailersireadystock'))
-        Solid Idol
+        CASTING
     @elseif($currentUrl == route('retailerjewelleryreadystock'))
-        Jewellery
+        IMPREZ
     @elseif($currentUrl == route('retailerindianiareadystock'))
-        Indiania
+        INDIANIA
     @elseif($currentUrl == route('retailerutensilreadystock'))
-        Utensil
+        LASERCUT
+    @elseif($currentUrl == route('mmd'))
+        MMD
+    @elseif($currentUrl == route('stamping'))
+        STAMPING
+    @elseif($currentUrl == route('turkish'))
+        TURKISH
+    @elseif($currentUrl == route('unikraft'))
+        UNIKRAFT
     @elseif($currentUrl == route('retailersearch'))
         search
     @endif- Emerald RMS
@@ -594,41 +602,41 @@
                                         </div>
 
                                         <div class="mt-3 grid cols-3 card-content_wrapper">
-                                                <div class="d-flex flex-column gap-1">
-                                                    <div class="card-text text-dark">Colour</div>
-                                                    <div class="product-card-badge product-card-badge-light">
-                                                        {{ $main->color ?? '-' }}</div>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="card-text text-dark">Colour</div>
+                                                <div class="product-card-badge product-card-badge-light">
+                                                    {{ $main->color ?? '-' }}</div>
+                                            </div>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="card-text text-dark">Unit</div>
+                                                <div class="product-card-badge product-card-badge-light">
+                                                    {{ $main->unit ?? '-' }}</div>
+                                            </div>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="card-text text-dark">Style</div>
+                                                <div class="product-card-badge product-card-badge-light">
+                                                    {{ $main->style ?? '-' }}</div>
+                                            </div>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="card-text text-dark">Making %</div>
+                                                <div class="product-card-badge">{{ $main->making ?? '-' }}
                                                 </div>
-                                                <div class="d-flex flex-column gap-1">
-                                                    <div class="card-text text-dark">Unit</div>
-                                                    <div class="product-card-badge product-card-badge-light">
-                                                        {{ $main->unit ?? '-' }}</div>
+                                            </div>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="card-text text-dark">
+                                                    Size
                                                 </div>
-                                                <div class="d-flex flex-column gap-1">
-                                                    <div class="card-text text-dark">Style</div>
-                                                    <div class="product-card-badge product-card-badge-light">
-                                                        {{ $main->style ?? '-' }}</div>
+                                                <div class="product-card-badge">{{ $main->size ?? '-' }}
                                                 </div>
-                                                <div class="d-flex flex-column gap-1">
-                                                        <div class="card-text text-dark">Making %</div>
-                                                        <div class="product-card-badge">{{ $main->making ?? '-' }}
-                                                        </div>
-                                                    </div>
-                                                <div class="d-flex flex-column gap-1">
-                                                    <div class="card-text text-dark">
-                                                        Size
-                                                    </div>
-                                                    <div class="product-card-badge">{{ $main->size ?? '-' }}
-                                                    </div>
-                                                </div>
+                                            </div>
 
-                                                <div class="d-flex flex-column gap-1">
-                                                    <div class="card-text text-dark">
-                                                        Weight
-                                                    </div>
-                                                    <div class="product-card-badge">
-                                                        {{ $main->weight ?? '-' }}g</div>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="card-text text-dark">
+                                                    Weight
                                                 </div>
+                                                <div class="product-card-badge">
+                                                    {{ $main->weight ?? '-' }}g</div>
+                                            </div>
                                         </div>
 
                                         <div class="card-multiple-sizes-wrapper">
@@ -660,49 +668,49 @@
                                     </div>
 
                                     @if (Auth::user()->role_id == App\Enums\Roles::Dealer ||
-                                        Auth::user()->role_id == App\Enums\Roles::Retailer ||
-                                        Auth::user()->role_id == App\Enums\Roles::CRM)
-                                    @php
-                                        $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
-                                            ->where('product_id', $main->id)
-                                            ->get();
-                                        $currentcartcount = App\Models\Cart::where('product_id', $main->id)
-                                            ->where('user_id', Auth::user()->id)
-                                            ->value('qty');
-                                    @endphp
-                                    <div class="shop-page-add-to-cart-btn mt-3">
-                                        @if (count($isCart))
-                                            <button onclick="addforcart({{ $main->id }})"
-                                                class="btn added-to-cart-btn mr-2 spinner-button"
-                                                data_id="card_id_{{ $main->id }}">
-                                                <span class="submit-text">ADDED TO CART</span>
-                                                <span class="d-none spinner">
-                                                    <span class="spinner-grow spinner-grow-sm"
-                                                        aria-hidden="true"></span>
-                                                    <span role="status">Adding...</span>
-                                                </span>
-                                                <span id="applycurrentcartcount{{ $main->id }}"
-                                                    class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
-                                            </button>
-                                        @else
-                                            <button onclick="addforcart({{ $main->id }})"
-                                                class="btn add-to-cart-btn mr-2 spinner-button"
-                                                data_id="card_id_{{ $main->id }}">
-                                                <span class="submit-text">ADD TO CART</span>
+                                            Auth::user()->role_id == App\Enums\Roles::Retailer ||
+                                            Auth::user()->role_id == App\Enums\Roles::CRM)
+                                        @php
+                                            $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
+                                                ->where('product_id', $main->id)
+                                                ->get();
+                                            $currentcartcount = App\Models\Cart::where('product_id', $main->id)
+                                                ->where('user_id', Auth::user()->id)
+                                                ->value('qty');
+                                        @endphp
+                                        <div class="shop-page-add-to-cart-btn mt-3">
+                                            @if (count($isCart))
+                                                <button onclick="addforcart({{ $main->id }})"
+                                                    class="btn added-to-cart-btn mr-2 spinner-button"
+                                                    data_id="card_id_{{ $main->id }}">
+                                                    <span class="submit-text">ADDED TO CART</span>
+                                                    <span class="d-none spinner">
+                                                        <span class="spinner-grow spinner-grow-sm"
+                                                            aria-hidden="true"></span>
+                                                        <span role="status">Adding...</span>
+                                                    </span>
+                                                    <span id="applycurrentcartcount{{ $main->id }}"
+                                                        class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
+                                                </button>
+                                            @else
+                                                <button onclick="addforcart({{ $main->id }})"
+                                                    class="btn add-to-cart-btn mr-2 spinner-button"
+                                                    data_id="card_id_{{ $main->id }}">
+                                                    <span class="submit-text">ADD TO CART</span>
 
-                                                <span class="d-none spinner">
-                                                    <span class="spinner-grow spinner-grow-sm"
-                                                        aria-hidden="true"></span>
-                                                    <span role="status">Adding...</span>
-                                                </span>
-                                                <span class="added-to-cart-badge"></span>
-                                            </button>
-                                        @endif
-                                    </div>
-                                @endif
+                                                    <span class="d-none spinner">
+                                                        <span class="spinner-grow spinner-grow-sm"
+                                                            aria-hidden="true"></span>
+                                                        <span role="status">Adding...</span>
+                                                    </span>
+                                                    <span class="added-to-cart-badge"></span>
+                                                </button>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </div>
 
-                             
+
                             </div>
                         @endforeach
                     </div>

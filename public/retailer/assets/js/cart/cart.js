@@ -20,6 +20,7 @@ function decrementQuantity(button) {
     } else {
         qtyInput.val(moq);
         container.find(".qtyminus").css("color", "red");
+        return; // Prevent decrementing below the minimum order quantity
     }
 
     $.ajax({
@@ -33,7 +34,7 @@ function decrementQuantity(button) {
         success: function (data, textStatus, xhr) {
             if (data.response && data.response.length > 0) {
                 const totalQty = data.response.reduce(
-                    (total, item) => total + item.qty,
+                    (total, item) => total + parseInt(item.qty, 10),
                     0
                 );
 
@@ -106,6 +107,7 @@ function incrementQuantity(button) {
         // If readystock is 1 and current value is greater than or equal to stock,
         // do not increase quantity beyond available stock
         alert("Quantity cannot exceed available ready stock");
+        return;
     } else {
         // Otherwise, increase quantity by 1
         qtyInput.val(currentValue + 1);
@@ -124,7 +126,7 @@ function incrementQuantity(button) {
         success: function (data, textStatus, xhr) {
             if (data.response && data.response.length > 0) {
                 const totalQty = data.response.reduce(
-                    (total, item) => total + item.qty,
+                    (total, item) => total + parseInt(item.qty, 10),
                     0
                 );
 
