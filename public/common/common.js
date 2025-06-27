@@ -201,29 +201,19 @@ function statusUpdate(id, url, status) {
 function addtocart(id) {
     var product_id = id;
     var qty = $("#quantity").val();
-    var size_id = $("input[name='size']:checked").val();
-    // var weight_id = $("input[name='weight']:checked").val();
-    var weight_id = $("input[name='weight']").val();
-    var box_id = $("input[name='box']").val();
-    var plating_id = $("input[name='plating']:checked").val();
-    var color_id = $("input[name='color']:checked").val();
-    var finish_id = $("input[name='finish']:checked").val();
-    var readyStock = $("#stockqty").val();
-    console.log(readyStock);
+    var size = $("input[name='size']:checked").val();
+    var weight = $("input[name='weight']:checked").val();
+    var box = $("input[name='box']").val();
     $.ajax({
         type: "POST",
-        url: "/addtocart",
+        url: "/retailer/addtocart",
         data: {
             _token: $('meta[name="csrf-token"]').attr("content"),
             product_id: product_id,
             qty: qty,
-            size_id: size_id,
-            box_id: box_id,
-            weight_id: weight_id,
-            plating_id: plating_id,
-            color_id: color_id,
-            finish_id: finish_id,
-            readyStock: readyStock,
+            size: size,
+            box: box,
+            weight: weight,
         },
         dataType: "json",
         success: function (data, textStatus, xhr) {
@@ -247,10 +237,6 @@ function addtocart(id) {
                 switch (type) {
                     case "success":
                         toastr.success(message);
-                        // $("#cart").text("view Cart");
-                        // $("#cart")
-                        //     .attr("href", `${baseurl}/cart`)
-                        //     .attr("onclick", "");
                         break;
                     case "error":
                         toastr.error(message);
@@ -267,7 +253,6 @@ function addtocart(id) {
 
                     const submitText = button.querySelector("span");
                     submitText.innerText = "Added to cart";
-                    // button.classList.add("added-to-cart-btn");
                 }
             }
         },
@@ -383,44 +368,30 @@ function addAllToCart() {
             return $(this).data("id");
         })
         .get();
-    var color_ids = [];
-    var size_ids = [];
-    var weight_ids = [];
-    var plating_ids = [];
-    var qtys = [];
-    var finish_ids = [];
-    var stocks = [];
-    var boxes = [];
+    var size = [];
+    var weight = [];
+    var qty = [];
+    var box = [];
 
     checkedIds.forEach(function (id) {
-        color_ids.push($("#color" + id).val());
-        size_ids.push($("#size" + id).val());
-        weight_ids.push($("#weight" + id).val());
-        plating_ids.push($("#plating" + id).val());
-        qtys.push($("#quantity" + id).val());
-        finish_ids.push($("#finish" + id).val());
-        stocks.push($("#stock" + id).val());
-        boxes.push($("#box" + id).val());
+        size.push($("#size" + id).val());
+        weight.push($("#weight" + id).val());
+        qty.push($("#quantity" + id).val());
+        box.push($("#box" + id).val());
     });
-    console.log(boxes);
     $.ajax({
         type: "POST",
-        url: "/addalltocart",
+        url: "/retailer/addalltocart",
         data: {
             _token: $('meta[name="csrf-token"]').attr("content"),
-            product_ids: checkedIds,
-            color_ids: color_ids,
-            size_ids: size_ids,
-            weight_ids: weight_ids,
-            plating_ids: plating_ids,
-            qtys: qtys,
-            finish_ids: finish_ids,
-            box_ids: boxes,
-            stocks: stocks,
+            product_id: checkedIds,
+            size: size,
+            weight: weight,
+            qty: qty,
+            box: box,
         },
         dataType: "json",
         success: function (data, textStatus, xhr) {
-            console.log(data);
             if (data.count_response) {
                 $('span[id="cartCount"]').text(data.count_response.count);
                 $("#navqty").text(data.count_qty + " Pcs");
@@ -430,8 +401,7 @@ function addAllToCart() {
             }
             if (data.notification_response.message) {
                 var type = data.notification_response.alert;
-                var message = data.notification_response.message;
-                console.log(message);
+                var message = data.notification_response.message;       
                 switch (type) {
                     case "success":
                         Swal.fire({

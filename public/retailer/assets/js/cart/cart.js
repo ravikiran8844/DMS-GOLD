@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 function decrementQuantity(button) {
     var dataId = $(button).data("id");
-    var moq = $("#moq" + dataId).val();
+    var moq = 1;
 
     const container = $(button).closest(".quantity-container");
     const qtyInput = container.find(".qty");
@@ -229,6 +229,7 @@ function populateCart() {
         </div>`;
             } else {
                 response.carts.forEach((item) => {
+                    
                     const row = document.createElement("tr");
                     var eid = $("#encrypt" + item.product_id).val();
 
@@ -242,7 +243,7 @@ function populateCart() {
                         item.product_image
                     }" width="60" height="60" alt=""></a>
                         </td>
-                        <td class="text-center">${item.product_unique_id} 
+                        <td class="text-center">${item.DesignNo} 
                         <div class="product-cart-qty-text mt-2 text-center m-auto">In Stock: <span
                                                         class="fw-semibold"
                                                         style="font-size:10px;">${
@@ -267,12 +268,7 @@ function populateCart() {
                         <td class="text-center" id="totalweight${
                             item.product_id
                         }">${item.weight * item.qty}gms</td>
-                        ${
-                            item.height && item.width
-                                ? `<td class="text-center">${item.height} x ${item.width}</td>`
-                                : `<td class="text-center">-</td>`
-                        }
-                    <td class="text-center">${item.style_name}</td>
+                    <td class="text-center">${item.box}</td>
                         <td class="text-center">
                             <button type='button' class="border-0 bg-transparent" onclick="removeItem(this,${
                                 item.id
@@ -329,7 +325,7 @@ function displayItems() {
                         <div class="d-flex justify-content-between">
                           
                             <div class="cart-page_card-bold-title mb-2">${
-                                item.product_unique_id
+                                item.DesignNo
                             }</div>
                             <div class="cart-page_card-bold-title mb-2">${
                                 item.weight
@@ -340,13 +336,8 @@ function displayItems() {
                         <div class="d-flex justify-content-between">
                           
                             <div class="cart-page_card-bold-title mb-2 text-success">Box: ${
-                                item.style_name
+                                item.box
                             }</div>
-                            <div class="cart-page_card-light-text mb-2">Size(cm): <b>${
-                                item.height && item.width
-                                    ? `${item.height} x ${item.width}`
-                                    : "-"
-                            }</b></div>
                         </div>
 
                         <div class="mb-2">
@@ -366,7 +357,6 @@ function displayItems() {
                                     item.product_id
                                 }' />
                             </div>
-
 
                            <div>
                             <button type="button" class="border-0 bg-transparent" onclick="removeItem(this,${

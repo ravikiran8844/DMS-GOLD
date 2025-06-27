@@ -490,26 +490,6 @@
             </div>
             <div class="d-flex gap-2 flex-wrap  flex-lg-nowrap justify-content-between">
                 <div class="d-flex gap-2 align-items-center flex-wrap">
-                    {{-- <div>
-                        <select name="popular-searches[]" id="popular-searches" multiple="multiple">
-                            <option value="1">GANESH</option>
-                            <option value="2">HANUMAN</option>
-                            <option value="3">KRISHNA</option>
-                            <option value="4">LAKSHMI</option>
-                            <option value="5">BUDDHA</option>
-                        </select>
-                    </div> --}}
-
-                    {{-- <div class="btn-group">
-                    <button type="button" class="btn custom-dropdown-btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                    Popular searches
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
-                        <li><button class="dropdown-item" type="button">Action</button></li>
-                        <li><button class="dropdown-item" type="button">Another action</button></li>
-                        <li><button class="dropdown-item" type="button">Something else here</button></li>
-                    </ul>
-                    </div> --}}
 
                     <div id="selected-filters-wrapper"></div>
                 </div>
@@ -525,16 +505,7 @@
                         </button>
                     </div>
                 </div>
-
             </div>
-
-            {{-- <div class="d-flex gap-2 flex-wrap  flex-lg-nowrap justify-content-between mt-3 mt-lg-0 mb-3">
-
-                <div>
-                    <div id="selected-filters-wrapper"></div>
-                </div>
-
-            </div> --}}
 
             <div class="product-cards_wrapper position-relative pt-0">
                 <div class="col-12 mb-3 d-flex justify-content-end gap-3 align-items-center sticky-add-to-cart">
@@ -543,7 +514,6 @@
                             <input id="add-moq" type="checkbox" class="card-checkbox">
                             <label for="add-moq">Select All</label>
                         </div>
-                        {{-- @if (Auth::user()->role_id == App\Enums\Roles::Dealer) --}}
                         <div class="d-flex align-items-center justify-content-between">
                             <div id="addtocarthidden">
                                 <span data-bs-toggle="tooltip" data-placement="top"
@@ -558,7 +528,6 @@
                                 </span>
                             </div>
                         </div>
-                        {{-- @endif --}}
                     @endif
                 </div>
                 <div id="pageloader">
@@ -579,12 +548,7 @@
 
                 <div class="row">
                     <div class="col-12 shop-page_product-cards grid" id="product_page">
-                        @foreach ($product as $group)
-                            @php
-                                $products = $group['products'];
-                                $main = $products->first();
-                            @endphp
-
+                        @foreach ($product as $main)
                             <input type="hidden" name="weight{{ $main->id }}" id="weight{{ $main->id }}"
                                 value="{{ $main->weight }}">
                             <input type="hidden" name="size{{ $main->id }}" id="size{{ $main->id }}"
@@ -594,8 +558,8 @@
 
                             <div class="card shop-page_product-card">
                                 <div class="card-checkbox_wrapper">
-                                    <input class="card-checkbox" type="checkbox" name=""
-                                        data-id="{{ $main->id }}">
+                                    <input class="card-checkbox" type="checkbox" name="product{{ $main->id }}"
+                                        id="product{{ $main->id }}" data-id="{{ $main->id }}">
                                 </div>
 
                                 <div
@@ -629,224 +593,168 @@
                                             </button>
                                         </div>
 
-                                        <div
-                                            class="mt-3 card-content_wrapper">
+                                        <div class="mt-3 card-content_wrapper">
                                             <div class="grid cols-3">
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Colour</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    {{ $main->color ?? '-' }}</div>
-                                            </div>
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Unit</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    {{ $main->unit ?? '-' }}</div>
-                                            </div>
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Style</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    {{ $main->style ?? '-' }}</div>
-                                            </div>
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">Colour</div>
+                                                    <div class="product-card-badge product-card-badge-light">
+                                                        {{ $main->color ?? '-' }}</div>
+                                                </div>
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">Unit</div>
+                                                    <div class="product-card-badge product-card-badge-light">
+                                                        {{ $main->unit ?? '-' }}</div>
+                                                </div>
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">Style</div>
+                                                    <div class="product-card-badge product-card-badge-light">
+                                                        {{ $main->style ?? '-' }}</div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="card-multiple-sizes-wrapper">
-                                            <div
-                                                class="mt-3 card-content_wrapper">
+                                            <div class="mt-3 card-content_wrapper">
 
-                                            <div class="grid cols-3">
+                                                <div class="grid cols-3">
+                                                    <div class="d-flex flex-column gap-1">
+                                                        <div class="card-text text-dark">Making %</div>
+                                                        <div class="product-card-badge">{{ $main->making ?? '-' }}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="d-flex flex-column gap-1">
-                                                    <div class="card-text text-dark">Making %</div>
-                                                    <div class="product-card-badge">{{ $main->making ?? '-' }}</div>
-                                                </div>
-                                                @if ($products->count() > 1)
-                                                    <div class="span-2 d-flex align-items-end">
-                                                        <button class="btn multiple-size-btn toggle-sizes"
-                                                            type="button">
-                                                            Multiple Sizes Available
-                                                            <span class="toggle-icon">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 14 8" fill="none">
-                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9625 0.29248L6.70255 4.99906L1.37562 0.323764L0.0438118 1.53132L6.63563 7.53794L13.3271 1.59313L11.9625 0.29248Z" fill="black"/>
-                                                        </svg>
-                                                            </span>
-                                                        </button>
+                                                    <div class="card-text text-dark">
+                                                        Size
+                                                    </div>
+                                                    <div class="product-card-badge">{{ $main->size ?? '-' }}
                                                     </div>
                                                 </div>
-                                                @else
-                                                    
-                                                        <div class="d-flex flex-column gap-1">
-                                                            <div class="card-text text-dark">
-                                                                Size
-                                                            </div>
-                                                            <div class="product-card-badge">{{ $main->size ?? '-' }}
-                                                            </div>
-                                                        </div>
 
-                                                        <div class="d-flex flex-column gap-1">
-                                                            <div class="card-text text-dark">
-                                                                Weight
-                                                            </div>
-                                                            <div class="product-card-badge">
-                                                                {{ $main->weight ?? '-' }}g</div>
-                                                        </div>
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">
+                                                        Weight
                                                     </div>
-
-
-
-                                                    <div class="d-flex mt-3">
-                                                        <div class="product-cart-qty-text">In Stock:
-                                                            <span> {{ $main->qty ?? '-' }} Pcs</span>
-                                                        </div>
-                                                    </div>
-
-                                                    <div>
-                                                        <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">
-                                                            <div class="d-flex align-items-center">
-                                                                <label class="me-2">Qty</label>
-                                                                <div
-                                                                    class="input-group quantity-input-group quantity-container">
-                                                                    <input type="button" value="-"
-                                                                        class="qtyminus" field="quantity">
-                                                                    <input type="text" name="quantity"
-                                                                        id="quantity{{ $main->id }}"
-                                                                        value="1" class="qty">
-                                                                    <input type="button" value="+"
-                                                                        class="qtyplus" field="quantity">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endif
+                                                    <div class="product-card-badge">
+                                                        {{ $main->weight ?? '-' }}g</div>
+                                                </div>
                                             </div>
 
-                                            @if ($products->count() > 1)
-                                                <div class="multiple-sizes-content d-none">
-                                                    @foreach ($products as $variant)
-                                                        <div
-                                                            class="mt-3 grid cols-4 card-content_wrapper">
-                                                            <div class="d-flex flex-column gap-1">
-                                                                <div class="card-text text-dark">Size</div>
-                                                                <div class="product-card-badge">
-                                                                    {{ $variant->size ?? '-' }}</div>
-                                                            </div>
-                                                            <div class="d-flex flex-column gap-1">
-                                                                <div class="card-text text-dark">Weight</div>
-                                                                <div class="product-card-badge">
-                                                                    {{ $variant->weight ?? '-' }}g</div>
-                                                            </div>
-                                                            <div class="d-flex flex-column gap-1">
-                                                                <div class="card-text text-dark">Stock</div>
-                                                                <div
-                                                                    class="product-card-badge product-card-badge-light">
-                                                                    {{ $variant->qty ?? 0 }}</div>
-                                                            </div>
-                                                            
-                                                                <div
-                                                                    class="input-group quantity-input-group quantity-container">
-                                                                    <input type="button" value="-"
-                                                                        class="qtyminus" field="quantity">
-                                                                    <input type="text" name="quantity"
-                                                                        id="quantity{{ $main->id }}"
-                                                                        value="1" class="qty">
-                                                                    <input type="button" value="+"
-                                                                        class="qtyplus" field="quantity">
-                                                                </div>
-                
-                                                        </div>
-                                                    @endforeach
+                                            <div class="d-flex mt-3">
+                                                <div class="product-cart-qty-text">In Stock:
+                                                    <span> {{ $main->qty ?? '-' }} Pcs</span>
                                                 </div>
-                                            @endif
+                                            </div>
+
+                                            <div>
+                                                <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">
+                                                    <div class="d-flex align-items-center">
+                                                        <label class="me-2">Qty</label>
+                                                        <div
+                                                            class="input-group quantity-input-group quantity-container">
+                                                            <input type="button" value="-" class="qtyminus"
+                                                                field="quantity">
+                                                            <input type="text" name="quantity"
+                                                                id="quantity{{ $main->id }}" value="1"
+                                                                class="qty">
+                                                            <input type="button" value="+" class="qtyplus"
+                                                                field="quantity">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    @if (Auth::user()->role_id == App\Enums\Roles::Dealer ||
-                                            Auth::user()->role_id == App\Enums\Roles::Retailer ||
-                                            Auth::user()->role_id == App\Enums\Roles::CRM)
-                                        @php
-                                            $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
-                                                ->where('product_id', $main->id)
-                                                ->get();
-                                            $currentcartcount = App\Models\Cart::where('product_id', $main->id)
-                                                ->where('user_id', Auth::user()->id)
-                                                ->value('qty');
-                                        @endphp
-                                        <div class="shop-page-add-to-cart-btn mt-3">
-                                            @if (count($isCart))
-                                                <button onclick="addforcart({{ $main->id }})"
-                                                    class="btn added-to-cart-btn mr-2 spinner-button"
-                                                    data_id="card_id_{{ $main->id }}">
-                                                    <span class="submit-text">ADDED TO CART</span>
-                                                    <span class="d-none spinner">
-                                                        <span class="spinner-grow spinner-grow-sm"
-                                                            aria-hidden="true"></span>
-                                                        <span role="status">Adding...</span>
-                                                    </span>
-                                                    <span id="applycurrentcartcount{{ $main->id }}"
-                                                        class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
-                                                </button>
-                                            @else
-                                                <button onclick="addforcart({{ $main->id }})"
-                                                    class="btn add-to-cart-btn mr-2 spinner-button"
-                                                    data_id="card_id_{{ $main->id }}">
-                                                    <span class="submit-text">ADD TO CART</span>
-
-                                                    <span class="d-none spinner">
-                                                        <span class="spinner-grow spinner-grow-sm"
-                                                            aria-hidden="true"></span>
-                                                        <span role="status">Adding...</span>
-                                                    </span>
-                                                    <span class="added-to-cart-badge"></span>
-                                                </button>
-                                            @endif
-                                        </div>
-                                    @endif
                                 </div>
+
+                                @if (Auth::user()->role_id == App\Enums\Roles::Dealer ||
+                                        Auth::user()->role_id == App\Enums\Roles::Retailer ||
+                                        Auth::user()->role_id == App\Enums\Roles::CRM)
+                                    @php
+                                        $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
+                                            ->where('product_id', $main->id)
+                                            ->get();
+                                        $currentcartcount = App\Models\Cart::where('product_id', $main->id)
+                                            ->where('user_id', Auth::user()->id)
+                                            ->value('qty');
+                                    @endphp
+                                    <div class="shop-page-add-to-cart-btn mt-3">
+                                        @if (count($isCart))
+                                            <button onclick="addforcart({{ $main->id }})"
+                                                class="btn added-to-cart-btn mr-2 spinner-button"
+                                                data_id="card_id_{{ $main->id }}">
+                                                <span class="submit-text">ADDED TO CART</span>
+                                                <span class="d-none spinner">
+                                                    <span class="spinner-grow spinner-grow-sm"
+                                                        aria-hidden="true"></span>
+                                                    <span role="status">Adding...</span>
+                                                </span>
+                                                <span id="applycurrentcartcount{{ $main->id }}"
+                                                    class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
+                                            </button>
+                                        @else
+                                            <button onclick="addforcart({{ $main->id }})"
+                                                class="btn add-to-cart-btn mr-2 spinner-button"
+                                                data_id="card_id_{{ $main->id }}">
+                                                <span class="submit-text">ADD TO CART</span>
+
+                                                <span class="d-none spinner">
+                                                    <span class="spinner-grow spinner-grow-sm"
+                                                        aria-hidden="true"></span>
+                                                    <span role="status">Adding...</span>
+                                                </span>
+                                                <span class="added-to-cart-badge"></span>
+                                            </button>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         @endforeach
+                    </div>
 
-                        <script>
-                            document.addEventListener("DOMContentLoaded", async function() {
-                                try {
-                                    const res = await fetch("/retailer/proxy/token");
-                                    const data = await res.json();
-                                    const token = data.token;
+                    <script>
+                        document.addEventListener("DOMContentLoaded", async function() {
+                            try {
+                                const res = await fetch("/retailer/proxy/token");
+                                const data = await res.json();
+                                const token = data.token;
 
-                                    if (!token) {
-                                        throw new Error("Token not received from /retailer/proxy/token");
-                                    }
-
-                                    // Loop through all secure images
-                                    document.querySelectorAll(".load-secure-image").forEach(async (img) => {
-                                        const secureFilename = img.dataset.secure;
-
-                                        try {
-                                            const res = await fetch("/retailer/proxy/secure-image", {
-                                                method: "POST",
-                                                headers: {
-                                                    "Content-Type": "application/json",
-                                                    "Authorization": `${token}`
-                                                },
-                                                body: JSON.stringify({
-                                                    secureFilename
-                                                })
-                                            });
-
-                                            if (!res.ok) throw new Error("Failed to fetch image");
-
-                                            const blob = await res.blob();
-                                            const imageUrl = URL.createObjectURL(blob);
-                                            img.src = imageUrl;
-                                        } catch (error) {
-                                            console.error("Image load failed:", error);
-                                            img.alt = "Image load failed";
-                                        }
-                                    });
-                                } catch (err) {
-                                    console.error("Token fetch failed:", err);
+                                if (!token) {
+                                    throw new Error("Token not received from /retailer/proxy/token");
                                 }
-                            });
-                        </script>
-                        {{-- @if ($product->isEmpty())
+
+                                // Loop through all secure images
+                                document.querySelectorAll(".load-secure-image").forEach(async (img) => {
+                                    const secureFilename = img.dataset.secure;
+
+                                    try {
+                                        const res = await fetch("/retailer/proxy/secure-image", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                                "Authorization": `${token}`
+                                            },
+                                            body: JSON.stringify({
+                                                secureFilename
+                                            })
+                                        });
+
+                                        if (!res.ok) throw new Error("Failed to fetch image");
+
+                                        const blob = await res.blob();
+                                        const imageUrl = URL.createObjectURL(blob);
+                                        img.src = imageUrl;
+                                    } catch (error) {
+                                        console.error("Image load failed:", error);
+                                        img.alt = "Image load failed";
+                                    }
+                                });
+                            } catch (err) {
+                                console.error("Token fetch failed:", err);
+                            }
+                        });
+                    </script>
+                    {{-- @if ($product->isEmpty())
                             <div class="text-center" id="empty-cart-image">
                                 <img src="{{ asset('emptycart.gif') }}" alt="alternative_text" class="nodata">
                             </div>
@@ -1101,65 +1009,65 @@
                                 </div>
                             @endforeach -->
                         @endif --}}
-                    </div>
                 </div>
-                <div id="pagination"></div>
-                @if (!$product->isEmpty())
-                    <div class="my-5 pagination-links">
-                        <nav class="large-devices_pagination">
-                            <div class="d-flex gap-3 flex-wrap justify-content-between">
-                                <div>
-                                    Showing {{ $product->firstItem() }} - {{ $product->lastItem() }} of
-                                    {{ $product->total() }} results
-                                </div>
-                                <ul class="pagination">
-                                    @if ($product->onFirstPage())
-                                        <li class="page-item disabled">
-                                            <span class="page-link">Previous</span>
-                                        </li>
-                                    @else
-                                        <li class="page-item">
-                                            <a class="page-link" href="{{ $product->previousPageUrl() }}"
-                                                tabindex="-1">Previous</a>
-                                        </li>
-                                    @endif
-
-                                    @for ($page = max(1, $product->currentPage() - 2); $page <= min($product->lastPage(), $product->currentPage() + 2); $page++)
-                                        @if ($page == $product->currentPage())
-                                            <li class="page-item active">
-                                                <span class="page-link">{{ $page }}</span>
-                                            </li>
-                                        @else
-                                            <li class="page-item">
-                                                <a class="page-link"
-                                                    href="{{ $product->url($page) }}">{{ $page }}</a>
-                                            </li>
-                                        @endif
-                                    @endfor
-
-                                    @if ($product->hasMorePages())
-                                        <li class="page-item">
-                                            <a class="page-link" href="{{ $product->nextPageUrl() }}">Next</a>
-                                        </li>
-                                    @else
-                                        <li class="page-item disabled">
-                                            <span class="page-link">Next</span>
-                                        </li>
-                                    @endif
-                                </ul>
-                            </div>
-                        </nav>
-                        <nav class="small-devices_pagination d-none">
-                            <div class="text-center">
-                                <a class="btn btn-dark px-4 py-2" href="{{ $product->nextPageUrl() }}">See More
-                                    Products</a>
-                            </div>
-                        </nav>
-                    </div>
-                @endif
             </div>
-        </section>
+            <div id="pagination"></div>
+            @if (!$product->isEmpty())
+                <div class="my-5 pagination-links">
+                    <nav class="large-devices_pagination">
+                        <div class="d-flex gap-3 flex-wrap justify-content-between">
+                            <div>
+                                Showing {{ $product->firstItem() }} - {{ $product->lastItem() }} of
+                                {{ $product->total() }} results
+                            </div>
+                            <ul class="pagination">
+                                @if ($product->onFirstPage())
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Previous</span>
+                                    </li>
+                                @else
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $product->previousPageUrl() }}"
+                                            tabindex="-1">Previous</a>
+                                    </li>
+                                @endif
+
+                                @for ($page = max(1, $product->currentPage() - 2); $page <= min($product->lastPage(), $product->currentPage() + 2); $page++)
+                                    @if ($page == $product->currentPage())
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ $page }}</span>
+                                        </li>
+                                    @else
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                                href="{{ $product->url($page) }}">{{ $page }}</a>
+                                        </li>
+                                    @endif
+                                @endfor
+
+                                @if ($product->hasMorePages())
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $product->nextPageUrl() }}">Next</a>
+                                    </li>
+                                @else
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Next</span>
+                                    </li>
+                                @endif
+                            </ul>
+                        </div>
+                    </nav>
+                    <nav class="small-devices_pagination d-none">
+                        <div class="text-center">
+                            <a class="btn btn-dark px-4 py-2" href="{{ $product->nextPageUrl() }}">See More
+                                Products</a>
+                        </div>
+                    </nav>
+                </div>
+            @endif
     </div>
+    </section>
+</div>
 </div>
 <style>
     .fixed-button-container {

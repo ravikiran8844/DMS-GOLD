@@ -21,7 +21,7 @@ class CartController extends Controller
 
     function cart()
     {
-        $cart = Cart::select('carts.*', 'products.moq', 'products.qty')
+        $cart = Cart::select('carts.*','products.qty')
             ->join('products', 'products.id', 'carts.product_id')
             ->where('carts.user_id', Auth::user()->id)
             ->get();
@@ -39,25 +39,17 @@ class CartController extends Controller
     function getCartProducts()
     {
         $carts = Cart::join('products', 'products.id', 'carts.product_id')
-            ->leftjoin('sizes', 'sizes.id', 'carts.size_id')
-            ->join('styles', 'styles.id', 'products.style_id')
             ->where('carts.user_id', Auth::user()->id)
-            ->select('carts.*', 'products.qty as stock', 'products.product_image', 'products.product_unique_id', 'sizes.size', 'products.weight', 'products.moq', 'styles.style_name', 'products.height', 'products.width')
+            ->select('carts.*', 'products.qty as stock', 'products.product_image', 'products.DesignNo', 'products.weight')
             ->get();
 
         $cartQty = Cart::join('products', 'products.id', 'carts.product_id')
             ->where('carts.user_id', Auth::user()->id)
-            // ->where('products.qty', '>', 0)
             ->select('carts.*', 'products.qty as stock')
             ->count('carts.id');
-
-        $sizes = Size::where('is_active', 1)->whereNull('deleted_at')->get();
-        $finishes = Finish::where('is_active', 1)->whereNull('deleted_at')->get();
         return response()->json(array(
             'carts' => $carts,
-            'cartQty' => $cartQty,
-            'sizes' => $sizes,
-            'finishes' => $finishes
+            'cartQty' => $cartQty
         ));
     }
 
@@ -69,7 +61,7 @@ class CartController extends Controller
             ->where('carts.user_id', Auth::user()->id)
             ->select('carts.*', 'products.qty as stock')
             ->count('carts.id');
-            $cartqtycount = Cart::where('user_id', Auth::user()->id)->sum('qty');
+        $cartqtycount = Cart::where('user_id', Auth::user()->id)->sum('qty');
         $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * products.weight) as totalWeight'))
             ->join('products', 'products.id', '=', 'carts.product_id')
             ->where('carts.user_id', Auth::user()->id)
