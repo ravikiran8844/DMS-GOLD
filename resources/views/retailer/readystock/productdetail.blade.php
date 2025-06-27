@@ -185,16 +185,50 @@
                             </div>
                         </div>
                         <div id="accordion mt-4">
-                            <div class="accordion product-specs-accordian">
-                                <div class="accordion-header py-2" role="button" data-bs-toggle="collapse"
+                            <div class="accordion product-specs-accordian py-3">
+                                <div class="accordion-header" role="button" data-bs-toggle="collapse"
                                     data-bs-target="#panel-body-1" aria-expanded="true">
-                                    <h4 class="fs-6">
+                                    <h5>
                                         Product Specs <span class="accordion-icon"><i
                                                 class="fas fa-angle-up"></i></span>
-                                    </h4>
+                                    </h5>
                                 </div>
-                                <div class="accordion-body collapse show" id="panel-body-1" data-parent="#accordion">
-                                    <div class="row mt-3">
+                                <div class="accordion-body collapse show px-0" id="panel-body-1" data-parent="#accordion">
+                                    <div class="row">
+                                           <div class="col-12 d-flex gap-5 flex-wrap">
+                                           <div>
+                                                <div class="product-specs-item_title mb-2">colour</div>
+                                                <div class="product-specs-item_text">Y</div>
+                                            </div>
+                                            <div>
+                                                <div class="product-specs-item_title mb-2">Unit</div>
+                                                <div class="product-specs-item_text">Pcs</div>
+                                            </div>
+                                            <div>
+                                                <div class="product-specs-item_title mb-2">STYLE</div>
+                                                <div class="product-specs-item_text">BU</div>
+                                            </div>
+                                            <div>
+                                                <div class="product-specs-item_title mb-2">MAKING %</div>
+                                                <div class="product-specs-item_text">4.50%</div>
+                                            </div>
+                                            <div>
+                                                <div class="product-specs-item_title mb-2">Size</div>
+                                                <div class="product-specs-item_text">16</div>
+                                            </div>
+                                            <div>
+                                                <div class="product-specs-item_title mb-2">Weight</div>
+                                                <div class="product-specs-item_text">1.70g</div>
+                                            </div>
+
+                                           </div>
+
+
+
+
+
+
+
                                         @if ($product->gender && $product->gender != 'NONE')
                                             <div class="col-4 col-lg-3 mb-4">
                                                 <div class="product-specs-item_title mb-2">Gender</div>

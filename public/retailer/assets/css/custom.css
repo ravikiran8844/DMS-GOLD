@@ -817,7 +817,7 @@ body {
 .product-specs-item_text {
     color: #2d2d2d;
     font-family: Inter;
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 600;
     line-height: 100%;
@@ -1148,7 +1148,7 @@ input.qtyminus {
     .product-specs-item_text {
         color: #2d2d2d;
         font-family: Inter;
-        font-size: 16px;
+        font-size: 14px;
         font-style: normal;
         font-weight: 600;
         line-height: 100%;
@@ -5895,4 +5895,8 @@ textarea {
     padding: 4px 8px;
     color: #fff;
     font-size: 12px;
+}
+
+.product-page_content_wrapper h5{
+    font-size: 16px;
 }
