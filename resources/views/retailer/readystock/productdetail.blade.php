@@ -114,7 +114,7 @@
                             <div class="product-design_title">Design
                                 Code: <span class="product-design_content me-2">{{ $product->DesignNo }}</span>
                             </div>
-                            
+
                             <div class="ml-auto ml-sm-5 ">
                                 @if ($product->qty > 0)
                                     <div class="badge in-stock-badge d-flex gap-1 align-items-center">IN
@@ -148,8 +148,7 @@
                                 <div class="input-group quantity-input-group quantity-container align-items-center">
                                     <input type="hidden" name="moq" id="moq" value="1">
                                     <input type="hidden" name="qty" id="qty" value="{{ $product->qty }}">
-                                    <input type="hidden" name="box" id="box"
-                                        value="{{ $product->style }}">
+                                    <input type="hidden" name="box" id="box" value="{{ $product->style }}">
                                     <input type="hidden" name="stockqty" id="stockqty" value="{{ $stock }}">
                                     <input type='button' value='-' class='qtyminus' field='quantity' />
                                     <input type='text' id="quantity" name='quantity'
@@ -193,45 +192,9 @@
                                                 class="fas fa-angle-up"></i></span>
                                     </h5>
                                 </div>
-                                <div class="accordion-body collapse show px-0" id="panel-body-1" data-parent="#accordion">
+                                <div class="accordion-body collapse show px-0" id="panel-body-1"
+                                    data-parent="#accordion">
                                     <div class="row">
-                                           <div class="col-12 d-flex gap-5 flex-wrap">
-                                           <div>
-                                                <div class="product-specs-item_title mb-2">colour</div>
-                                                <div class="product-specs-item_text">Y</div>
-                                            </div>
-                                            <div>
-                                                <div class="product-specs-item_title mb-2">Unit</div>
-                                                <div class="product-specs-item_text">Pcs</div>
-                                            </div>
-                                            <div>
-                                                <div class="product-specs-item_title mb-2">STYLE</div>
-                                                <div class="product-specs-item_text">BU</div>
-                                            </div>
-                                            <div>
-                                                <div class="product-specs-item_title mb-2">MAKING %</div>
-                                                <div class="product-specs-item_text">4.50%</div>
-                                            </div>
-                                            <div>
-                                                <div class="product-specs-item_title mb-2">Size</div>
-                                                <div class="product-specs-item_text">16</div>
-                                            </div>
-                                            <div>
-                                                <div class="product-specs-item_title mb-2">Weight</div>
-                                                <div class="product-specs-item_text">1.70g</div>
-                                            </div>
-
-                                           </div>
-
-
-
-
-
-
-
-                                        @if ($product->gender && $product->gender != 'NONE')
-                                <div class="accordion-body collapse show" id="panel-body-1" data-parent="#accordion">
-                                    <div class="row mt-3">
                                         @if ($product->color)
                                             <div class="col-4 col-lg-3 mb-4">
                                                 <div class="product-specs-item_title mb-2">COLOR</div>
