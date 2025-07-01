@@ -22,47 +22,49 @@ class ImportStockUpdate implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
-            $stock = Product::where('DesignNo', $row['designno'])->first();
+            // Try to find a product with the exact match
+            $stock = Product::where('DesignNo', $row['designno'])
+                ->where('style', $row['style'])
+                ->where('weight', $row['weight'])
+                ->where('Purity', $row['purity'])
+                ->where('size', $row['size'])
+                ->first();
 
-            if (!$stock) {
-                continue;
-            }
-
-            $stock = Product::find($stock->id);
-            $this->processedProductIds[] = $stock->id;
-
-            $box = $row['style'];
-            $purity = $row['purity'];
-            $size = $row['size'];
-            $weight = $row['weight'];
-            
-
-            // If same style, update; otherwise create new entry
-            if ($stock->style === $box && $stock->weight === $weight && $stock->Purity === $purity && $stock->size === $size) {
+            if ($stock) {
+                $this->processedProductIds[] = $stock->id;
                 $stock->qty = $row['qty'];
                 $stock->save();
             } else {
-                Product::create([
-                    'DesingNo' => $row['designno'],
+                // Fallback: get one product with just the DesignNo to copy project/category/etc
+                $base = Product::where('DesignNo', $row['designno'])->first();
+
+                if (!$base) {
+                    continue; // Skip if nothing to clone from
+                }
+
+                $newProduct = Product::create([
+                    'DesignNo' => $row['designno'],
                     'product_image' => $row['designno'] . '.jpg',
                     'weight' => $row['weight'],
                     'color' => $row['color'],
                     'style' => $row['style'],
-                    'Project' => $stock->Project,
-                    'Category' => $stock->Category,
-                    'Subcategory' => $stock->Subcategory,
+                    'Project' => $base->Project,
+                    'Category' => $base->Category,
+                    'Subcategory' => $base->Subcategory,
                     'Purity' => $row['purity'],
                     'size' => $row['size'],
                     'qty' => $row['qty'],
-                    'Jeweltype' => $stock->Jeweltype,
-                    'Item' => $stock->Item,
-                    'Procatgory' => $stock->Procatgory,
+                    'Jeweltype' => $row['jeweltype'],
+                    'Item' => $base->Item,
+                    'Procatgory' => $row['procatgory'],
                     'unit' => $row['unit'],
                     'making' => $row['making']
                 ]);
+                $this->processedProductIds[] = $newProduct->id;
             }
         }
     }
+
 
     // Retrieve the processed product IDs after the import is done
     public function getProcessedProductIds()
