@@ -18,10 +18,58 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb px-0">
                     <li class="breadcrumb-item"><a href="{{ route('retailerlanding') }}">HOME</a></li>
-                    <li class="breadcrumb-item"><a
-                            href="{{ $product->project_id == App\Enums\Projects::EF ? route('retailerefreadystock') : ($product->project_id == App\Enums\Projects::CASTING ? route('retailersireadystock') : route('retailerjewelleryreadystock')) }}">
-                            {{ $product->project_id == App\Enums\Projects::EF ? 'EF' : ($product->project_id == App\Enums\Projects::CASTING ? 'CASTING' : 'CASTING') }}
-                        </a></li>
+                    <li class="breadcrumb-item">@php
+
+                        $projectId = $product->Project;
+                        $route = '#'; // default
+                        $label = $projectId;
+
+                        switch ($projectId) {
+                            case App\Enums\Projects::EF:
+                                $route = route('retailerefreadystock');
+                                $label = 'EF';
+                                break;
+                            case App\Enums\Projects::CASTING:
+                                $route = route('retailersireadystock');
+                                $label = 'CASTING';
+                                break;
+                            case App\Enums\Projects::IMPREZ:
+                                $route = route('retailerimprezreadystock');
+                                $label = 'IMPREZ';
+                                break;
+                            case App\Enums\Projects::INDIANIA:
+                                $route = route('retailerindianiareadystock');
+                                $label = 'INDIANIA';
+                                break;
+                            case App\Enums\Projects::LASERCUT:
+                                $route = route('retailerUTENSILreadystock');
+                                $label = 'LASER CUT';
+                                break;
+                            case App\Enums\Projects::MMD:
+                                $route = route('mmd');
+                                $label = 'MMD';
+                                break;
+                            case App\Enums\Projects::STAMPING:
+                                $route = route('stamping');
+                                $label = 'STAMPING';
+                                break;
+                            case App\Enums\Projects::TURKISH:
+                                $route = route('turkish');
+                                $label = 'TURKISH';
+                                break;
+                            case App\Enums\Projects::UNIKRAFT:
+                                $route = route('unikraft');
+                                $label = 'UNIKRAFT';
+                                break;
+                            default:
+                                $route = '#';
+                                $label = 'UNKNOWN';
+                                break;
+                        }
+                    @endphp
+
+                        <a href="{{ $route }}">{{ $label }}</a>
+                    </li>
                     <li class="breadcrumb-item active" aria-current="page">{{ $product->DesignNo }}</li>
                 </ol>
             </nav>
@@ -109,7 +157,7 @@
                 </div>
                 <div class="col-12 col-lg-6">
                     <div class="product-page_content_wrapper d-flex flex-column h-100">
-                        <div class="purity-badge mb-2">Purity: 22K-91.75</div>
+                        {{-- <div class="purity-badge mb-2">Purity: 22K-91.75</div> --}}
                         <div class="d-flex flex-wrap gap-2 align-items-center">
                             <div class="product-design_title">Design
                                 Code: <span class="product-design_content me-2">{{ $product->DesignNo }}</span>
@@ -129,7 +177,7 @@
 
                             </div>
                         </div>
-                        <h1 class="product-main-title my-2">Product Title {{ $product->product_name }}</h1>
+                        {{-- <h1 class="product-main-title my-2">Product Title {{ $product->product_name }}</h1> --}}
 
                         @if ($stock == 1 && $product->qty > 0)
                             <div class="d-none d-md-block">
