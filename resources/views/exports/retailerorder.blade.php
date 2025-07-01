@@ -96,7 +96,7 @@
                         src="{{ public_path('upload/product/' . $detail->product_image) }}" alt="Description of Image"
                         width="100" height="100">
                 </td>
-                <td style="text-align: center;">{{ $detail->product_unique_id }}</td>
+                <td style="text-align: center;">{{ $detail->DesignNo }}</td>
                 <td style="text-align: center;">{{ str_replace('SIL-', '', $detail->Purity) }}</td>
                 <td style="text-align: center;">{{ $detail->qty }}</td>
                 <td style="text-align: center;">{{ $detail->weight }}</td>

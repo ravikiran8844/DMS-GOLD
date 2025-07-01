@@ -135,17 +135,14 @@ class OrderController extends Controller
         $productDetailsQuery = OrderDetail::select(
             'order_details.id as order_detail_id',
             'order_details.order_id',
-            'products.product_unique_id',
-            'products.product_name',
+            'products.DesignNo',
             'products.product_image',
             'products.id as product_id',
             'products.qty as available_qty',
             'products.weight',
-            'order_details.qty as order_qty',
-            'styles.style_name'
+            'order_details.qty as order_qty'
         )
             ->join('products', 'products.id', '=', 'order_details.product_id')
-            ->join('styles', 'styles.id', '=', 'products.style_id')
             ->whereIn('order_details.order_id', $order->pluck('id'))
             ->get()
             ->groupBy('order_id');
