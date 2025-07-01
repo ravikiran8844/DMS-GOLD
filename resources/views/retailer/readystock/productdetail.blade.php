@@ -32,7 +32,7 @@
 
 <div class="container">
     <div class="col-12">
-        <section class="main-product">
+        <section class="main-product mb-5">
             <div class="row g-4">
                 <div class="col-12 col-lg-6 mb-lg-0">
                     <div class="single-images-block position-relative">
@@ -108,11 +108,13 @@
                     </div>
                 </div>
                 <div class="col-12 col-lg-6">
-                    <div class="product-page_content_wrapper d-flex flex-column h-100 justify-content-center">
+                    <div class="product-page_content_wrapper d-flex flex-column h-100">
+                        <div class="purity-badge mb-2">Purity: 22K-91.75</div>
                         <div class="d-flex flex-wrap gap-2 align-items-center">
                             <div class="product-design_title">Design
                                 Code: <span class="product-design_content me-2">{{ $product->DesignNo }}</span>
                             </div>
+                            
                             <div class="ml-auto ml-sm-5 ">
                                 @if ($product->qty > 0)
                                     <div class="badge in-stock-badge d-flex gap-1 align-items-center">IN
@@ -127,7 +129,7 @@
 
                             </div>
                         </div>
-                        <div class="product-main-title my-3">{{ $product->product_name }}</div>
+                        <h1 class="product-main-title my-2">Product Title {{ $product->product_name }}</h1>
 
                         @if ($stock == 1 && $product->qty > 0)
                             <div class="d-none d-md-block">
@@ -137,7 +139,7 @@
                             </div>
                         @endif
 
-                        <div class="my-4 my-mb-5 pt-5 d-flex gap-5 flex-row flex-wrap align-items-center"
+                        <div class="py-4 mt-4 d-flex gap-5 flex-row flex-wrap align-items-center"
                             style=" border-top: 1px solid #bcbcbc;">
                             <div class="product-weight_text mb-0 mb-md-0">{{ $product->weight }}gm</div>
 
@@ -182,15 +184,52 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="accordion">
-                            <div class="accordion product-specs-accordian">
+                        <div id="accordion mt-4">
+                            <div class="accordion product-specs-accordian py-3">
                                 <div class="accordion-header" role="button" data-bs-toggle="collapse"
                                     data-bs-target="#panel-body-1" aria-expanded="true">
-                                    <h4>
+                                    <h5>
                                         Product Specs <span class="accordion-icon"><i
                                                 class="fas fa-angle-up"></i></span>
-                                    </h4>
+                                    </h5>
                                 </div>
+                                <div class="accordion-body collapse show px-0" id="panel-body-1" data-parent="#accordion">
+                                    <div class="row">
+                                           <div class="col-12 d-flex gap-5 flex-wrap">
+                                           <div>
+                                                <div class="product-specs-item_title mb-2">colour</div>
+                                                <div class="product-specs-item_text">Y</div>
+                                            </div>
+                                            <div>
+                                                <div class="product-specs-item_title mb-2">Unit</div>
+                                                <div class="product-specs-item_text">Pcs</div>
+                                            </div>
+                                            <div>
+                                                <div class="product-specs-item_title mb-2">STYLE</div>
+                                                <div class="product-specs-item_text">BU</div>
+                                            </div>
+                                            <div>
+                                                <div class="product-specs-item_title mb-2">MAKING %</div>
+                                                <div class="product-specs-item_text">4.50%</div>
+                                            </div>
+                                            <div>
+                                                <div class="product-specs-item_title mb-2">Size</div>
+                                                <div class="product-specs-item_text">16</div>
+                                            </div>
+                                            <div>
+                                                <div class="product-specs-item_title mb-2">Weight</div>
+                                                <div class="product-specs-item_text">1.70g</div>
+                                            </div>
+
+                                           </div>
+
+
+
+
+
+
+
+                                        @if ($product->gender && $product->gender != 'NONE')
                                 <div class="accordion-body collapse show" id="panel-body-1" data-parent="#accordion">
                                     <div class="row mt-3">
                                         @if ($product->color)

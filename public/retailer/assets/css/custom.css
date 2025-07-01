@@ -817,7 +817,7 @@ body {
 .product-specs-item_text {
     color: #2d2d2d;
     font-family: Inter;
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 600;
     line-height: 100%;
@@ -1148,7 +1148,7 @@ input.qtyminus {
     .product-specs-item_text {
         color: #2d2d2d;
         font-family: Inter;
-        font-size: 16px;
+        font-size: 14px;
         font-style: normal;
         font-weight: 600;
         line-height: 100%;
@@ -1166,7 +1166,7 @@ input.qtyminus {
     }
 
     .product-add-to_cart-btn {
-        border-radius: 55.528px !important;
+        border-radius: 8px !important;
         border: 2.251px solid rgba(52, 115, 98, 0) !important;
         background: #003836 !important;
         width: 100%;
@@ -5885,4 +5885,18 @@ textarea {
 
 .span-2{
     grid-column: span 2;
+}
+
+.purity-badge{
+    border-radius: 4px;
+    font-weight: 500;
+    background: #FF2626;
+    width: fit-content;
+    padding: 4px 8px;
+    color: #fff;
+    font-size: 12px;
+}
+
+.product-page_content_wrapper h5{
+    font-size: 16px;
 }
