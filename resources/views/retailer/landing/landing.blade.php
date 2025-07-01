@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 <main>
-    <section id="home-main-slider" class="splide main-slider container-fluid" aria-label="Home page Main Slider">
+    {{-- <section id="home-main-slider" class="splide main-slider container-fluid" aria-label="Home page Main Slider">
         <div class="splide__track">
             <ul class="splide__list">
                 <a href="{{ route('retailersireadystock') }}" class="w-100">
@@ -53,7 +53,6 @@
                     <div class="home-products-grid-item">
                         <a href="{{ route('efkrishna') }}">
                             <div class="home-products-grid-item__img-wrapper">
-                                {{-- <span class="pro-badge">new</span> --}}
                                 <img class="img-fluid"
                                     src="{{ asset('retailer/assets/img/new-home/electro-forming-img3.png') }}"
                                     alt="">
@@ -211,7 +210,6 @@
                     <div class="home-products-grid-item">
                         <a href="{{ route('sikrishna') }}">
                             <div class="home-products-grid-item__img-wrapper">
-                                {{-- <span class="pro-badge">new</span> --}}
                                 <img class="img-fluid"
                                     src="{{ asset('retailer/assets/img/new-home/solid-idol-3.jpg') }}"
                                     alt="">
@@ -355,7 +353,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
     <section class="home-multicolumn-section mt-4 mt-lg-5">
         <div class="container py-5">
             <div class="row gx-lg-5">

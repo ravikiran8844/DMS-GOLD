@@ -31,15 +31,10 @@ class StockController extends Controller
     public function getStockData()
     {
         try {
-            $query = Product::select('products.*', 'styles.style_name')
-                ->join('styles', 'styles.id', 'products.style_id')
-                ->whereNull('products.deleted_at')
+            $query = Product::select('products.*')
                 ->orderBy('products.id', 'ASC');
 
             return DataTables::of($query)
-                ->filterColumn('style_name', function ($query, $keyword) {
-                    $query->where('styles.style_name', 'like', "%{$keyword}%");
-                })
                 ->addColumn('action', function ($row) {
                     return '<input type="hidden" id="product_id' . $row->id . '" name="product_id" value="' . $row->id . '"><button type="button" title="Update" class="btn btn-primary" onclick="stockUpdate(' . $row->id . ');">Update</button>';
                 })

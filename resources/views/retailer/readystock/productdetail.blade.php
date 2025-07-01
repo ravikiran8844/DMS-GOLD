@@ -144,14 +144,14 @@
                             <div class="d-flex gap-2 align-items-center">
                                 <div class="fs-6" style=" color: #717171; ">Qty</div>
                                 <div class="input-group quantity-input-group quantity-container align-items-center">
-                                    <input type="hidden" name="moq" id="moq" value="{{ $product->moq }}">
+                                    <input type="hidden" name="moq" id="moq" value="1">
                                     <input type="hidden" name="qty" id="qty" value="{{ $product->qty }}">
                                     <input type="hidden" name="box" id="box"
-                                        value="{{ $product->style_id }}">
+                                        value="{{ $product->style }}">
                                     <input type="hidden" name="stockqty" id="stockqty" value="{{ $stock }}">
                                     <input type='button' value='-' class='qtyminus' field='quantity' />
                                     <input type='text' id="quantity" name='quantity'
-                                        value="{{ $currentcartcount ?? $product->moq }}" class='qty' />
+                                        value="{{ $currentcartcount ?? 1 }}" class='qty' />
                                     <input type='button' value='+' class='qtyplus' field='quantity' />
                                 </div>
                             </div>
@@ -193,42 +193,51 @@
                                 </div>
                                 <div class="accordion-body collapse show" id="panel-body-1" data-parent="#accordion">
                                     <div class="row mt-3">
-                                        @if ($product->gender && $product->gender != 'NONE')
-                                            <div class="col-4 col-lg-3 mb-4">
-                                                <div class="product-specs-item_title mb-2">Gender</div>
-                                                <div class="product-specs-item_text">{{ $product->gender }}</div>
-                                            </div>
-                                        @endif
-                                        @if ($product->metal_name)
-                                            <div class="col-4 col-lg-3 mb-4">
-                                                <div class="product-specs-item_title mb-2">METAL</div>
-                                                <div class="product-specs-item_text">{{ $product->metal_name }}</div>
-                                            </div>
-                                        @endif
-                                        @if ($product->height)
-                                            <div class="col-4 col-lg-3 mb-4">
-                                                <div class="product-specs-item_title mb-2">HEIGHT</div>
-                                                <div class="product-specs-item_text">{{ $product->height }}cm</div>
-                                            </div>
-                                        @endif
-                                        @if ($product->width)
-                                            <div class="col-4 col-lg-3 mb-4">
-                                                <div class="product-specs-item_title mb-2">WIDTH</div>
-                                                <div class="product-specs-item_text">{{ $product->width }}cm</div>
-                                            </div>
-                                        @endif
-                                        @if ($product->plating_name)
+                                        @if ($product->color)
                                             <div class="col-4 col-lg-3 mb-4">
                                                 <div class="product-specs-item_title mb-2">COLOR</div>
-                                                <div class="product-specs-item_text">{{ $product->plating_name }}
+                                                <div class="product-specs-item_text">
+                                                    {{ $product->color }}
                                                 </div>
                                             </div>
                                         @endif
-                                        @if ($product->silver_purity_percentage)
+                                        @if ($product->unit)
+                                            <div class="col-4 col-lg-3 mb-4">
+                                                <div class="product-specs-item_title mb-2">UNIT</div>
+                                                <div class="product-specs-item_text">
+                                                    {{ $product->unit }}
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if ($product->style)
+                                            <div class="col-4 col-lg-3 mb-4">
+                                                <div class="product-specs-item_title mb-2">STYLE</div>
+                                                <div class="product-specs-item_text">
+                                                    {{ $product->style }}
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if ($product->making)
+                                            <div class="col-4 col-lg-3 mb-4">
+                                                <div class="product-specs-item_title mb-2">MAKING</div>
+                                                <div class="product-specs-item_text">
+                                                    {{ $product->making }}%
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if ($product->Purity)
                                             <div class="col-4 col-lg-3 mb-4">
                                                 <div class="product-specs-item_title mb-2">PURITY</div>
                                                 <div class="product-specs-item_text">
-                                                    {{ str_replace('SIL-', '', $product->silver_purity_percentage) }}
+                                                    {{ $product->Purity }}
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if ($product->size)
+                                            <div class="col-4 col-lg-3 mb-4">
+                                                <div class="product-specs-item_title mb-2">SIZE</div>
+                                                <div class="product-specs-item_text">
+                                                    {{ $product->size }}
                                                 </div>
                                             </div>
                                         @endif

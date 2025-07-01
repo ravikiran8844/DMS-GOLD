@@ -28,7 +28,6 @@
                                 <thead>
                                     <tr>
                                         <th>Product SKU</th>
-                                        <th>Product Name</th>
                                         <th>Box</th>
                                         <th>Stock</th>
                                         <th>Action</th>

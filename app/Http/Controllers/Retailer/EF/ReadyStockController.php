@@ -126,6 +126,7 @@ class ReadyStockController extends Controller
 
         $subQuery = DB::table('products')
             ->select('id')
+            ->where('qty','>', 0)
             ->where('project', Projects::EF);
 
         $productQuery = Product::select('products.*', 'wishlists.is_favourite')
@@ -175,6 +176,7 @@ class ReadyStockController extends Controller
 
         $subQuery = DB::table('products')
             ->select('id')
+            ->where('qty','>', 0)
             ->where('project', Projects::CASTING);
 
         $productQuery = Product::select('products.*', 'wishlists.is_favourite')
@@ -224,6 +226,7 @@ class ReadyStockController extends Controller
 
         $subQuery = DB::table('products')
             ->select('id')
+            ->where('qty','>', 0)
             ->where('project', Projects::IMPREZ);
 
         $productQuery = Product::select('products.*', 'wishlists.is_favourite')
@@ -273,6 +276,7 @@ class ReadyStockController extends Controller
 
         $subQuery = DB::table('products')
             ->select('id')
+            ->where('qty','>', 0)
             ->where('project', Projects::INDIANIA);
 
         $productQuery = Product::select('products.*', 'wishlists.is_favourite')
@@ -322,6 +326,7 @@ class ReadyStockController extends Controller
 
         $subQuery = DB::table('products')
             ->select('id')
+            ->where('qty','>', 0)
             ->where('project', Projects::LASERCUT);
 
         $productQuery = Product::select('products.*', 'wishlists.is_favourite')
@@ -371,6 +376,7 @@ class ReadyStockController extends Controller
 
         $subQuery = DB::table('products')
             ->select('id')
+            ->where('qty','>', 0)
             ->where('project', Projects::MMD);
 
         $productQuery = Product::select('products.*', 'wishlists.is_favourite')
@@ -420,6 +426,7 @@ class ReadyStockController extends Controller
 
         $subQuery = DB::table('products')
             ->select('id')
+            ->where('qty','>', 0)
             ->where('project', Projects::STAMPING);
 
         $productQuery = Product::select('products.*', 'wishlists.is_favourite')
@@ -469,6 +476,7 @@ class ReadyStockController extends Controller
 
         $subQuery = DB::table('products')
             ->select('id')
+            ->where('qty','>', 0)
             ->where('project', Projects::TURKISH);
 
         $productQuery = Product::select('products.*', 'wishlists.is_favourite')
@@ -518,6 +526,7 @@ class ReadyStockController extends Controller
 
         $subQuery = DB::table('products')
             ->select('id')
+            ->where('qty','>', 0)
             ->where('project', Projects::UNIKRAFT);
 
         $productQuery = Product::select('products.*', 'wishlists.is_favourite')

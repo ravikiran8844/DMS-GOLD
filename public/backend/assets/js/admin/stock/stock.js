@@ -24,9 +24,8 @@ function stock() {
             },
         },
         columns: [
-            { data: "product_unique_id" },
-            { data: "product_name" },
-            { data: "style_name" },
+            { data: "DesignNo" },
+            { data: "style" },
             {
                 data: "qty",
                 render: function (data, type, row) {
@@ -39,15 +38,6 @@ function stock() {
                     );
                 },
             },
-            //   {
-            //     data: "action",
-            //     orderable: false,
-            //     searchable: false,
-            //     render: function (data, type, row) {
-            //       return `<input type="hidden" id="product_id${row.id}" name="product_id" value="${row.id}">
-            // <button type="button" title="Update" class="btn btn-primary" onclick="stockUpdate(${row.id});">Update</button>`;
-            //     },
-            //   },
             {
                 data: "action",
                 orderable: false,

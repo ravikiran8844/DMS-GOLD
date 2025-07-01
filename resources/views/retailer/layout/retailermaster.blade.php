@@ -254,11 +254,11 @@
             </a>
         </div>
     </div>
-
-    <footer class="footer">
-        {{-- footer --}}
+    
+    {{-- footer --}}
+    {{-- <footer class="footer">
         @include('retailer.panel.footer')
-    </footer>
+    </footer> --}}
     <!-- Search Bar Modal -->
     <div class="modal" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
         <div class="modal-dialog">
