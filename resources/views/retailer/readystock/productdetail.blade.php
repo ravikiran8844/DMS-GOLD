@@ -1,16 +1,16 @@
 @extends('retailer.layout.retailermaster')
 @section('content')
 @section('title')
-    Product Details Page - Emerald RMS
+Product Details Page - Emerald RMS
 @endsection
 @section('header')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <style>
-        body,
-        .product-page_content_wrapper {
-            background: #F6F6F6 !important;
-        }
-    </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<style>
+    body,
+    .product-page_content_wrapper {
+        background: #F6F6F6 !important;
+    }
+</style>
 @endsection
 <section class="breadcrumbs container mt-4">
     <div class="row">
@@ -25,48 +25,48 @@
                         $label = $projectId;
 
                         switch ($projectId) {
-                            case App\Enums\Projects::EF:
-                                $route = route('retailerefreadystock');
-                                $label = 'EF';
-                                break;
-                            case App\Enums\Projects::CASTING:
-                                $route = route('retailersireadystock');
-                                $label = 'CASTING';
-                                break;
-                            case App\Enums\Projects::IMPREZ:
-                                $route = route('retailerimprezreadystock');
-                                $label = 'IMPREZ';
-                                break;
-                            case App\Enums\Projects::INDIANIA:
-                                $route = route('retailerindianiareadystock');
-                                $label = 'INDIANIA';
-                                break;
-                            case App\Enums\Projects::LASERCUT:
-                                $route = route('retailerUTENSILreadystock');
-                                $label = 'LASER CUT';
-                                break;
-                            case App\Enums\Projects::MMD:
-                                $route = route('mmd');
-                                $label = 'MMD';
-                                break;
-                            case App\Enums\Projects::STAMPING:
-                                $route = route('stamping');
-                                $label = 'STAMPING';
-                                break;
-                            case App\Enums\Projects::TURKISH:
-                                $route = route('turkish');
-                                $label = 'TURKISH';
-                                break;
-                            case App\Enums\Projects::UNIKRAFT:
-                                $route = route('unikraft');
-                                $label = 'UNIKRAFT';
-                                break;
-                            default:
-                                $route = '#';
-                                $label = 'UNKNOWN';
-                                break;
+                        case App\Enums\Projects::EF:
+                        $route = route('retailerefreadystock');
+                        $label = 'EF';
+                        break;
+                        case App\Enums\Projects::CASTING:
+                        $route = route('retailersireadystock');
+                        $label = 'CASTING';
+                        break;
+                        case App\Enums\Projects::IMPREZ:
+                        $route = route('retailerimprezreadystock');
+                        $label = 'IMPREZ';
+                        break;
+                        case App\Enums\Projects::INDIANIA:
+                        $route = route('retailerindianiareadystock');
+                        $label = 'INDIANIA';
+                        break;
+                        case App\Enums\Projects::LASERCUT:
+                        $route = route('retailerUTENSILreadystock');
+                        $label = 'LASER CUT';
+                        break;
+                        case App\Enums\Projects::MMD:
+                        $route = route('mmd');
+                        $label = 'MMD';
+                        break;
+                        case App\Enums\Projects::STAMPING:
+                        $route = route('stamping');
+                        $label = 'STAMPING';
+                        break;
+                        case App\Enums\Projects::TURKISH:
+                        $route = route('turkish');
+                        $label = 'TURKISH';
+                        break;
+                        case App\Enums\Projects::UNIKRAFT:
+                        $route = route('unikraft');
+                        $label = 'UNIKRAFT';
+                        break;
+                        default:
+                        $route = '#';
+                        $label = 'UNKNOWN';
+                        break;
                         }
-                    @endphp
+                        @endphp
 
                         <a href="{{ $route }}">{{ $label }}</a>
                     </li>
@@ -85,52 +85,89 @@
                 <div class="col-12 col-lg-6 mb-lg-0">
                     <div class="single-images-block position-relative">
 
-                        <img id="product-main-image" class="img-fluid product-main-image load-secure-image"
-                            src="http://imageurl.ejindia.com/api/image/secure"
-                            data-secure="{{ $product->secureFilename }}" alt>
+                        <div class="zoom-wrapper">
+                            <img id="product-main-image" class="img-fluid product-main-image load-secure-image"
+                                src="http://imageurl.ejindia.com/api/image/secure"
+                                data-secure="{{ $product->secureFilename }}" alt>
+                            <div id="magnifier-lens" class="magnifier-lens"></div>
+                        </div>
 
                         <script>
                             document.addEventListener("DOMContentLoaded", async function() {
-                                try {
-                                    const res = await fetch("/retailer/proxy/token");
-                                    const data = await res.json();
-                                    const token = data.token;
+                                const tokenRes = await fetch("/retailer/proxy/token");
+                                const tokenData = await tokenRes.json();
+                                const token = tokenData.token;
+                                if (!token) return;
 
-                                    if (!token) {
-                                        throw new Error("Token not received from /retailer/proxy/token");
+                                const secureImages = document.querySelectorAll(".load-secure-image");
+
+                                for (let img of secureImages) {
+                                    const secureFilename = img.dataset.secure;
+
+                                    try {
+                                        const res = await fetch("/retailer/proxy/secure-image", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                                "Authorization": `${token}`
+                                            },
+                                            body: JSON.stringify({
+                                                secureFilename
+                                            })
+                                        });
+
+                                        const blob = await res.blob();
+                                        const blobUrl = URL.createObjectURL(blob);
+                                        img.src = blobUrl;
+
+                                        img.onload = () => setupMagnifier(img, blobUrl);
+                                    } catch (e) {
+                                        console.error("Failed to load secure image", e);
                                     }
+                                }
 
-                                    // Loop through all secure images
-                                    document.querySelectorAll(".load-secure-image").forEach(async (img) => {
-                                        const secureFilename = img.dataset.secure;
+                                function setupMagnifier(img, imageUrl) {
+                                    const lens = document.getElementById("magnifier-lens");
+                                    lens.style.backgroundImage = `url('${imageUrl}')`;
 
-                                        try {
-                                            const res = await fetch("/retailer/proxy/secure-image", {
-                                                method: "POST",
-                                                headers: {
-                                                    "Content-Type": "application/json",
-                                                    "Authorization": `${token}`
-                                                },
-                                                body: JSON.stringify({
-                                                    secureFilename
-                                                })
-                                            });
+                                    const zoom = 2; // Zoom factor
 
-                                            if (!res.ok) throw new Error("Failed to fetch image");
+                                    img.addEventListener("mousemove", moveLens);
+                                    lens.addEventListener("mousemove", moveLens);
+                                    img.addEventListener("mouseenter", () => lens.style.display = "block");
+                                    img.addEventListener("mouseleave", () => lens.style.display = "none");
 
-                                            const blob = await res.blob();
-                                            const imageUrl = URL.createObjectURL(blob);
-                                            img.src = imageUrl;
-                                        } catch (error) {
-                                            console.error("Image load failed:", error);
-                                            img.alt = "Image load failed";
+                                    function moveLens(e) {
+                                        const imgRect = img.getBoundingClientRect();
+                                        const lensSize = lens.offsetWidth / 2;
+
+                                        // Mouse x/y relative to image
+                                        const x = e.clientX - imgRect.left;
+                                        const y = e.clientY - imgRect.top;
+
+                                        // Prevent lens from going outside
+                                        if (x < 0 || y < 0 || x > img.width || y > img.height) {
+                                            lens.style.display = "none";
+                                            return;
                                         }
-                                    });
-                                } catch (err) {
-                                    console.error("Token fetch failed:", err);
+
+                                        const left = x - lensSize;
+                                        const top = y - lensSize;
+
+                                        lens.style.left = `${left}px`;
+                                        lens.style.top = `${top}px`;
+
+                                        const bgX = (x / img.width) * 100;
+                                        const bgY = (y / img.height) * 100;
+
+                                        lens.style.backgroundPosition = `${bgX}% ${bgY}%`;
+                                        lens.style.backgroundSize = `${img.width * zoom}px ${img.height * zoom}px`;
+                                    }
                                 }
                             });
                         </script>
+
+
 
                         <div style=" position: absolute; top: 10px; right: 10px; ">
                             <button
@@ -165,14 +202,14 @@
 
                             <div class="ml-auto ml-sm-5 ">
                                 @if ($product->qty > 0)
-                                    <div class="badge in-stock-badge d-flex gap-1 align-items-center">IN
-                                        STOCK
-                                        <span class="d-block d-md-none">- <span
-                                                class="fw-semibold">{{ $product->qty }}</span></span>
-                                    </div>
+                                <div class="badge in-stock-badge d-flex gap-1 align-items-center">IN
+                                    STOCK
+                                    <span class="d-block d-md-none">- <span
+                                            class="fw-semibold">{{ $product->qty }}</span></span>
+                                </div>
                                 @else
-                                    <div class="badge out-stock-badge">OUT OF
-                                        STOCK</div>
+                                <div class="badge out-stock-badge">OUT OF
+                                    STOCK</div>
                                 @endif
 
                             </div>
@@ -180,11 +217,11 @@
                         {{-- <h1 class="product-main-title my-2">Product Title {{ $product->product_name }}</h1> --}}
 
                         @if ($stock == 1 && $product->qty > 0)
-                            <div class="d-none d-md-block">
-                                <div class="text-success">
-                                    Product Stock - <span class="fw-semibold">{{ $product->qty }}</span>
-                                </div>
+                        <div class="d-none d-md-block">
+                            <div class="text-success">
+                                Product Stock - <span class="fw-semibold">{{ $product->qty }}</span>
                             </div>
+                        </div>
                         @endif
 
                         <div class="py-4 mt-4 d-flex gap-5 flex-row flex-wrap align-items-center"
@@ -206,9 +243,9 @@
                             </div>
                             <div>
                                 @php
-                                    $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
-                                        ->where('product_id', $product->id)
-                                        ->get();
+                                $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
+                                ->where('product_id', $product->id)
+                                ->get();
 
                                 @endphp
                                 <div class="position-relative">
@@ -224,9 +261,9 @@
                                     </button>
 
                                     @if (count($isCart))
-                                        <div class="product-page-addtocart-badge">
-                                            {{ $currentcartcount }}
-                                        </div>
+                                    <div class="product-page-addtocart-badge">
+                                        {{ $currentcartcount }}
+                                    </div>
                                     @endif
                                 </div>
                             </div>
@@ -244,52 +281,52 @@
                                     data-parent="#accordion">
                                     <div class="row">
                                         @if ($product->color)
-                                            <div class="col-4 col-lg-3 mb-4">
-                                                <div class="product-specs-item_title mb-2">COLOR</div>
-                                                <div class="product-specs-item_text">
-                                                    {{ $product->color }}
-                                                </div>
+                                        <div class="col-4 col-lg-3 mb-4">
+                                            <div class="product-specs-item_title mb-2">COLOR</div>
+                                            <div class="product-specs-item_text">
+                                                {{ $product->color }}
                                             </div>
+                                        </div>
                                         @endif
                                         @if ($product->unit)
-                                            <div class="col-4 col-lg-3 mb-4">
-                                                <div class="product-specs-item_title mb-2">UNIT</div>
-                                                <div class="product-specs-item_text">
-                                                    {{ $product->unit }}
-                                                </div>
+                                        <div class="col-4 col-lg-3 mb-4">
+                                            <div class="product-specs-item_title mb-2">UNIT</div>
+                                            <div class="product-specs-item_text">
+                                                {{ $product->unit }}
                                             </div>
+                                        </div>
                                         @endif
                                         @if ($product->style)
-                                            <div class="col-4 col-lg-3 mb-4">
-                                                <div class="product-specs-item_title mb-2">STYLE</div>
-                                                <div class="product-specs-item_text">
-                                                    {{ $product->style }}
-                                                </div>
+                                        <div class="col-4 col-lg-3 mb-4">
+                                            <div class="product-specs-item_title mb-2">STYLE</div>
+                                            <div class="product-specs-item_text">
+                                                {{ $product->style }}
                                             </div>
+                                        </div>
                                         @endif
                                         @if ($product->making)
-                                            <div class="col-4 col-lg-3 mb-4">
-                                                <div class="product-specs-item_title mb-2">MAKING</div>
-                                                <div class="product-specs-item_text">
-                                                    {{ $product->making }}%
-                                                </div>
+                                        <div class="col-4 col-lg-3 mb-4">
+                                            <div class="product-specs-item_title mb-2">MAKING</div>
+                                            <div class="product-specs-item_text">
+                                                {{ $product->making }}%
                                             </div>
+                                        </div>
                                         @endif
                                         @if ($product->Purity)
-                                            <div class="col-4 col-lg-3 mb-4">
-                                                <div class="product-specs-item_title mb-2">PURITY</div>
-                                                <div class="product-specs-item_text">
-                                                    {{ $product->Purity }}
-                                                </div>
+                                        <div class="col-4 col-lg-3 mb-4">
+                                            <div class="product-specs-item_title mb-2">PURITY</div>
+                                            <div class="product-specs-item_text">
+                                                {{ $product->Purity }}
                                             </div>
+                                        </div>
                                         @endif
                                         @if ($product->size)
-                                            <div class="col-4 col-lg-3 mb-4">
-                                                <div class="product-specs-item_title mb-2">SIZE</div>
-                                                <div class="product-specs-item_text">
-                                                    {{ $product->size }}
-                                                </div>
+                                        <div class="col-4 col-lg-3 mb-4">
+                                            <div class="product-specs-item_title mb-2">SIZE</div>
+                                            <div class="product-specs-item_text">
+                                                {{ $product->size }}
                                             </div>
+                                        </div>
                                         @endif
                                     </div>
                                 </div>
@@ -303,46 +340,46 @@
 </div>
 
 @section('scripts')
-    <script src="{{ asset('retailer/assets/lib/js/jquery.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="{{ asset('retailer/assets/js/readystock/product_detail.js') }}"></script>
-    <script src="{{ asset('retailer/assets/lib/js/jquery.ez-plus.js') }}"></script>
+<script src="{{ asset('retailer/assets/lib/js/jquery.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="{{ asset('retailer/assets/js/readystock/product_detail.js') }}"></script>
+<script src="{{ asset('retailer/assets/lib/js/jquery.ez-plus.js') }}"></script>
 
-    <script>
-        var swiper = new Swiper(".recommended-products-slider", {
-            slidesPerView: "auto",
-            loop: true,
-            spaceBetween: 20,
-            scrollbar: {
-                el: ".recommended-products-slider-scrollbar",
-                draggable: true,
-                hide: false,
-            },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev"
-            },
+<script>
+    var swiper = new Swiper(".recommended-products-slider", {
+        slidesPerView: "auto",
+        loop: true,
+        spaceBetween: 20,
+        scrollbar: {
+            el: ".recommended-products-slider-scrollbar",
+            draggable: true,
+            hide: false,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev"
+        },
 
+    });
+</script>
+
+
+
+<script>
+    $('#product-main-image').ezPlus({
+        zoomType: 'inner',
+        cursor: 'crosshair'
+    });
+</script>
+
+<script>
+    const wishlistButtons = document.querySelectorAll(".wishlist-svg");
+    wishlistButtons.forEach((button) => {
+        button.addEventListener("click", function() {
+            // Toggle the 'active' class to change the color on click
+            this.classList.toggle("active");
         });
-    </script>
-
-
-
-    <script>
-        $('#product-main-image').ezPlus({
-            zoomType: 'inner',
-            cursor: 'crosshair'
-        });
-    </script>
-
-    <script>
-        const wishlistButtons = document.querySelectorAll(".wishlist-svg");
-        wishlistButtons.forEach((button) => {
-            button.addEventListener("click", function() {
-                // Toggle the 'active' class to change the color on click
-                this.classList.toggle("active");
-            });
-        });
-    </script>
+    });
+</script>
 @endsection
 @endsection
