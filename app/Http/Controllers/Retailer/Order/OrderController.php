@@ -119,13 +119,11 @@ class OrderController extends Controller
                     'remarks' => $cart->remarks,
                 ]);
 
-                if (Auth::user()->role_id == Roles::CRM) {
-                    // Decrement product stock if user is CRM
-                    $product = Product::where('id', $cart->product_id)->first();
-                    Product::where('id', $cart->product_id)->update([
-                        'qty' => $product->qty - $cart->qty,
-                    ]);
-                }
+                // Decrement product stock if user is CRM
+                $product = Product::where('id', $cart->product_id)->first();
+                Product::where('id', $cart->product_id)->update([
+                    'qty' => $product->qty - $cart->qty,
+                ]);
             }
 
             Cart::where('user_id', Auth::user()->id)->delete();

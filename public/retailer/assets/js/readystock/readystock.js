@@ -109,433 +109,6 @@ $(".top-dropdown-filters .btn").click(function () {
     // $(this).attr('aria-expanded', !isExpanded);
 });
 
-function getCollectionWiseProducts(id, page = 1) {
-    $(".pagination-links").attr("hidden", true);
-    var category_id = $("#decryptedCategoryId").val();
-    var project_id = $("#decryptedProjectId").val();
-    var subcollection_id = $("#subcol").val();
-    var weightfrom = document.getElementById("hdweightfrom").value;
-    var weightto = document.getElementById("hdweightto").value;
-    var box = $("#box").val();
-    // console.log("box Value", box);
-    var purity = $("#purity").val();
-    // console.log("purity Value", purity);
-
-    // Split the value into an array using the comma as a delimiter
-    var weightfrom = weightfrom.split(",");
-    var weightto = weightto.split(",");
-    var boxArray = box.split(",");
-    var purityArray = purity.split(",");
-
-    var stockid = JSON.parse(document.getElementById("stock").value);
-    var selectedcollection = [];
-    // Iterate over all checkboxes with the class 'platingfilter'
-    $(".others").each(function () {
-        if (windowWidth > 300) {
-            $("#pageloader").fadeIn();
-        }
-        // Check if the checkbox is checked
-        if ($(this).is(":checked")) {
-            // Add the value to the selectedplating array
-            selectedcollection.push($(this).val());
-        }
-    });
-
-    // Serialize the array into a string separated by a delimiter (comma)
-    var selectedcollectionString = selectedcollection.join(",");
-    // Set the value of the hidden input field to the serialized string
-    $("#col").val(selectedcollectionString);
-
-    // To retrieve the array back from the string later:
-    // Retrieve the value of the hidden input field
-    var selectedcollectionString = $("#col").val();
-
-    // Split the string into an array using the delimiter (comma)
-    var selectedcollection = selectedcollectionString.split(",");
-    $("#product_page").empty();
-    $.ajax({
-        type: "GET",
-        url: "/retailer/collectionwiseproduct/" + id + "?page=" + page,
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        data: {
-            selectedcollection: selectedcollection,
-            category_id: category_id,
-            subcollection_id: subcollection_id,
-            project_id: project_id,
-            weightfrom: weightfrom,
-            weightto: weightto,
-            boxArray: boxArray,
-            purityArray: purityArray,
-            stockid: stockid,
-            _token: $('meta[name="csrf-token"]').attr("content"),
-        },
-        dataType: "json",
-        success: function (data) {
-            // Check if any checkbox is checked
-            let isAnyCheckboxChecked = $(".others:checked").length > 0;
-            // Assign value to #subCollectionData based on the checkbox state
-            if (isAnyCheckboxChecked) {
-                $("#weights").val(JSON.stringify(data.weightJson));
-                $("#boxFilter").val(JSON.stringify(data.boxjson));
-                $("#purityFilter").val(JSON.stringify(data.purityjson));
-            } else {
-                $("#weights").val(JSON.stringify(data.defaultweightJson));
-                $("#boxFilter").val(data.boxDefaultjson);
-                $("#purityFilter").val(data.purityDefaultjson);
-            }
-            if (data.collectionwiseproduct.data.length == 0) {
-                $("#notfound").empty();
-                $("#checkboxhidden").attr("hidden", "");
-                $("#addtocarthidden").attr("hidden", "");
-                $("#product_page").attr("hidden", "");
-                var notfound = `<img src='${baseurl}/emptycart.gif'>`;
-                $("#notfound").append(notfound);
-                if (windowWidth > 300) {
-                    $("#pageloader").fadeOut();
-                }
-            } else {
-                $("#checkboxhidden").removeAttr("hidden", "");
-                $("#addtocarthidden").removeAttr("hidden", "");
-                $("#product_page").removeAttr("hidden", "");
-                $.each(data.collectionwiseproduct.data, function (key, value) {
-                    $("#notfound").empty();
-                    if (data.stock == 1) {
-                        moqAvailabilityHTML = `<div class="product-cart-qty-text">In Stock: <span>${value.qty} Pcs</span></div>`;
-                    } else {
-                        moqAvailabilityHTML = ``;
-                    }
-                    let box = "";
-                    if (data.box[key] !== "-") {
-                        box = `
-                        <div class="d-flex flex-column gap-1">
-                        <div class="card-text text-dark">
-                        Box
-                        </div>
-                        <div class="product-card-badge">${data.box[key]}</div>
-                        </div>`;
-                    }
-                    var eid = $("#encrypt" + value.id).val();
-                    var productDetailUrl =
-                        "/retailer/productdetail/productId".replace(
-                            "productId",
-                            eid
-                        );
-                    var productHTML = `
-                                          <input type="hidden" name="weight${
-                                              value.id
-                                          }" id="weight${value.id}"
-                                              value="${value.weight}">
-                                              <input type="hidden" name="finish${
-                                                  value.id
-                                              }" id="finish${value.id}"
-                                                  value="${value.finish_id}">
-                                          <input type="hidden" name="size${
-                                              value.id
-                                          }" id="size${value.id}"
-                                              value="${value.size_id}">
-                                          <input type="hidden" name="plating${
-                                              value.id
-                                          }" id="plating${value.id}"
-                                              value="${value.plating_id}">
-                                          <input type="hidden" name="color${
-                                              value.id
-                                          }" id="color${value.id}"
-                                              value="${value.color_id}">
-                                              <input type="hidden" name="stock${
-                                                  value.id
-                                              }" id="stock${value.id}"
-                                                  value="${stockid}">
-                                                  <input type="hidden" name="box${
-                                                      value.id
-                                                  }" id="box${value.id}"
-                        value="${value.style_id}">
-                                          <div class="card shop-page_product-card">
-                                              <div class="card-checkbox_wrapper">
-                                                  <input class="card-checkbox" type="checkbox" name="product${
-                                                      value.id
-                                                  }"
-                                                      id="product${
-                                                          value.id
-                                                      }" data-id="${value.id}">
-                                              </div>
-                                              <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
-                                                  <a href="${productDetailUrl}">
-                                                      <img class="img-fluid prouduct_card-image" width="154" height="160"
-                                                          src="${baseurl}/${
-                        "upload/product/" + value.product_image
-                    }" alt>
-                                                  </a>
-                                                   <div class="position-absolute card-purity purity-list">
-                                Purity: ${
-                                    data.purity && data.purity[key]
-                                        ? data.purity[key].replace("SIL-", "")
-                                        : ""
-                                }
-                            </div>
-                                              </div>
-                                              <div class="card-body d-flex flex-column justify-content-between">
-                                                  <div
-                                                      class="d-flex justify-content-between  align-items-center flex-wrap card-title_wrapper">
-                                                    <div class="card-title"><a href="${productDetailUrl}">${
-                        value.product_unique_id
-                    }</a> </div>
-                                                       
-                                                          <button class="ml-2 custom-icon-btn wishlist-svg ${
-                                                              value.is_favourite ===
-                                                              1
-                                                                  ? "active"
-                                                                  : ""
-                                                          }"
-                                                          onclick="addtowishlist(${
-                                                              value.id
-                                                          })">
-                                                              <svg width="26" height="23" viewBox="0 0 26 23"
-                                                                  fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                  <path
-                                                                      d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                                      stroke="inherit" stroke-width="1.5"
-                                                                      stroke-linejoin="round" />
-                                                              </svg>
-                                                          </button>
-                                                  </div>
-                                                  <input type="hidden" name="moq${
-                                                      value.id
-                                                  }"
-                                                      id="moq${
-                                                          value.id
-                                                      }" value="${value.moq}">
-                                                      <input type="hidden" name="qty${
-                                                          value.id
-                                                      }"
-                                                id="qty${value.id}" value="${
-                        value.qty
-                    }">
-                                                <input type="hidden" name="stockqty"
-                                                id="stockqty" value="${stockid}">
-                              <div>
-
-
-
-                               <div class="d-flex my-2 flex-wrap gap-3 align-items-center card-content_wrapper">
-
-
-                                 <div class="d-flex flex-column gap-1">
-                                    <div class="card-text text-dark">Weight</div>
-                                    <div class="product-card-badge">${
-                                        value.weight
-                                    }g</div>
-                                </div>
-                                
-                                ${box}
-                             
-                            </div>
-                                    <div class="d-flex flex-wrap gap-2 align-items-center">
-                                        ${moqAvailabilityHTML}
-                                        <div class="d-flex gap-2 align-items-center purity-inside-card">
-                                            <div class="card-text text-dark">
-                                                Purity
-                                            </div>
-                                            <div class="product-card-badge">${
-                                                data.purity && data.purity[key]
-                                                    ? data.purity[key].replace(
-                                                          "SIL-",
-                                                          ""
-                                                      )
-                                                    : ""
-                                            }</div>
-                                        </div>
-                                    </div>
-
-
-
-                                                  <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">
-                                                      <div class="d-flex align-items-center">
-                                                          <label class="me-2">Qty</label>
-                                                          <div class="input-group quantity-input-group quantity-container"
-                                                              data-product-id=${
-                                                                  value.id
-                                                              }>
-                                                              <input type="button" value="-" class="qtyminus"
-                                                                  field="quantity"
-                                                                 >
-                                                              <input type="text" name="quantity"
-                                                                  id="quantity${
-                                                                      value.id
-                                                                  }" value="${
-                        value.moq
-                    }"
-                                                                  class="qty">
-                                                              <input type="button" value="+" class="qtyplus"
-                                                                  field="quantity">
-                                                          </div>
-                                                      </div>
-                                                      <div class="shop-page-add-to-cart-btn">
-                                                      <button onclick="addforcart(${
-                                                          value.id
-                                                      })" data_id="card_id_${
-                        value.id
-                    }"
-                                                        class="btn ${
-                                                            data.cart[key] &&
-                                                            Array.isArray(
-                                                                data.cart[key]
-                                                            ) &&
-                                                            data.cart[key]
-                                                                .length
-                                                                ? "added-to-cart-btn"
-                                                                : "add-to-cart-btn"
-                                                        } mr-2 spinner-button">                                                            
-                                                        <span class="submit-text">${
-                                                            data.cart[key] &&
-                                                            Array.isArray(
-                                                                data.cart[key]
-                                                            ) &&
-                                                            data.cart[key]
-                                                                .length
-                                                                ? "Added To Cart"
-                                                                : "ADD TO CART"
-                                                        }</span>
-                                                <span class="d-none spinner">
-                                                    <span class="spinner-grow spinner-grow-sm"
-                                                        aria-hidden="true"></span>
-                                                    <span role="status">Adding...</span>
-                                                </span>
-                                                <span class="added-to-cart-badge ms-2">${
-                                                    data.cartcount[key]
-                                                }</span>
-                                                </button>
-                                                  </div>
-                                                  </div>
-                                                  </div>
-                                              </div>
-                                          </div>
-                            `;
-                    $("#product_page").append(productHTML);
-                });
-                if (windowWidth > 300) {
-                    $("#pageloader").fadeOut();
-                }
-                $("#pagination").empty();
-                // Append pagination links
-                var paginationHTML = `<div class="my-5 pagination-links">
-                          <nav class="large-devices_pagination">
-                              <div class="d-flex gap-3 flex-wrap justify-content-between">
-                                  <div>
-                                       Showing ${data.collectionwiseproduct.from} - ${data.collectionwiseproduct.to} of ${data.collectionwiseproduct.total} results
-                                   </div>
-                                   <ul class="pagination">`;
-
-                if (data.collectionwiseproduct.current_page == 1) {
-                    paginationHTML += `<li class="page-item disabled">
-                               <span class="page-link">Previous</span>
-                           </li>`;
-                } else {
-                    paginationHTML += `<li class="page-item">
-                               <a class="page-link" href="javascript:void(0)" onclick="getCollectionWiseProducts(${id}, ${
-                        data.collectionwiseproduct.current_page - 1
-                    })" tabindex="-1">Previous</a>
-                           </li>`;
-                }
-                $("#pageloader").fadeOut();
-
-                for (
-                    var page = Math.max(
-                        1,
-                        data.collectionwiseproduct.current_page - 2
-                    );
-                    page <=
-                    Math.min(
-                        data.collectionwiseproduct.last_page,
-                        data.collectionwiseproduct.current_page + 2
-                    );
-                    page++
-                ) {
-                    if (page == data.collectionwiseproduct.current_page) {
-                        paginationHTML += `<li class="page-item active">
-                                   <span class="page-link">${page}</span>
-                               </li>`;
-                    } else {
-                        paginationHTML += `<li class="page-item">
-                                   <a class="page-link"  href="javascript:void(0)" onclick="getCollectionWiseProducts(${id}, ${page})">${page}</a>
-                               </li>`;
-                    }
-                }
-
-                if (
-                    data.collectionwiseproduct.current_page ==
-                    data.collectionwiseproduct.last_page
-                ) {
-                    paginationHTML += `<li class="page-item disabled">
-                               <span class="page-link">Next</span>
-                           </li>`;
-                } else {
-                    paginationHTML += `<li class="page-item">
-                               <a class="page-link"  href="javascript:void(0)" onclick="getCollectionWiseProducts(${id}, ${
-                        data.collectionwiseproduct.current_page + 1
-                    })">Next</a>
-                           </li>`;
-                }
-
-                paginationHTML += `</ul></div></nav>
-                          <nav class="small-devices_pagination d-none">
-                              <div class="text-center">
-                                  <a class="btn btn-dark px-4 py-2" href="javascript:void(0)" onclick="getCollectionWiseProducts(${id}, ${
-                    data.collectionwiseproduct.current_page + 1
-                })">See More
-                                      Products</a>
-                              </div>
-                          </nav></div>`;
-
-                $("#pagination").append(paginationHTML);
-            }
-            qtyplusminus();
-            $(".card-checkbox").click(function () {
-                if ($(this).is(":checked")) {
-                    $("#addalltocart").removeAttr("disabled");
-                } else {
-                    $("#addalltocart").attr("disabled", "disabled");
-                }
-            });
-
-            // Add click event listener to wishlist-svg buttons
-            const wishlistButtons = document.querySelectorAll(".wishlist-svg");
-
-            wishlistButtons.forEach((button) => {
-                button.addEventListener("click", function () {
-                    // Toggle the 'active' class to change the color on click
-                    this.classList.toggle("active");
-                });
-            });
-
-            if (isAnyCheckboxChecked) {
-                updateWeightFilters(data.weightJson);
-                updateMobileWeightFilters(data.weightJson);
-                updateBoxFilters(data.boxjson);
-                updatePurityFilters(data.purityjson);
-            } else {
-                updateWeightFilters(data.defaultweightJson);
-                updateMobileWeightFilters(data.defaultweightJson);
-                updateBoxFilters(data.boxDefaultjson);
-                updatePurityFilters(data.purityDefaultjson);
-            }
-        },
-    });
-    var collectionwiseproduct = document.querySelectorAll(".others:checked");
-    if (collectionwiseproduct.length > 0) {
-        const checkboxes = document.querySelectorAll(".subcollection_filter");
-        checkboxes.forEach((checkbox) => {
-            checkbox.disabled = true;
-        });
-    } else {
-        const checkboxes = document.querySelectorAll(".subcollection_filter");
-        checkboxes.forEach((checkbox) => {
-            checkbox.disabled = false;
-        });
-    }
-}
-
 function getWeightRange(id, page = 1) {
     // Get the value from the hidden input field
     var subcolValue = $("#subcol").val();
@@ -1030,514 +603,36 @@ function getWeightRange(id, page = 1) {
     });
 }
 
-function getsubcollectionproduct(id, page = 1) {
+function getProduct(id, page = 1) {
     $(".pagination-links").attr("hidden", true);
-    var category_id = $("#decryptedCategoryId").val();
     var project_id = $("#decryptedProjectId").val();
-    var classification_id = $("#class").val();
-    // var weightfrom = $("#hdweightfrom").val();
-    // var weightto = $("#hdweightto").val();
-    // Get the value from the hidden input field
-    var weightfrom = document.getElementById("hdweightfrom").value;
-    var weightto = document.getElementById("hdweightto").value;
-    var box = $("#box").val();
-    // console.log("box Value", box);
-    var purity = $("#purity").val();
-    // console.log("purity Value", purity);
 
-    // Split the value into an array using the comma as a delimiter
-    var weightfrom = weightfrom.split(",");
-    var weightto = weightto.split(",");
-    var boxArray = box.split(",");
-    var purityArray = purity.split(",");
-
-    var stockid = JSON.parse(document.getElementById("stock").value);
-
-    var selectedsubcollection = [];
-    // Iterate over all checkboxes with the class 'platingfilter'
-    $(".subcollection_filter").each(function () {
-        if (windowWidth > 300) {
-            $("#pageloader").fadeIn();
-        }
-        // Check if the checkbox is checked
-        if ($(this).is(":checked")) {
-            // Add the value to the selectedplating array
-            selectedsubcollection.push($(this).val());
-        }
-    });
-
-    // Serialize the array into a string separated by a delimiter (comma)
-    var selectedsubcollectionString = selectedsubcollection.join(",");
-
-    // Set the value of the hidden input field to the serialized string
-    $("#subcol").val(selectedsubcollectionString);
-
-    // To retrieve the array back from the string later:
-    // Retrieve the value of the hidden input field
-    var selectedsubcollectionString = $("#subcol").val();
-
-    // Split the string into an array using the delimiter (comma)
-    var selectedsubcollection = selectedsubcollectionString.split(",");
-    $("#product_page").empty();
-    $.ajax({
-        type: "GET",
-        url: "/retailer/subcollectionwiseproduct/" + id + "?page=" + page,
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        data: {
-            selectedsubcollection: selectedsubcollection,
-            category_id: category_id,
-            classification_id: classification_id,
-            project_id: project_id,
-            weightfrom: weightfrom,
-            boxArray: boxArray,
-            purityArray: purityArray,
-            weightto: weightto,
-            stockid: stockid,
-            _token: $('meta[name="csrf-token"]').attr("content"),
-        },
-        dataType: "json",
-        success: function (result) {
-            // Check if any checkbox is checked
-            let isAnyCheckboxChecked =
-                $(".subcollection_filter:checked").length > 0;
-            // Assign value to #subCollectionData based on the checkbox state
-            if (isAnyCheckboxChecked) {
-                $("#weights").val(JSON.stringify(result.weightJson));
-                $("#classification").val(
-                    JSON.stringify(result.classificationsjson)
-                );
-                $("#boxFilter").val(JSON.stringify(result.boxjson));
-                $("#purityFilter").val(JSON.stringify(result.purityjson));
-            } else {
-                $("#weights").val(JSON.stringify(result.defaultweightJson));
-                $("#classification").val(
-                    JSON.stringify(result.classificationsDefaultjson)
-                );
-                $("#boxFilter").val(result.boxDefaultjson);
-                $("#purityFilter").val(result.purityDefaultjson);
-            }
-            if (result.subcollectionwiseproduct.data.length == 0) {
-                $("#checkboxhidden").attr("hidden", "");
-                $("#addtocarthidden").attr("hidden", "");
-                $("#product_page").attr("hidden", "");
-                $("#notfound").empty();
-                var notfound = `<img src='${baseurl}/emptycart.gif'>`;
-                $("#notfound").append(notfound);
-                if (windowWidth > 300) {
-                    $("#pageloader").fadeOut();
-                }
-            } else {
-                $("#checkboxhidden").removeAttr("hidden", "");
-                $("#addtocarthidden").removeAttr("hidden", "");
-                $("#product_page").removeAttr("hidden", "");
-                $.each(
-                    result.subcollectionwiseproduct.data,
-                    function (key, value) {
-                        $("#notfound").empty();
-                        if (result.stock == 1 && value.qty != 0) {
-                            moqAvailabilityHTML = `<div class="product-cart-qty-text">In Stock: <span>${value.qty} Pcs</span></div>`;
-                        } else {
-                            moqAvailabilityHTML = ``;
-                        }
-                        let box = "";
-                        if (
-                            result.box[key] !== "-" &&
-                            result.box[key] !== undefined &&
-                            result.box[key] !== null
-                        ) {
-                            box = `
-                            <div class="d-flex flex-column gap-1">
-                            <div class="card-text text-dark">
-                            ${value.project_id != 4 ? "Box: " : "Style: "}
-                            </div>
-                            <div class="product-card-badge">${
-                                result.box[key]
-                            }</div>
-                            </div>`;
-                        }
-
-                        var eid = $("#encrypt" + value.id).val();
-                        var productDetailUrl =
-                            "/retailer/productdetail/productId".replace(
-                                "productId",
-                                eid
-                            );
-                        var productHTML = `
-                            <input type="hidden" name="weight${
-                                value.id
-                            }" id="weight${value.id}"
-                                value="${value.weight}">
-                                <input type="hidden" name="finish${
-                                    value.id
-                                }" id="finish${value.id}"
-                                    value="${value.finish_id}">
-                            <input type="hidden" name="size${
-                                value.id
-                            }" id="size${value.id}"
-                                value="${value.size_id}">
-                            <input type="hidden" name="plating${
-                                value.id
-                            }" id="plating${value.id}"
-                                value="${value.plating_id}">
-                            <input type="hidden" name="color${
-                                value.id
-                            }" id="color${value.id}"
-                                value="${value.color_id}">
-                                <input type="hidden" name="stock${
-                                    value.id
-                                }" id="stock${value.id}"
-                                    value="${stockid}">
-                                    <input type="hidden" name="box${
-                                        value.id
-                                    }" id="box${value.id}"
-          value="${value.style_id}">
-                            <div class="card shop-page_product-card">
-                                <div class="card-checkbox_wrapper">
-                                    <input class="card-checkbox" type="checkbox" name="product${
-                                        value.id
-                                    }"
-                                        id="product${value.id}" data-id="${
-                            value.id
-                        }">
-                                </div>
-                                <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
-                                    <a href="${productDetailUrl}">
-                                        <img class="img-fluid prouduct_card-image" width="154" height="160"
-                                            src="${baseurl}/${
-                            "upload/product/" + value.product_image
-                        }" alt>
-                                    </a>
-                                     <div class="position-absolute card-purity purity-list">
-                  Purity: ${
-                      result.purity && result.purity[key]
-                          ? result.purity[key].replace("SIL-", "")
-                          : ""
-                  }
-              </div>
-                                </div>
-                                <div class="card-body d-flex flex-column justify-content-between">
-                                    <div
-                                        class="d-flex justify-content-between  align-items-center flex-wrap card-title_wrapper">
-                                      <div class="card-title"><a href="${productDetailUrl}">${
-                            value.product_unique_id
-                        }</a> </div>
-                                         
-                                            <button class="ml-2 custom-icon-btn wishlist-svg ${
-                                                value.is_favourite === 1
-                                                    ? "active"
-                                                    : ""
-                                            }"
-                                            onclick="addtowishlist(${
-                                                value.id
-                                            })">
-                                                <svg width="26" height="23" viewBox="0 0 26 23"
-                                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                        stroke="inherit" stroke-width="1.5"
-                                                        stroke-linejoin="round" />
-                                                </svg>
-                                            </button>
-                                    </div>
-                                    <input type="hidden" name="moq${value.id}"
-                                        id="moq${value.id}" value="${
-                            value.moq
-                        }">
-                                        <input type="hidden" name="qty${
-                                            value.id
-                                        }"
-                                  id="qty${value.id}" value="${value.qty}">
-                                  <input type="hidden" name="stockqty"
-                                  id="stockqty" value="${stockid}">
-                <div>
-
-
-
-                 <div class="d-flex my-2 flex-wrap gap-3 align-items-center card-content_wrapper">
-
-
-                   <div class="d-flex flex-column gap-1">
-                      <div class="card-text text-dark">Weight</div>
-                      <div class="product-card-badge">${value.weight}g</div>
-                  </div>
-                  
-                  ${box}
-               
-              </div>
-
-
-
-              
-                      <div class="d-flex flex-wrap gap-2 align-items-center">
-                          ${moqAvailabilityHTML}
-                          <div class="d-flex gap-2 align-items-center purity-inside-card">
-                              <div class="card-text text-dark">
-                                  Purity
-                              </div>
-                              <div class="product-card-badge">${
-                                  result.purity && result.purity[key]
-                                      ? result.purity[key].replace("SIL-", "")
-                                      : ""
-                              }</div>
-                          </div>
-                      </div>
-
-
-
-                                    <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">
-                                        <div class="d-flex align-items-center">
-                                            <label class="me-2">Qty</label>
-                                            <div class="input-group quantity-input-group quantity-container"
-                                                data-product-id=${value.id}>
-                                                <input type="button" value="-" class="qtyminus"
-                                                    field="quantity"
-                                                   >
-                                                <input type="text" name="quantity"
-                                                    id="quantity${
-                                                        value.id
-                                                    }" value="${value.moq}"
-                                                    class="qty">
-                                                <input type="button" value="+" class="qtyplus"
-                                                    field="quantity">
-                                            </div>
-                                        </div>
-                                        <div class="shop-page-add-to-cart-btn">
-                                        <button onclick="addforcart(${
-                                            value.id
-                                        })" data_id="card_id_${value.id}"
-                                          class="btn ${
-                                              result.cart[key] &&
-                                              Array.isArray(result.cart[key]) &&
-                                              result.cart[key].length
-                                                  ? "added-to-cart-btn"
-                                                  : "add-to-cart-btn"
-                                          } mr-2 spinner-button">                                                            
-                                          <span class="submit-text">${
-                                              result.cart[key] &&
-                                              Array.isArray(result.cart[key]) &&
-                                              result.cart[key].length
-                                                  ? "Added To Cart"
-                                                  : "ADD TO CART"
-                                          }</span>
-                                  <span class="d-none spinner">
-                                      <span class="spinner-grow spinner-grow-sm"
-                                          aria-hidden="true"></span>
-                                      <span role="status">Adding...</span>
-                                  </span>
-                                  <span class="added-to-cart-badge ms-2">${
-                                      result.cartcount[key]
-                                  }</span>
-                                  </button>
-                                    </div>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-              `;
-                        $("#product_page").append(productHTML);
-                    }
-                );
-                $(".loader").fadeOut();
-                if (windowWidth > 300) {
-                    $("#pageloader").fadeOut();
-                }
-                $("#pagination").empty();
-                // Append pagination links
-                var paginationHTML = `<div class="my-5 pagination-links">
-                <nav class="large-devices_pagination">
-                    <div class="d-flex gap-3 flex-wrap justify-content-between">
-                        <div>
-                             Showing ${result.subcollectionwiseproduct.from} - ${result.subcollectionwiseproduct.to} of ${result.subcollectionwiseproduct.total} results
-                         </div>
-                         <ul class="pagination">`;
-
-                if (result.subcollectionwiseproduct.current_page == 1) {
-                    paginationHTML += `<li class="page-item disabled">
-                     <span class="page-link">Previous</span>
-                 </li>`;
-                } else {
-                    paginationHTML += `<li class="page-item">
-                     <a class="page-link" href="javascript:void(0)" onclick="getsubcollectionproduct(${id}, ${
-                        result.subcollectionwiseproduct.current_page - 1
-                    })" tabindex="-1">Previous</a>
-                 </li>`;
-                }
-
-                for (
-                    var page = Math.max(
-                        1,
-                        result.subcollectionwiseproduct.current_page - 2
-                    );
-                    page <=
-                    Math.min(
-                        result.subcollectionwiseproduct.last_page,
-                        result.subcollectionwiseproduct.current_page + 2
-                    );
-                    page++
-                ) {
-                    if (page == result.subcollectionwiseproduct.current_page) {
-                        paginationHTML += `<li class="page-item active">
-                         <span class="page-link">${page}</span>
-                     </li>`;
-                    } else {
-                        paginationHTML += `<li class="page-item">
-                         <a class="page-link"  href="javascript:void(0)" onclick="getsubcollectionproduct(${id}, ${page})">${page}</a>
-                     </li>`;
-                    }
-                }
-
-                if (
-                    result.subcollectionwiseproduct.current_page ==
-                    result.subcollectionwiseproduct.last_page
-                ) {
-                    paginationHTML += `<li class="page-item disabled">
-                     <span class="page-link">Next</span>
-                 </li>`;
-                } else {
-                    paginationHTML += `<li class="page-item">
-                     <a class="page-link"  href="javascript:void(0)" onclick="getsubcollectionproduct(${id}, ${
-                        result.subcollectionwiseproduct.current_page + 1
-                    })">Next</a>
-                 </li>`;
-                }
-
-                paginationHTML += `</ul></div></nav>
-                <nav class="small-devices_pagination d-none">
-                    <div class="text-center">
-                        <a class="btn btn-dark px-4 py-2" href="javascript:void(0)" onclick="getsubcollectionproduct(${id}, ${
-                    result.subcollectionwiseproduct.current_page + 1
-                })">See More
-                            Products</a>
-                    </div>
-                </nav></div>`;
-
-                $("#pagination").append(paginationHTML);
-            }
-            qtyplusminus();
-            $(".card-checkbox").click(function () {
-                if ($(this).is(":checked")) {
-                    $("#addalltocart").removeAttr("disabled");
-                } else {
-                    $("#addalltocart").attr("disabled", "disabled");
-                }
-            });
-
-            // Add click event listener to wishlist-svg buttons
-            const wishlistButtons = document.querySelectorAll(".wishlist-svg");
-
-            wishlistButtons.forEach((button) => {
-                button.addEventListener("click", function () {
-                    // Toggle the 'active' class to change the color on click
-                    this.classList.toggle("active");
-                });
-            });
-
-            if (isAnyCheckboxChecked) {
-                updateWeightFilters(result.weightJson);
-                updateMobileWeightFilters(result.weightJson);
-                updateBoxFilters(result.boxjson);
-                updatePurityFilters(result.purityjson);
-            } else {
-                updateWeightFilters(result.defaultweightJson);
-                updateMobileWeightFilters(result.defaultweightJson);
-                updateBoxFilters(result.boxDefaultjson);
-                updatePurityFilters(result.purityDefaultjson);
-            }
-        },
-    });
-
-    var subcollectionlength = document.querySelectorAll(
-        ".subcollection_filter:checked"
-    );
-    if (subcollectionlength.length > 0) {
-        const checkboxes = document.querySelectorAll('[name="other"]');
-        checkboxes.forEach((checkbox) => {
-            checkbox.disabled = true;
-        });
-    } else {
-        const checkboxes = document.querySelectorAll('[name="other"]');
-        checkboxes.forEach((checkbox) => {
-            checkbox.disabled = false;
-        });
-    }
-}
-
-function getclassificationproduct(id, page = 1) {
-    $(".pagination-links").attr("hidden", true);
-    var category_id = $("#decryptedCategoryId").val();
-    var project_id = $("#decryptedProjectId").val();
-    var weightfrom = document.getElementById("hdweightfrom").value;
-    var weightto = document.getElementById("hdweightto").value;
-    var subcollection_id = $("#subcol").val();
-    var box = $("#box").val();
-    // console.log("box Value", box);
-    var purity = $("#purity").val();
-    // console.log("purity Value", purity);
-    // Split the value into an array using the comma as a delimiter
-    var weightfrom = weightfrom.split(",");
-    var weightto = weightto.split(",");
-    var boxArray = box.split(",");
-    var purityArray = purity.split(",");
-
-    var stockid = JSON.parse(document.getElementById("stock").value);
-
-    var selectedclassification = [];
-    $(".classification").each(function () {
+    var selectedItem = [];
+    $(".product").each(function () {
         if (windowWidth > 300) {
             $("#pageloader").fadeIn();
         }
         if ($(this).is(":checked")) {
-            selectedclassification.push($(this).val());
+            selectedItem.push($(this).val());
         }
     });
-
-    var selectedclassificationString = selectedclassification.join(",");
-    // console.log(selectedclassificationString);
-    $("#class").val(selectedclassificationString);
 
     $("#product_page").empty();
     $.ajax({
         type: "GET",
-        url: "/retailer/classificationwiseproduct/" + id + "?page=" + page,
+        url: "/retailer/itemwiseproduct/" + id + "?page=" + page,
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         data: {
-            selectedclassification: selectedclassification,
-            category_id: category_id,
-            subcollection_id: subcollection_id,
+            selectedItem: selectedItem,
             project_id: project_id,
-            weightfrom: weightfrom,
-            weightto: weightto,
-            boxArray: boxArray,
-            purityArray: purityArray,
-            stockid: stockid,
             _token: $('meta[name="csrf-token"]').attr("content"),
         },
         dataType: "json",
         success: function (result) {
             // console.log(result);
-            // Check if any checkbox is checked
-            let isAnyCheckboxChecked = $(".classification:checked").length > 0;
-            // Assign value to #subCollectionData based on the checkbox state
-            if (isAnyCheckboxChecked) {
-                $("#subCollectionData").val(
-                    JSON.stringify(result.subcollectionsjson)
-                );
-                $("#weights").val(JSON.stringify(result.weightJson));
-                $("#boxFilter").val(JSON.stringify(result.boxjson));
-                $("#purityFilter").val(JSON.stringify(result.purityjson));
-            } else {
-                $("#subCollectionData").val(
-                    JSON.stringify(result.subcollectionsDefaultjson)
-                );
-                $("#weights").val(JSON.stringify(result.defaultweightJson));
-                $("#boxFilter").val(result.boxDefaultjson);
-                $("#purityFilter").val(result.purityDefaultjson);
-            }
-            if (result.classificationwiseproduct.data.length == 0) {
+            if (result.itemwiseproduct.data.length == 0) {
                 $("#checkboxhidden").attr("hidden", "");
                 $("#addtocarthidden").attr("hidden", "");
                 $("#product_page").attr("hidden", "");
@@ -1551,425 +646,18 @@ function getclassificationproduct(id, page = 1) {
                 $("#checkboxhidden").removeAttr("hidden", "");
                 $("#addtocarthidden").removeAttr("hidden", "");
                 $("#product_page").removeAttr("hidden", "");
-                $.each(
-                    result.classificationwiseproduct.data,
-                    function (key, value) {
-                        $("#notfound").empty();
-                        if (result.stock == 1 && value.qty != 0) {
-                            moqAvailabilityHTML = `<div class="product-cart-qty-text">In Stock: <span>${value.qty} Pcs</span></div>`;
-                        } else {
-                            moqAvailabilityHTML = ``;
-                        }
-                        let box = "";
-                        if (
-                            result.box[key] !== "-" &&
-                            result.box[key] !== undefined &&
-                            result.box[key] !== null
-                        ) {
-                            box = `
-                            <div class="d-flex flex-column gap-1">
-                            <div class="card-text text-dark">
-                            ${value.project_id != 4 ? "Box: " : "Style: "}
-                            </div>
-                            <div class="product-card-badge">${
-                                result.box[key]
-                            }</div>
-                            </div>`;
-                        }
-
-                        var eid = $("#encrypt" + value.id).val();
-                        var productDetailUrl =
-                            "/retailer/productdetail/productId".replace(
-                                "productId",
-                                eid
-                            );
-                        var productHTML = `
-                            <input type="hidden" name="weight${
-                                value.id
-                            }" id="weight${value.id}"
-                                value="${value.weight}">
-                                <input type="hidden" name="finish${
-                                    value.id
-                                }" id="finish${value.id}"
-                                    value="${value.finish_id}">
-                            <input type="hidden" name="size${
-                                value.id
-                            }" id="size${value.id}"
-                                value="${value.size_id}">
-                            <input type="hidden" name="plating${
-                                value.id
-                            }" id="plating${value.id}"
-                                value="${value.plating_id}">
-                            <input type="hidden" name="color${
-                                value.id
-                            }" id="color${value.id}"
-                                value="${value.color_id}">
-                                <input type="hidden" name="stock${
-                                    value.id
-                                }" id="stock${value.id}"
-                                    value="${stockid}">
-                                    <input type="hidden" name="box${
-                                        value.id
-                                    }" id="box${value.id}"
-          value="${value.style_id}">
-                            <div class="card shop-page_product-card">
-                                <div class="card-checkbox_wrapper">
-                                    <input class="card-checkbox" type="checkbox" name="product${
-                                        value.id
-                                    }"
-                                        id="product${value.id}" data-id="${
-                            value.id
-                        }">
-                                </div>
-                                <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
-                                    <a href="${productDetailUrl}">
-                                        <img class="img-fluid prouduct_card-image" width="154" height="160"
-                                            src="${baseurl}/${
-                            "upload/product/" + value.product_image
-                        }" alt>
-                                    </a>
-                                     <div class="position-absolute card-purity purity-list">
-                  Purity: ${
-                      result.purity && result.purity[key]
-                          ? result.purity[key].replace("SIL-", "")
-                          : ""
-                  }
-              </div>
-                                </div>
-                                <div class="card-body d-flex flex-column justify-content-between">
-                                    <div
-                                        class="d-flex justify-content-between  align-items-center flex-wrap card-title_wrapper">
-                                      <div class="card-title"><a href="${productDetailUrl}">${
-                            value.product_unique_id
-                        }</a> </div>
-                                         
-                                            <button class="ml-2 custom-icon-btn wishlist-svg ${
-                                                value.is_favourite === 1
-                                                    ? "active"
-                                                    : ""
-                                            }"
-                                            onclick="addtowishlist(${
-                                                value.id
-                                            })">
-                                                <svg width="26" height="23" viewBox="0 0 26 23"
-                                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                        stroke="inherit" stroke-width="1.5"
-                                                        stroke-linejoin="round" />
-                                                </svg>
-                                            </button>
-                                    </div>
-                                    <input type="hidden" name="moq${value.id}"
-                                        id="moq${value.id}" value="${
-                            value.moq
-                        }">
-                                        <input type="hidden" name="qty${
-                                            value.id
-                                        }"
-                                  id="qty${value.id}" value="${value.qty}">
-                                  <input type="hidden" name="stockqty"
-                                  id="stockqty" value="${stockid}">
-                <div>
-
-
-
-                 <div class="d-flex my-2 flex-wrap gap-3 align-items-center card-content_wrapper">
-
-
-                   <div class="d-flex flex-column gap-1">
-                      <div class="card-text text-dark">Weight</div>
-                      <div class="product-card-badge">${value.weight}g</div>
-                  </div>
-                  
-                  ${box}
-               
-              </div>
-
-
-
-              
-                      <div class="d-flex flex-wrap gap-2 align-items-center">
-                          ${moqAvailabilityHTML}
-                          <div class="d-flex gap-2 align-items-center purity-inside-card">
-                              <div class="card-text text-dark">
-                                  Purity
-                              </div>
-                              <div class="product-card-badge">${
-                                  result.purity && result.purity[key]
-                                      ? result.purity[key].replace("SIL-", "")
-                                      : ""
-                              }</div>
-                          </div>
-                      </div>
-
-
-
-                                    <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">
-                                        <div class="d-flex align-items-center">
-                                            <label class="me-2">Qty</label>
-                                            <div class="input-group quantity-input-group quantity-container"
-                                                data-product-id=${value.id}>
-                                                <input type="button" value="-" class="qtyminus"
-                                                    field="quantity"
-                                                   >
-                                                <input type="text" name="quantity"
-                                                    id="quantity${
-                                                        value.id
-                                                    }" value="${value.moq}"
-                                                    class="qty">
-                                                <input type="button" value="+" class="qtyplus"
-                                                    field="quantity">
-                                            </div>
-                                        </div>
-                                        <div class="shop-page-add-to-cart-btn">
-                                        <button onclick="addforcart(${
-                                            value.id
-                                        })" data_id="card_id_${value.id}"
-                                          class="btn ${
-                                              result.cart[key] &&
-                                              Array.isArray(result.cart[key]) &&
-                                              result.cart[key].length
-                                                  ? "added-to-cart-btn"
-                                                  : "add-to-cart-btn"
-                                          } mr-2 spinner-button">                                                            
-                                          <span class="submit-text">${
-                                              result.cart[key] &&
-                                              Array.isArray(result.cart[key]) &&
-                                              result.cart[key].length
-                                                  ? "Added To Cart"
-                                                  : "ADD TO CART"
-                                          }</span>
-                                  <span class="d-none spinner">
-                                      <span class="spinner-grow spinner-grow-sm"
-                                          aria-hidden="true"></span>
-                                      <span role="status">Adding...</span>
-                                  </span>
-                                  <span class="added-to-cart-badge ms-2">${
-                                      result.cartcount[key]
-                                  }</span>
-                                  </button>
-                                    </div>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-              `;
-                        $("#product_page").append(productHTML);
-                    }
-                );
-                $(".loader").fadeOut();
-                if (windowWidth > 300) {
-                    $("#pageloader").fadeOut();
-                }
-                $("#pagination").empty();
-                // Append pagination links
-                var paginationHTML = `<div class="my-5 pagination-links">
-                <nav class="large-devices_pagination">
-                    <div class="d-flex gap-3 flex-wrap justify-content-between">
-                        <div>
-                             Showing ${result.classificationwiseproduct.from} - ${result.classificationwiseproduct.to} of ${result.classificationwiseproduct.total} results
-                         </div>
-                         <ul class="pagination">`;
-
-                if (result.classificationwiseproduct.current_page == 1) {
-                    paginationHTML += `<li class="page-item disabled">
-                     <span class="page-link">Previous</span>
-                 </li>`;
-                } else {
-                    paginationHTML += `<li class="page-item">
-                     <a class="page-link" href="javascript:void(0)" onclick="getclassificationproduct(${id},${
-                        result.classificationwiseproduct.current_page - 1
-                    })" tabindex="-1">Previous</a>
-                 </li>`;
-                }
-
-                for (
-                    var page = Math.max(
-                        1,
-                        result.classificationwiseproduct.current_page - 2
-                    );
-                    page <=
-                    Math.min(
-                        result.classificationwiseproduct.last_page,
-                        result.classificationwiseproduct.current_page + 2
-                    );
-                    page++
-                ) {
-                    if (page == result.classificationwiseproduct.current_page) {
-                        paginationHTML += `<li class="page-item active">
-                         <span class="page-link">${page}</span>
-                     </li>`;
-                    } else {
-                        paginationHTML += `<li class="page-item">
-                         <a class="page-link"  href="javascript:void(0)" onclick="getclassificationproduct(${id},${page})">${page}</a>
-                     </li>`;
-                    }
-                }
-
-                if (
-                    result.classificationwiseproduct.current_page ==
-                    result.classificationwiseproduct.last_page
-                ) {
-                    paginationHTML += `<li class="page-item disabled">
-                     <span class="page-link">Next</span>
-                 </li>`;
-                } else {
-                    paginationHTML += `<li class="page-item">
-                     <a class="page-link"  href="javascript:void(0)" onclick="getclassificationproduct(${id},${
-                        result.classificationwiseproduct.current_page + 1
-                    })">Next</a>
-                 </li>`;
-                }
-
-                paginationHTML += `</ul></div></nav>
-                <nav class="small-devices_pagination d-none">
-                    <div class="text-center">
-                        <a class="btn btn-dark px-4 py-2" href="javascript:void(0)" onclick="getclassificationproduct(${id},${
-                    result.classificationwiseproduct.current_page + 1
-                })">See More
-                            Products</a>
-                    </div>
-                </nav></div>`;
-
-                $("#pagination").append(paginationHTML);
-            }
-            qtyplusminus();
-            $(".card-checkbox").click(function () {
-                if ($(this).is(":checked")) {
-                    $("#addalltocart").removeAttr("disabled");
-                } else {
-                    $("#addalltocart").attr("disabled", "disabled");
-                }
-            });
-
-            // Add click event listener to wishlist-svg buttons
-            const wishlistButtons = document.querySelectorAll(".wishlist-svg");
-
-            wishlistButtons.forEach((button) => {
-                button.addEventListener("click", function () {
-                    // Toggle the 'active' class to change the color on click
-                    this.classList.toggle("active");
-                });
-            });
-
-            if (isAnyCheckboxChecked) {
-                updateSubCollections(result.subcollectionsjson);
-                updateMobileSubColFilters(result.subcollectionsjson);
-                updateWeightFilters(result.weightJson);
-                updateMobileWeightFilters(result.weightJson);
-                updateBoxFilters(data.boxjson);
-                updatePurityFilters(data.purityjson);
-            } else {
-                updateSubCollections(result.subcollectionsDefaultjson);
-                updateMobileSubColFilters(result.subcollectionsDefaultjson);
-                updateWeightFilters(result.defaultweightJson);
-                updateMobileWeightFilters(result.defaultweightJson);
-                updateBoxFilters(data.boxDefaultjson);
-                updatePurityFilters(data.purityDefaultjson);
-            }
-        },
-    });
-}
-
-function getcategoryproduct(id, page = 1) {
-    $(".pagination-links").attr("hidden", true);
-    var category_id = $("#decryptedCategoryId").val();
-    var project_id = $("#decryptedProjectId").val();
-    var weightfrom = document.getElementById("hdweightfrom").value;
-    var weightto = document.getElementById("hdweightto").value;
-    var box = $("#box").val();
-    // console.log("box Value", box);
-    var purity = $("#purity").val();
-    // console.log("purity Value", purity);
-    // Split the value into an array using the comma as a delimiter
-    var weightfrom = weightfrom.split(",");
-    var weightto = weightto.split(",");
-    var boxArray = box.split(",");
-    var purityArray = purity.split(",");
-
-    var stockid = JSON.parse(document.getElementById("stock").value);
-
-    var selectedcategory = [];
-    $(".category").each(function () {
-        if (windowWidth > 300) {
-            $("#pageloader").fadeIn();
-        }
-        if ($(this).is(":checked")) {
-            selectedcategory.push($(this).val());
-        }
-    });
-
-    var selectedcategoryString = selectedcategory.join(",");
-    // console.log(selectedcategoryString);
-    $("#jewcat").val(selectedcategoryString);
-
-    $("#product_page").empty();
-    $.ajax({
-        type: "GET",
-        url: "/retailer/categorywiseproduct/" + id + "?page=" + page,
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        data: {
-            selectedcategory: selectedcategory,
-            category_id: category_id,
-            project_id: project_id,
-            weightfrom: weightfrom,
-            weightto: weightto,
-            boxArray: boxArray,
-            purityArray: purityArray,
-            stockid: stockid,
-            _token: $('meta[name="csrf-token"]').attr("content"),
-        },
-        dataType: "json",
-        success: function (result) {
-            // console.log(result);
-            // Check if any checkbox is checked
-            let isAnyCheckboxChecked = $(".classification:checked").length > 0;
-            // Assign value to #subCollectionData based on the checkbox state
-            if (isAnyCheckboxChecked) {
-                $("#boxFilter").val(JSON.stringify(result.boxjson));
-                $("#purityFilter").val(JSON.stringify(result.purityjson));
-            } else {
-                $("#boxFilter").val(result.boxDefaultjson);
-                $("#purityFilter").val(result.purityDefaultjson);
-            }
-            if (result.categorywiseproduct.data.length == 0) {
-                $("#checkboxhidden").attr("hidden", "");
-                $("#addtocarthidden").attr("hidden", "");
-                $("#product_page").attr("hidden", "");
-                $("#notfound").empty();
-                var notfound = `<img src='${baseurl}/emptycart.gif'>`;
-                $("#notfound").append(notfound);
-                if (windowWidth > 300) {
-                    $("#pageloader").fadeOut();
-                }
-            } else {
-                $("#checkboxhidden").removeAttr("hidden", "");
-                $("#addtocarthidden").removeAttr("hidden", "");
-                $("#product_page").removeAttr("hidden", "");
-                $.each(result.categorywiseproduct.data, function (key, value) {
+                $.each(result.itemwiseproduct.data, function (key, value) {
                     $("#notfound").empty();
-                    if (result.stock == 1 && value.qty != 0) {
-                        moqAvailabilityHTML = `<div class="product-cart-qty-text">In Stock: <span>${value.qty} Pcs</span></div>`;
-                    } else {
-                        moqAvailabilityHTML = ``;
-                    }
-                    let box = "";
-                    if (
-                        result.box[key] !== "-" &&
-                        result.box[key] !== undefined &&
-                        result.box[key] !== null
-                    ) {
-                        box = `
-                        <div class="d-flex flex-column gap-1">
-                        <div class="card-text text-dark">
-                        ${value.project_id != 4 ? "Box: " : "Style: "}
-                        </div>
-                        <div class="product-card-badge">${result.box[key]}</div>
-                        </div>`;
-                    }
+                    moqAvailabilityHTML = ` <div class="card-multiple-sizes-wrapper">
+
+                                            <div class="d-flex mt-3">
+                                                <div class="product-cart-qty-text">In Stock:
+                                                    <span> ${
+                                                        value.qty ?? "-"
+                                                    } Pcs</span>
+                                                </div>
+                                            </div>
+                                            </div>`;
 
                     var eid = $("#encrypt" + value.id).val();
                     var productDetailUrl =
@@ -1980,32 +668,16 @@ function getcategoryproduct(id, page = 1) {
                     var productHTML = `
                     <input type="hidden" name="weight${value.id}" id="weight${
                         value.id
-                    }"
-                        value="${value.weight}">
-                        <input type="hidden" name="finish${
-                            value.id
-                        }" id="finish${value.id}"
-                            value="${value.finish_id}">
+                    }" value="${value.weight}">
                     <input type="hidden" name="size${value.id}" id="size${
                         value.id
-                    }"
-                        value="${value.size_id}">
-                    <input type="hidden" name="plating${value.id}" id="plating${
-                        value.id
-                    }"
-                        value="${value.plating_id}">
+                    }" value="${value.size}">
                     <input type="hidden" name="color${value.id}" id="color${
                         value.id
-                    }"
-                        value="${value.color_id}">
-                        <input type="hidden" name="stock${value.id}" id="stock${
-                        value.id
-                    }"
-                            value="${stockid}">
+                    }" value="${value.color}">
                             <input type="hidden" name="box${value.id}" id="box${
                         value.id
-                    }"
-  value="${value.style_id}">
+                    }" value="${value.style}">
                     <div class="card shop-page_product-card">
                         <div class="card-checkbox_wrapper">
                             <input class="card-checkbox" type="checkbox" name="product${
@@ -2015,24 +687,21 @@ function getcategoryproduct(id, page = 1) {
                         </div>
                         <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
                             <a href="${productDetailUrl}">
-                                <img class="img-fluid prouduct_card-image" width="154" height="160"
-                                    src="${baseurl}/${
-                        "upload/product/" + value.product_image
-                    }" alt>
+                                <img class="img-fluid prouduct_card-image load-secure-image" width="255"
+                                            height="255" src="http://imageurl.ejindia.com/api/image/secure"
+                                            data-secure="${
+                                                value.secureFilename
+                                            }" alt>
                             </a>
                              <div class="position-absolute card-purity purity-list">
-          Purity: ${
-              result.purity && result.purity[key]
-                  ? result.purity[key].replace("SIL-", "")
-                  : ""
-          }
-      </div>
+                                Purity: ${value.Purity}
+                            </div>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-between">
                             <div
                                 class="d-flex justify-content-between  align-items-center flex-wrap card-title_wrapper">
                               <div class="card-title"><a href="${productDetailUrl}">${
-                        value.product_unique_id
+                        value.DesignNo
                     }</a> </div>
                                  
                                     <button class="ml-2 custom-icon-btn wishlist-svg ${
@@ -2048,47 +717,63 @@ function getcategoryproduct(id, page = 1) {
                                         </svg>
                                     </button>
                             </div>
-                            <input type="hidden" name="moq${value.id}"
-                                id="moq${value.id}" value="${value.moq}">
                                 <input type="hidden" name="qty${value.id}"
                           id="qty${value.id}" value="${value.qty}">
-                          <input type="hidden" name="stockqty"
-                          id="stockqty" value="${stockid}">
         <div>
 
+       <div class="mt-3 grid cols-3 card-content_wrapper">
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="card-text text-dark">Colour</div>
+                                                <div class="product-card-badge product-card-badge-light">
+                                                    ${value.color ?? "-"}</div>
+                                            </div>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="card-text text-dark">Unit</div>
+                                                <div class="product-card-badge product-card-badge-light">
+                                                    ${value.unit ?? "-"}</div>
+                                            </div>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="card-text text-dark">Style</div>
+                                                <div class="product-card-badge product-card-badge-light">
+                                                    ${value.style ?? "-"}</div>
+                                            </div>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="card-text text-dark">Making %</div>
+                                                <div class="product-card-badge">${
+                                                    value.making ?? "-"
+                                                }
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="card-text text-dark">
+                                                    Size
+                                                </div>
+                                                <div class="product-card-badge">${
+                                                    value.size ?? "-"
+                                                }
+                                                </div>
+                                            </div>
 
-
-         <div class="d-flex my-2 flex-wrap gap-3 align-items-center card-content_wrapper">
-
-
-           <div class="d-flex flex-column gap-1">
-              <div class="card-text text-dark">Weight</div>
-              <div class="product-card-badge">${value.weight}g</div>
-          </div>
-          
-          ${box}
-       
-      </div>
-
-
-
-      
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="card-text text-dark">
+                                                    Weight
+                                                </div>
+                                                <div class="product-card-badge">
+                                                    ${
+                                                        value.weight ?? "-"
+                                                    }g</div>
+                                            </div>
+                                        </div>
+             </div>
               <div class="d-flex flex-wrap gap-2 align-items-center">
                   ${moqAvailabilityHTML}
                   <div class="d-flex gap-2 align-items-center purity-inside-card">
                       <div class="card-text text-dark">
                           Purity
                       </div>
-                      <div class="product-card-badge">${
-                          result.purity && result.purity[key]
-                              ? result.purity[key].replace("SIL-", "")
-                              : ""
-                      }</div>
+                      <div class="product-card-badge">${value.Purity}</div>
                   </div>
               </div>
-
-
-
                             <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">
                                 <div class="d-flex align-items-center">
                                     <label class="me-2">Qty</label>
@@ -2098,9 +783,7 @@ function getcategoryproduct(id, page = 1) {
                                             field="quantity"
                                            >
                                         <input type="text" name="quantity"
-                                            id="quantity${value.id}" value="${
-                        value.moq
-                    }"
+                                            id="quantity${value.id}" value="1"
                                             class="qty">
                                         <input type="button" value="+" class="qtyplus"
                                             field="quantity">
@@ -2151,18 +834,18 @@ function getcategoryproduct(id, page = 1) {
                 <nav class="large-devices_pagination">
                     <div class="d-flex gap-3 flex-wrap justify-content-between">
                         <div>
-                             Showing ${result.categorywiseproduct.from} - ${result.categorywiseproduct.to} of ${result.categorywiseproduct.total} results
+                             Showing ${result.itemwiseproduct.from} - ${result.itemwiseproduct.to} of ${result.itemwiseproduct.total} results
                          </div>
                          <ul class="pagination">`;
 
-                if (result.categorywiseproduct.current_page == 1) {
+                if (result.itemwiseproduct.current_page == 1) {
                     paginationHTML += `<li class="page-item disabled">
                      <span class="page-link">Previous</span>
                  </li>`;
                 } else {
                     paginationHTML += `<li class="page-item">
-                     <a class="page-link" href="javascript:void(0)" onclick="getcategoryproduct(${id},${
-                        result.categorywiseproduct.current_page - 1
+                     <a class="page-link" href="javascript:void(0)" onclick="getProduct(${id},${
+                        result.itemwiseproduct.current_page - 1
                     })" tabindex="-1">Previous</a>
                  </li>`;
                 }
@@ -2170,37 +853,37 @@ function getcategoryproduct(id, page = 1) {
                 for (
                     var page = Math.max(
                         1,
-                        result.categorywiseproduct.current_page - 2
+                        result.itemwiseproduct.current_page - 2
                     );
                     page <=
                     Math.min(
-                        result.categorywiseproduct.last_page,
-                        result.categorywiseproduct.current_page + 2
+                        result.itemwiseproduct.last_page,
+                        result.itemwiseproduct.current_page + 2
                     );
                     page++
                 ) {
-                    if (page == result.categorywiseproduct.current_page) {
+                    if (page == result.itemwiseproduct.current_page) {
                         paginationHTML += `<li class="page-item active">
                          <span class="page-link">${page}</span>
                      </li>`;
                     } else {
                         paginationHTML += `<li class="page-item">
-                         <a class="page-link"  href="javascript:void(0)" onclick="getcategoryproduct(${id},${page})">${page}</a>
+                         <a class="page-link"  href="javascript:void(0)" onclick="getProduct(${id},${page})">${page}</a>
                      </li>`;
                     }
                 }
 
                 if (
-                    result.categorywiseproduct.current_page ==
-                    result.categorywiseproduct.last_page
+                    result.itemwiseproduct.current_page ==
+                    result.itemwiseproduct.last_page
                 ) {
                     paginationHTML += `<li class="page-item disabled">
                      <span class="page-link">Next</span>
                  </li>`;
                 } else {
                     paginationHTML += `<li class="page-item">
-                     <a class="page-link"  href="javascript:void(0)" onclick="getcategoryproduct(${id},${
-                        result.categorywiseproduct.current_page + 1
+                     <a class="page-link"  href="javascript:void(0)" onclick="getProduct(${id},${
+                        result.itemwiseproduct.current_page + 1
                     })">Next</a>
                  </li>`;
                 }
@@ -2208,8 +891,8 @@ function getcategoryproduct(id, page = 1) {
                 paginationHTML += `</ul></div></nav>
                 <nav class="small-devices_pagination d-none">
                     <div class="text-center">
-                        <a class="btn btn-dark px-4 py-2" href="javascript:void(0)" onclick="getcategoryproduct(${id},${
-                    result.categorywiseproduct.current_page + 1
+                        <a class="btn btn-dark px-4 py-2" href="javascript:void(0)" onclick="getProduct(${id},${
+                    result.itemwiseproduct.current_page + 1
                 })">See More
                             Products</a>
                     </div>
@@ -2236,368 +919,15 @@ function getcategoryproduct(id, page = 1) {
                 });
             });
 
-            if (isAnyCheckboxChecked) {
-                updateBoxFilters(data.boxjson);
-                updatePurityFilters(data.purityjson);
-            } else {
-                updateBoxFilters(data.boxDefaultjson);
-                updatePurityFilters(data.purityDefaultjson);
-            }
+            loadSecureImages();
         },
     });
 }
 
-function getBoxProduct(id, page = 1) {
+function getProductFilter(id, page = 1) {
     $(".pagination-links").attr("hidden", true);
     var category_id = $("#decryptedCategoryId").val();
     var project_id = $("#decryptedProjectId").val();
-    var weightfrom = document.getElementById("hdweightfrom").value;
-    var weightto = document.getElementById("hdweightto").value;
-    // Split the value into an array using the comma as a delimiter
-    var weightfrom = weightfrom.split(",");
-    var weightto = weightto.split(",");
-    var stockid = JSON.parse(document.getElementById("stock").value);
-
-    var selectedbox = [];
-    $(".box").each(function () {
-        if (windowWidth > 300) {
-            $("#pageloader").fadeIn();
-        }
-        if ($(this).is(":checked")) {
-            selectedbox.push($(this).val());
-        }
-    });
-
-    var selectedboxString = selectedbox.join(",");
-    // console.log(selectedcategoryString);
-    $("#box").val(selectedboxString);
-
-    $("#product_page").empty();
-    $.ajax({
-        type: "GET",
-        url: "/retailer/boxwiseproduct/" + id + "?page=" + page,
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        data: {
-            selectedbox: selectedbox,
-            category_id: category_id,
-            project_id: project_id,
-            weightfrom: weightfrom,
-            weightto: weightto,
-            stockid: stockid,
-            _token: $('meta[name="csrf-token"]').attr("content"),
-        },
-        dataType: "json",
-        success: function (result) {
-            // console.log(result);
-            if (result.boxwiseproduct.data.length == 0) {
-                $("#checkboxhidden").attr("hidden", "");
-                $("#addtocarthidden").attr("hidden", "");
-                $("#product_page").attr("hidden", "");
-                $("#notfound").empty();
-                var notfound = `<img src='${baseurl}/emptycart.gif'>`;
-                $("#notfound").append(notfound);
-                if (windowWidth > 300) {
-                    $("#pageloader").fadeOut();
-                }
-            } else {
-                $("#checkboxhidden").removeAttr("hidden", "");
-                $("#addtocarthidden").removeAttr("hidden", "");
-                $("#product_page").removeAttr("hidden", "");
-                $.each(result.boxwiseproduct.data, function (key, value) {
-                    $("#notfound").empty();
-                    if (result.stock == 1 && value.qty != 0) {
-                        moqAvailabilityHTML = `<div class="product-cart-qty-text">In Stock: <span>${value.qty} Pcs</span></div>`;
-                    } else {
-                        moqAvailabilityHTML = ``;
-                    }
-                    let box = "";
-                    if (
-                        result.box[key] !== "-" &&
-                        result.box[key] !== undefined &&
-                        result.box[key] !== null
-                    ) {
-                        box = `
-                        <div class="d-flex flex-column gap-1">
-                        <div class="card-text text-dark">
-                        ${value.project_id != 4 ? "Box: " : "Style: "}
-                        </div>
-                        <div class="product-card-badge">${result.box[key]}</div>
-                        </div>`;
-                    }
-
-                    var eid = $("#encrypt" + value.id).val();
-                    var productDetailUrl =
-                        "/retailer/productdetail/productId".replace(
-                            "productId",
-                            eid
-                        );
-                    var productHTML = `
-                    <input type="hidden" name="weight${value.id}" id="weight${
-                        value.id
-                    }"
-                        value="${value.weight}">
-                        <input type="hidden" name="finish${
-                            value.id
-                        }" id="finish${value.id}"
-                            value="${value.finish_id}">
-                    <input type="hidden" name="size${value.id}" id="size${
-                        value.id
-                    }"
-                        value="${value.size_id}">
-                    <input type="hidden" name="plating${value.id}" id="plating${
-                        value.id
-                    }"
-                        value="${value.plating_id}">
-                    <input type="hidden" name="color${value.id}" id="color${
-                        value.id
-                    }"
-                        value="${value.color_id}">
-                        <input type="hidden" name="stock${value.id}" id="stock${
-                        value.id
-                    }"
-                            value="${stockid}">
-                            <input type="hidden" name="box${value.id}" id="box${
-                        value.id
-                    }"
-  value="${value.style_id}">
-                    <div class="card shop-page_product-card">
-                        <div class="card-checkbox_wrapper">
-                            <input class="card-checkbox" type="checkbox" name="product${
-                                value.id
-                            }"
-                                id="product${value.id}" data-id="${value.id}">
-                        </div>
-                        <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
-                            <a href="${productDetailUrl}">
-                                <img class="img-fluid prouduct_card-image" width="154" height="160"
-                                    src="${baseurl}/${
-                        "upload/product/" + value.product_image
-                    }" alt>
-                            </a>
-                             <div class="position-absolute card-purity purity-list">
-          Purity: ${
-              result.purity && result.purity[key]
-                  ? result.purity[key].replace("SIL-", "")
-                  : ""
-          }
-      </div>
-                        </div>
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <div
-                                class="d-flex justify-content-between  align-items-center flex-wrap card-title_wrapper">
-                              <div class="card-title"><a href="${productDetailUrl}">${
-                        value.product_unique_id
-                    }</a> </div>
-                                 
-                                    <button class="ml-2 custom-icon-btn wishlist-svg ${
-                                        value.is_favourite === 1 ? "active" : ""
-                                    }"
-                                    onclick="addtowishlist(${value.id})">
-                                        <svg width="26" height="23" viewBox="0 0 26 23"
-                                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                stroke="inherit" stroke-width="1.5"
-                                                stroke-linejoin="round" />
-                                        </svg>
-                                    </button>
-                            </div>
-                            <input type="hidden" name="moq${value.id}"
-                                id="moq${value.id}" value="${value.moq}">
-                                <input type="hidden" name="qty${value.id}"
-                          id="qty${value.id}" value="${value.qty}">
-                          <input type="hidden" name="stockqty"
-                          id="stockqty" value="${stockid}">
-        <div>
-
-
-
-         <div class="d-flex my-2 flex-wrap gap-3 align-items-center card-content_wrapper">
-
-
-           <div class="d-flex flex-column gap-1">
-              <div class="card-text text-dark">Weight</div>
-              <div class="product-card-badge">${value.weight}g</div>
-          </div>
-          
-          ${box}
-       
-      </div>
-              <div class="d-flex flex-wrap gap-2 align-items-center">
-                  ${moqAvailabilityHTML}
-                  <div class="d-flex gap-2 align-items-center purity-inside-card">
-                      <div class="card-text text-dark">
-                          Purity
-                      </div>
-                      <div class="product-card-badge">${
-                          result.purity && result.purity[key]
-                              ? result.purity[key].replace("SIL-", "")
-                              : ""
-                      }</div>
-                  </div>
-              </div>
-                            <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">
-                                <div class="d-flex align-items-center">
-                                    <label class="me-2">Qty</label>
-                                    <div class="input-group quantity-input-group quantity-container"
-                                        data-product-id=${value.id}>
-                                        <input type="button" value="-" class="qtyminus"
-                                            field="quantity"
-                                           >
-                                        <input type="text" name="quantity"
-                                            id="quantity${value.id}" value="${
-                        value.moq
-                    }"
-                                            class="qty">
-                                        <input type="button" value="+" class="qtyplus"
-                                            field="quantity">
-                                    </div>
-                                </div>
-                                <div class="shop-page-add-to-cart-btn">
-                                <button onclick="addforcart(${
-                                    value.id
-                                })" data_id="card_id_${value.id}"
-                                  class="btn ${
-                                      result.cart[key] &&
-                                      Array.isArray(result.cart[key]) &&
-                                      result.cart[key].length
-                                          ? "added-to-cart-btn"
-                                          : "add-to-cart-btn"
-                                  } mr-2 spinner-button">                                                            
-                                  <span class="submit-text">${
-                                      result.cart[key] &&
-                                      Array.isArray(result.cart[key]) &&
-                                      result.cart[key].length
-                                          ? "Added To Cart"
-                                          : "ADD TO CART"
-                                  }</span>
-                          <span class="d-none spinner">
-                              <span class="spinner-grow spinner-grow-sm"
-                                  aria-hidden="true"></span>
-                              <span role="status">Adding...</span>
-                          </span>
-                          <span class="added-to-cart-badge ms-2">${
-                              result.cartcount[key]
-                          }</span>
-                          </button>
-                            </div>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-      `;
-                    $("#product_page").append(productHTML);
-                });
-                $(".loader").fadeOut();
-                if (windowWidth > 300) {
-                    $("#pageloader").fadeOut();
-                }
-                $("#pagination").empty();
-                // Append pagination links
-                var paginationHTML = `<div class="my-5 pagination-links">
-                <nav class="large-devices_pagination">
-                    <div class="d-flex gap-3 flex-wrap justify-content-between">
-                        <div>
-                             Showing ${result.boxwiseproduct.from} - ${result.boxwiseproduct.to} of ${result.boxwiseproduct.total} results
-                         </div>
-                         <ul class="pagination">`;
-
-                if (result.boxwiseproduct.current_page == 1) {
-                    paginationHTML += `<li class="page-item disabled">
-                     <span class="page-link">Previous</span>
-                 </li>`;
-                } else {
-                    paginationHTML += `<li class="page-item">
-                     <a class="page-link" href="javascript:void(0)" onclick="getBoxProduct(${id},${
-                        result.boxwiseproduct.current_page - 1
-                    })" tabindex="-1">Previous</a>
-                 </li>`;
-                }
-
-                for (
-                    var page = Math.max(
-                        1,
-                        result.boxwiseproduct.current_page - 2
-                    );
-                    page <=
-                    Math.min(
-                        result.boxwiseproduct.last_page,
-                        result.boxwiseproduct.current_page + 2
-                    );
-                    page++
-                ) {
-                    if (page == result.boxwiseproduct.current_page) {
-                        paginationHTML += `<li class="page-item active">
-                         <span class="page-link">${page}</span>
-                     </li>`;
-                    } else {
-                        paginationHTML += `<li class="page-item">
-                         <a class="page-link"  href="javascript:void(0)" onclick="getBoxProduct(${id},${page})">${page}</a>
-                     </li>`;
-                    }
-                }
-
-                if (
-                    result.boxwiseproduct.current_page ==
-                    result.boxwiseproduct.last_page
-                ) {
-                    paginationHTML += `<li class="page-item disabled">
-                     <span class="page-link">Next</span>
-                 </li>`;
-                } else {
-                    paginationHTML += `<li class="page-item">
-                     <a class="page-link"  href="javascript:void(0)" onclick="getBoxProduct(${id},${
-                        result.boxwiseproduct.current_page + 1
-                    })">Next</a>
-                 </li>`;
-                }
-
-                paginationHTML += `</ul></div></nav>
-                <nav class="small-devices_pagination d-none">
-                    <div class="text-center">
-                        <a class="btn btn-dark px-4 py-2" href="javascript:void(0)" onclick="getBoxProduct(${id},${
-                    result.boxwiseproduct.current_page + 1
-                })">See More
-                            Products</a>
-                    </div>
-                </nav></div>`;
-
-                $("#pagination").append(paginationHTML);
-            }
-            qtyplusminus();
-            $(".card-checkbox").click(function () {
-                if ($(this).is(":checked")) {
-                    $("#addalltocart").removeAttr("disabled");
-                } else {
-                    $("#addalltocart").attr("disabled", "disabled");
-                }
-            });
-
-            // Add click event listener to wishlist-svg buttons
-            const wishlistButtons = document.querySelectorAll(".wishlist-svg");
-
-            wishlistButtons.forEach((button) => {
-                button.addEventListener("click", function () {
-                    // Toggle the 'active' class to change the color on click
-                    this.classList.toggle("active");
-                });
-            });
-        },
-    });
-}
-
-function getPurityProduct(id, page = 1) {
-    $(".pagination-links").attr("hidden", true);
-    var category_id = $("#decryptedCategoryId").val();
-    var project_id = $("#decryptedProjectId").val();
-    var weightfrom = document.getElementById("hdweightfrom").value;
-    var weightto = document.getElementById("hdweightto").value;
-    // Split the value into an array using the comma as a delimiter
-    var weightfrom = weightfrom.split(",");
-    var weightto = weightto.split(",");
-    var stockid = JSON.parse(document.getElementById("stock").value);
 
     var selectedpurity = [];
     $(".purity").each(function () {
@@ -2852,7 +1182,7 @@ function getPurityProduct(id, page = 1) {
                  </li>`;
                 } else {
                     paginationHTML += `<li class="page-item">
-                     <a class="page-link" href="javascript:void(0)" onclick="getPurityProduct(${id},${
+                     <a class="page-link" href="javascript:void(0)" onclick="getProduct(${id},${
                         result.puritywiseproduct.current_page - 1
                     })" tabindex="-1">Previous</a>
                  </li>`;
@@ -2876,7 +1206,7 @@ function getPurityProduct(id, page = 1) {
                      </li>`;
                     } else {
                         paginationHTML += `<li class="page-item">
-                         <a class="page-link"  href="javascript:void(0)" onclick="getPurityProduct(${id},${page})">${page}</a>
+                         <a class="page-link"  href="javascript:void(0)" onclick="getProduct(${id},${page})">${page}</a>
                      </li>`;
                     }
                 }
@@ -2890,7 +1220,7 @@ function getPurityProduct(id, page = 1) {
                  </li>`;
                 } else {
                     paginationHTML += `<li class="page-item">
-                     <a class="page-link"  href="javascript:void(0)" onclick="getPurityProduct(${id},${
+                     <a class="page-link"  href="javascript:void(0)" onclick="getProduct(${id},${
                         result.puritywiseproduct.current_page + 1
                     })">Next</a>
                  </li>`;
@@ -2899,7 +1229,7 @@ function getPurityProduct(id, page = 1) {
                 paginationHTML += `</ul></div></nav>
                 <nav class="small-devices_pagination d-none">
                     <div class="text-center">
-                        <a class="btn btn-dark px-4 py-2" href="javascript:void(0)" onclick="getPurityProduct(${id},${
+                        <a class="btn btn-dark px-4 py-2" href="javascript:void(0)" onclick="getProduct(${id},${
                     result.puritywiseproduct.current_page + 1
                 })">See More
                             Products</a>
@@ -2908,6 +1238,7 @@ function getPurityProduct(id, page = 1) {
 
                 $("#pagination").append(paginationHTML);
             }
+            loadSecureImages();
             qtyplusminus();
             $(".card-checkbox").click(function () {
                 if ($(this).is(":checked")) {
@@ -3020,104 +1351,20 @@ function updateMobileWeightFilters(data) {
     });
 }
 
-function updateSubCollections(subcollectionsjson) {
-    // Log the data to debug
-    // console.log("subcollectionsjson:", subcollectionsjson);
-
-    // Ensure the data is parsed if it's not an object
-    if (typeof subcollectionsjson === "string") {
-        try {
-            subcollectionsjson = JSON.parse(subcollectionsjson);
-        } catch (error) {
-            console.error("Failed to parse subcollectionsjson:", error);
-            return;
-        }
-    }
-
-    // Check if the data is an array
-    if (!Array.isArray(subcollectionsjson)) {
-        console.error(
-            "subcollectionsjson is not an array:",
-            subcollectionsjson
-        );
-        return;
-    }
-
-    let newSubCollectionData = addKeyValueToObjects(
-        subcollectionsjson,
-        "item_name",
-        "sub_collection_name"
-    );
-    newSubCollectionData.sort(sortByItemName);
-
-    // Clear existing sub-collection filter inputs
-    let subCollectionEl = document.getElementById(
-        "sidebarLabels-subcollection"
-    );
-    if (subCollectionEl) {
-        subCollectionEl.innerHTML = "";
-
-        // Generate new sub-collection filter inputs
-        generateInputElements("subcollection", newSubCollectionData);
-        generatePopupInputElements("subcollection", newSubCollectionData);
-        generatePopupSortingButtons("subcollection", newSubCollectionData);
-    }
-}
-
-function updateMobileSubColFilters(newData) {
-    let newContainer = document.querySelector("#subcollectionFilterContent1");
-    newContainer.innerHTML = ""; // Clear existing filters
-
-    // Ensure newData is parsed if it's not an object
-    if (typeof newData === "string") {
-        try {
-            newData = JSON.parse(newData);
-        } catch (error) {
-            console.error("Failed to parse newData:", error);
-            return;
-        }
-    }
-
-    // Check if newData is an array
-    if (Array.isArray(newData)) {
-        newData.forEach((each) => {
-            let filterItem = document.createElement("div");
-
-            filterItem.innerHTML = `<div class="form-check d-flex justify-content-between gap-2">
-                        <div>
-                            <input type="checkbox" class="form-check-input subcollection_filter" id="mobile-${each.sub_collection_name.toLowerCase()}"
-                            value="${
-                                each.sub_collection_name
-                            }" onclick="getsubcollectionproduct(${
-                each.id
-            })"><label for="mobile-${each.sub_collection_name.toLowerCase()}" class="form-check-label">${
-                each.sub_collection_name
-            }</label>
-                        </div>
-                    </div>`;
-            newContainer.appendChild(filterItem);
-        });
-    } else {
-        console.error("newData is not an array:", newData);
-        // Handle the case where newData is not an array (e.g., log an error, show a message, etc.)
-    }
-}
-
-function updateCategoryFilters(categoriesData) {
-    // console.log("update cat filters", categoriesData);
-    let categories = JSON.parse(categoriesData);
-    let container = document.getElementById("jewel-category-filter");
+function updateProductFilters(productsData) {
+    let products = JSON.parse(productsData);
+    let container = document.getElementById("product-filter");
     if (container) {
         container.innerHTML = ""; // Clear existing filters if any
-        categories.forEach(function (category) {
+        products.forEach(function (product) {
             var filterHtml = `
     <div class="form-check">
     
-    <input class="category form-check-input" type="checkbox"
-    id="category${category.id}" name="category" data-id="${category.id}"
-    value="${category.category_name}" onclick="getcategoryproduct(${category.id})">
-    <label class="form-check-label" for="category${category.id}">
-    ${category.category_name}
+    <input class="product form-check-input" type="checkbox"
+    id="product${product.id}" name="product" data-id="${product.id}"
+    value="${product.Item}" onclick="getProduct(${product.id})">
+    <label class="form-check-label" for="product${product.id}">
+    ${product.Item}
     </label>
     
         </div>
@@ -3127,120 +1374,21 @@ function updateCategoryFilters(categoriesData) {
     }
 }
 
-function updateMobileCategoryFilters(categoriesData) {
-    // console.log("update mob cat filters", categoriesData);
-    let categories = JSON.parse(categoriesData);
+function updateMobileProductFilters(productsData) {
+    let products = JSON.parse(productsData);
 
-    let container = document.getElementById("mobileCategoryFilter");
+    let container = document.getElementById("mobile-product-filters");
     container.innerHTML = ""; // Clear existing filters if any
 
-    categories.forEach(function (category) {
+    products.forEach(function (product) {
         let filterHtml = `
         <div class="form-check d-flex justify-content-between gap-2">
             <div>
-                <input class="category form-check-input" type="checkbox"
-                    id="category${category.id}-mob" name="category" data-id="${category.id}"
-                    value="${category.category_name}" onclick="getcategoryproduct(${category.id})">
-                <label class="form-check-label" for="category${category.id}-mob">
-                    ${category.category_name}
-                </label>
-            </div>
-        </div>
-    `;
-        container.insertAdjacentHTML("beforeend", filterHtml);
-    });
-}
-
-function updateBoxFilters(boxesData) {
-    // console.log("update cat filters", categoriesData);
-    let boxes = JSON.parse(boxesData);
-    let container = document.getElementById("box-filter");
-    if (container) {
-        container.innerHTML = ""; // Clear existing filters if any
-        boxes.forEach(function (box) {
-            var filterHtml = `
-    <div class="form-check">
-    
-    <input class="box form-check-input" type="checkbox"
-    id="box${box.id}" name="box" data-id="${box.id}"
-    value="${box.style_name}" onclick="getBoxProduct(${box.id})">
-    <label class="form-check-label" for="box${box.id}">
-    ${box.style_name == "-" ? "Default" : box.style_name}
-    </label>
-    
-        </div>
-        `;
-            container.insertAdjacentHTML("beforeend", filterHtml);
-        });
-    }
-}
-
-function updateMobileBoxFilters(boxesData) {
-    // console.log("update mob cat filters", categoriesData);
-    let boxes = JSON.parse(boxesData);
-
-    let container = document.getElementById("mobile-box-filters");
-    container.innerHTML = ""; // Clear existing filters if any
-
-    boxes.forEach(function (box) {
-        let filterHtml = `
-        <div class="form-check d-flex justify-content-between gap-2">
-            <div>
-                <input class="box form-check-input" type="checkbox"
-                    id="box${box.id}-mob" name="box" data-id="${box.id}"
-                    value="${box.style_name}" onclick="getBoxProduct(${
-            box.id
-        })">
-                <label class="form-check-label" for="box${box.id}-mob">
-                    ${box.style_name == "-" ? "Default" : box.style_name}
-                </label>
-            </div>
-        </div>
-    `;
-        container.insertAdjacentHTML("beforeend", filterHtml);
-    });
-}
-
-function updatePurityFilters(puritiesData) {
-    // console.log("update cat filters", categoriesData);
-    let purities = JSON.parse(puritiesData);
-    let container = document.getElementById("purity-filter");
-    if (container) {
-        container.innerHTML = ""; // Clear existing filters if any
-        purities.forEach(function (purity) {
-            var filterHtml = `
-    <div class="form-check">
-    
-    <input class="purity form-check-input" type="checkbox"
-    id="purity${purity.id}" name="purity" data-id="${purity.id}"
-    value="${purity.silver_purity_percentage}" onclick="getBoxProduct(${purity.id})">
-    <label class="form-check-label" for="purity${purity.id}">
-    ${purity.silver_purity_percentage}
-    </label>
-    
-        </div>
-        `;
-            container.insertAdjacentHTML("beforeend", filterHtml);
-        });
-    }
-}
-
-function updateMobilePurityFilters(puritiesData) {
-    // console.log("update mob cat filters", categoriesData);
-    let purities = JSON.parse(puritiesData);
-
-    let container = document.getElementById("mobile-purity-filters");
-    container.innerHTML = ""; // Clear existing filters if any
-
-    purities.forEach(function (purity) {
-        let filterHtml = `
-        <div class="form-check d-flex justify-content-between gap-2">
-            <div>
-                <input class="purity form-check-input" type="checkbox"
-                    id="purity${purity.id}-mob" name="purity" data-id="${purity.id}"
-                    value="${purity.silver_purity_percentage}" onclick="getPurityProduct(${purity.id})">
-                <label class="form-check-label" for="purity${purity.id}-mob">
-                    ${purity.silver_purity_percentage}
+                <input class="product form-check-input" type="checkbox"
+                    id="product${product.id}-mob" name="product" data-id="${product.id}"
+                    value="${product.Item}" onclick="getproductProduct(${product.id})">
+                <label class="form-check-label" for="product${product.id}-mob">
+                    ${product.Item}
                 </label>
             </div>
         </div>
@@ -3254,313 +1402,125 @@ function clearFilters() {
     window.location.reload();
 }
 
-// function updateMobileClassifications(classifications) {
-//     const mobileClassificationContainer = document.querySelector('#mobileClassificationFilter .filter-inputs_wrapper');
+// function appendWeightFilters() {
+//     let weights = JSON.parse($("#weights").val());
+//     var container = document.getElementById("weight-filters-container");
+//     container.innerHTML = ""; // Clear existing filters if any
 
-//     if(mobileClassificationContainer){
-//         mobileClassificationContainer.innerHTML = ''; // Clear existing filters if any
-//         classifications.forEach(classification => {
+//     weights?.forEach(function (weight, key) {
+//         var label = "";
 
-//             const formCheckDiv = document.createElement('div');
-//             formCheckDiv.className = 'form-check d-flex justify-content-between gap-2';
+//         if (
+//             weight.weight_range_from === 50 &&
+//             weight.weight_range_to === 10000
+//         ) {
+//             label = "Above 50grams";
+//         } else if (Number.isInteger(weight.weight_range_from)) {
+//             label =
+//                 weight.weight_range_from +
+//                 " - " +
+//                 weight.weight_range_to +
+//                 "gms";
+//         } else {
+//             label =
+//                 weight.weight_range_from +
+//                 " - " +
+//                 weight.weight_range_to +
+//                 "gms";
+//         }
 
-//             const innerDiv = document.createElement('div');
-
-//             const inputElement = document.createElement('input');
-//             inputElement.className = 'form-check-input classification';
-//             inputElement.type = 'checkbox';
-//             inputElement.id = `mob-classification_name${classification.id}`;
-//             inputElement.name = 'classification-mobile';
-//             inputElement.value = classification.classification_name;
-//             inputElement.onclick = function() {
-//                 getclassificationproduct(classification.id);
-//             };
-
-//             const labelElement = document.createElement('label');
-//             labelElement.className = 'form-check-label';
-//             labelElement.setAttribute('for', `mob-classification_name${classification.id}`);
-//             labelElement.textContent = classification.classification_name;
-
-//             innerDiv.appendChild(inputElement);
-//             innerDiv.appendChild(labelElement);
-
-//             formCheckDiv.appendChild(innerDiv);
-
-//             mobileClassificationContainer.appendChild(formCheckDiv);
-//         });
-//     }
-
-// }
-
-// // Call the function with the JSON data
-// updateMobileClassifications(JSON.parse($("#classification").val()));
-
-// function updateMobileOtherFilters(others) {
-//     const mobileOthersContainer = document.querySelector('#mobileOtherFilter .filter-inputs_wrapper');
-
-//     others.forEach(other => {
-//         mobileOthersContainer.innerHTML = ''; // Clear existing filters if any
-
-//         const formCheckDiv = document.createElement('div');
-//         formCheckDiv.className = 'form-check d-flex justify-content-between gap-2';
-
-//         const innerDiv = document.createElement('div');
-
-//         const inputElement = document.createElement('input');
-//         inputElement.className = 'others form-check-input';
-//         inputElement.type = 'checkbox';
-//         inputElement.id = `other${other.id}`;
-//         inputElement.name = 'other';
-//         inputElement.value = other.collection_name;
-//         inputElement.setAttribute('data-id', other.id);
-//         inputElement.onclick = function() {
-//             getCollectionWiseProducts(other.id);
-//         };
-
-//         const labelElement = document.createElement('label');
-//         labelElement.className = 'form-check-label';
-//         labelElement.setAttribute('for', `other${other.id}`);
-//         labelElement.textContent = other.collection_name;
-
-//         innerDiv.appendChild(inputElement);
-//         innerDiv.appendChild(labelElement);
-
-//         formCheckDiv.appendChild(innerDiv);
-
-//         mobileOthersContainer.appendChild(formCheckDiv);
+//         var filterHtml = `
+//                 <div class="form-check">
+//                     <input class="form-check-input weight_filter" type="checkbox"
+//                         id="weightfrom${weight.id}" name="weightfrom"
+//                         data-id="${weight.id}" value="${weight.weight_range_from}"
+//                         onclick="getWeightRange(${weight.id})">
+//                     <input class="weight_filter" type="hidden" name="weightto"
+//                         id="weightto${weight.id}" value="${weight.weight_range_to}">
+//                     <label class="form-check-label" for="weightfrom${weight.id}">
+//                         ${label}
+//                     </label>
+//                 </div>
+//             `;
+//         container.insertAdjacentHTML("beforeend", filterHtml);
 //     });
 // }
-// // Call the function with the JSON data
-// updateMobileOtherFilters(JSON.parse($("#otherFilter").val()));
+// Call the function to append the filters
+// appendWeightFilters();
 
-// Parse the JSON string into a JavaScript object
+function appendProductFilters() {
+    let products = JSON.parse($("#productFilter").val());
 
-function appendWeightFilters() {
-    let weights = JSON.parse($("#weights").val());
-    var container = document.getElementById("weight-filters-container");
-    container.innerHTML = ""; // Clear existing filters if any
+    let container = document.getElementById("product-filter");
+    if (container) {
+        container.innerHTML = ""; // Clear existing filters if any
 
-    weights?.forEach(function (weight, key) {
-        var label = "";
+        products.forEach(function (product) {
+            // Remove "SIL-" prefix if present
+            let productabel = product.Item;
 
-        if (
-            weight.weight_range_from === 50 &&
-            weight.weight_range_to === 10000
-        ) {
-            label = "Above 50grams";
-        } else if (Number.isInteger(weight.weight_range_from)) {
-            label =
-                weight.weight_range_from +
-                " - " +
-                weight.weight_range_to +
-                "gms";
-        } else {
-            label =
-                weight.weight_range_from +
-                " - " +
-                weight.weight_range_to +
-                "gms";
+            var filterHtml = `
+        <div class="form-check">
+  
+                <input class="product form-check-input" type="checkbox"
+                    id="product${product.id}" name="product" data-id="${product.id}"
+                    value="${productabel}" onclick="getProduct(${product.id})">
+                <label class="form-check-label" for="product${product.id}">
+                    ${productabel}
+                </label>
+ 
+        </div>
+    `;
+            container.insertAdjacentHTML("beforeend", filterHtml);
+        });
+    }
+}
+
+// Call the function to append the filters
+appendProductFilters();
+
+async function loadSecureImages() {
+    try {
+        const res = await fetch("/retailer/proxy/token");
+        const data = await res.json();
+        const token = data.token;
+
+        if (!token) {
+            throw new Error("Token not received from /retailer/proxy/token");
         }
 
-        var filterHtml = `
-                <div class="form-check">
-                    <input class="form-check-input weight_filter" type="checkbox"
-                        id="weightfrom${weight.id}" name="weightfrom"
-                        data-id="${weight.id}" value="${weight.weight_range_from}"
-                        onclick="getWeightRange(${weight.id})">
-                    <input class="weight_filter" type="hidden" name="weightto"
-                        id="weightto${weight.id}" value="${weight.weight_range_to}">
-                    <label class="form-check-label" for="weightfrom${weight.id}">
-                        ${label}
-                    </label>
-                </div>
-            `;
-        container.insertAdjacentHTML("beforeend", filterHtml);
-    });
-}
-// Call the function to append the filters
-appendWeightFilters();
+        const secureImages = document.querySelectorAll(".load-secure-image");
 
-function appendCategoryFilters() {
-    let categories = JSON.parse($("#categoryFilter").val());
-    let container = document.getElementById("jewel-category-filter");
-    if (container) {
-        container.innerHTML = ""; // Clear existing filters if any
+        secureImages.forEach(async (img) => {
+            const secureFilename = img.dataset.secure;
 
-        categories.forEach(function (category) {
-            var filterHtml = `
-        <div class="form-check">
-  
-                <input class="category form-check-input" type="checkbox"
-                    id="category${category.id}" name="category" data-id="${category.id}"
-                    value="${category.category_name}" onclick="getcategoryproduct(${category.id})">
-                <label class="form-check-label" for="category${category.id}">
-                    ${category.category_name}
-                </label>
- 
-        </div>
-    `;
-            container.insertAdjacentHTML("beforeend", filterHtml);
+            try {
+                const imageRes = await fetch("/retailer/proxy/secure-image", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `${token}`,
+                    },
+                    body: JSON.stringify({
+                        secureFilename,
+                    }),
+                });
+
+                if (!imageRes.ok) {
+                    throw new Error(`Failed to fetch image for ${secureFilename}`);
+                }
+
+                const blob = await imageRes.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                img.src = imageUrl;
+            } catch (error) {
+                console.error("Image load failed:", error);
+                img.alt = "Image load failed";
+            }
         });
+
+    } catch (err) {
+        console.error("Token fetch failed:", err);
     }
 }
 
-// Call the function to append the filters
-appendCategoryFilters();
-function appendUtensilCategoryFilters() {
-    let categories = JSON.parse($("#utensilcategoryFilter").val());
-    let container = document.getElementById("utensil-category-filter");
-    if (container) {
-        container.innerHTML = ""; // Clear existing filters if any
-
-        categories.forEach(function (category) {
-            var filterHtml = `
-        <div class="form-check">
-  
-                <input class="category form-check-input" type="checkbox"
-                    id="category${category.id}" name="category" data-id="${category.id}"
-                    value="${category.category_name}" onclick="getcategoryproduct(${category.id})">
-                <label class="form-check-label" for="category${category.id}">
-                    ${category.category_name}
-                </label>
- 
-        </div>
-    `;
-            container.insertAdjacentHTML("beforeend", filterHtml);
-        });
-    }
-}
-
-function appendBoxFilters() {
-    let boxes = JSON.parse($("#boxFilter").val());
-
-    let container = document.getElementById("box-filter");
-    if (container) {
-        container.innerHTML = ""; // Clear existing filters if any
-
-        boxes.forEach(function (box) {
-            var filterHtml = `
-        <div class="form-check">
-  
-                <input class="box form-check-input" type="checkbox"
-                    id="box${box.id}" name="box" data-id="${box.id}"
-                    value="${box.style_name}" onclick="getBoxProduct(${
-                box.id
-            })">
-                <label class="form-check-label" for="box${box.id}">
-                    ${box.style_name == "-" ? "Default" : box.style_name}
-                </label>
- 
-        </div>
-    `;
-            container.insertAdjacentHTML("beforeend", filterHtml);
-        });
-    }
-}
-function appendPurityFilters() {
-    let purities = JSON.parse($("#purityFilter").val());
-
-    let container = document.getElementById("purity-filter");
-    if (container) {
-        container.innerHTML = ""; // Clear existing filters if any
-
-        purities.forEach(function (purity) {
-            // Remove "SIL-" prefix if present
-            let purityLabel = purity.silver_purity_percentage.replace(
-                /^SIL-/,
-                ""
-            );
-
-            var filterHtml = `
-        <div class="form-check">
-  
-                <input class="purity form-check-input" type="checkbox"
-                    id="purity${purity.id}" name="purity" data-id="${purity.id}"
-                    value="${purityLabel}" onclick="getPurityProduct(${purity.id})">
-                <label class="form-check-label" for="purity${purity.id}">
-                    ${purityLabel}
-                </label>
- 
-        </div>
-    `;
-            container.insertAdjacentHTML("beforeend", filterHtml);
-        });
-    }
-}
-
-// Call the function to append the filters
-appendUtensilCategoryFilters();
-appendBoxFilters();
-appendPurityFilters();
-
-//     function updateClassifications(classifications) {
-//     const classificationContainer = document.querySelector('#classificationFilter .accordion-body');
-//     if(classificationContainer){
-//         classificationContainer.innerHTML = ''; // Clear existing filters if any
-//         classifications.forEach(classification => {
-//         const formCheckDiv = document.createElement('div');
-//         formCheckDiv.className = 'form-check';
-
-//         const inputElement = document.createElement('input');
-//         inputElement.className = 'form-check-input classification classification_name_filter';
-//         inputElement.type = 'checkbox';
-//         inputElement.id = `classification${classification.id}`;
-//         inputElement.name = 'classification';
-//         inputElement.value = classification.classification_name;
-//         inputElement.onclick = function() {
-//             getclassificationproduct(classification.id);
-//         };
-
-//         const labelElement = document.createElement('label');
-//         labelElement.className = 'form-check-label';
-//         labelElement.setAttribute('for', `classification${classification.id}`);
-//         labelElement.textContent = classification.classification_name;
-
-//         formCheckDiv.appendChild(inputElement);
-//         formCheckDiv.appendChild(labelElement);
-
-//         classificationContainer.appendChild(formCheckDiv);
-//     });
-//     }
-
-// }
-
-// // Call the function with the JSON data
-// updateClassifications(JSON.parse($("#classification").val()));
-// });
-
-// function updateOthersFilters(others) {
-//     const othersContainer = document.querySelector('#others .accordion-body');
-
-//    if(othersContainer){
-//     othersContainer.innerHTML = ''; // Clear existing filters if any
-//     others.forEach(other => {
-//         const formCheckDiv = document.createElement('div');
-//         formCheckDiv.className = 'form-check';
-
-//         const inputElement = document.createElement('input');
-//         inputElement.className = 'form-check-input others';
-//         inputElement.type = 'checkbox';
-//         inputElement.id = other.collection_name;
-//         inputElement.name = 'other';
-//         inputElement.value = other.collection_name;
-//         inputElement.setAttribute('data-id', other.id);
-//         inputElement.onclick = function() {
-//             getCollectionWiseProducts(other.id);
-//         };
-
-//         const labelElement = document.createElement('label');
-//         labelElement.className = 'form-check-label';
-//         labelElement.setAttribute('for', other.collection_name);
-//         labelElement.textContent = other.collection_name;
-
-//         formCheckDiv.appendChild(inputElement);
-//         formCheckDiv.appendChild(labelElement);
-
-//         othersContainer.appendChild(formCheckDiv);
-//     });
-//    }
-// }
-
-// // Call the function with the JSON data
-// updateOthersFilters(JSON.parse($("#otherFilter").val()));

@@ -481,7 +481,7 @@
 
     <div class="row g-0">
         {{-- Sidebar --}}
-        {{-- @include('retailer.readystock.sidebar') --}}
+        @include('retailer.readystock.sidebar')
         {{-- product list --}}
         <section class="col-lg-9 col-xxl-10 ms-auto">
 

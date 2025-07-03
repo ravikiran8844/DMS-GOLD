@@ -101,8 +101,8 @@ Route::prefix('retailer')->group(function () {
         //boxwiseproduct
         Route::get('boxwiseproduct/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'getBoxwiseProduct'])->name('retailerboxwiseproduct');
 
-        //puritywiseproduct
-        Route::get('puritywiseproduct/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'getPuritywiseProduct'])->name('retailerpuritywiseproduct');
+        //itemwiseproduct
+        Route::get('itemwiseproduct/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'getItemwiseProduct'])->name('retaileritemwiseproduct');
 
         // cart
         Route::get('cart', [\App\Http\Controllers\Retailer\Cart\CartController::class, 'cart'])->name('retailercart');
