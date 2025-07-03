@@ -54,7 +54,7 @@ class ImportStockUpdate implements ToCollection, WithHeadingRow
                     'Purity' => $row['purity'],
                     'size' => $row['size'],
                     'qty' => $row['qty'],
-                    'Jeweltype' => $base->Jeweltype,
+                    'Jeweltype' => $row['jeweltype'],
                     'Item' => $base->Item,
                     'Procatgory' => $base->Procatgory,
                     'unit' => $row['unit'],

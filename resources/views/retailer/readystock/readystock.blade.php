@@ -612,11 +612,13 @@
                                                 <div class="product-card-badge product-card-badge-light">
                                                     {{ $main->unit ?? '-' }}</div>
                                             </div>
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Style</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    {{ $main->style ?? '-' }}</div>
-                                            </div>
+                                            @if ($main->style)
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">Style</div>
+                                                    <div class="product-card-badge product-card-badge-light">
+                                                        {{ $main->style ?? '-' }}</div>
+                                                </div>
+                                            @endif
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">Making %</div>
                                                 <div class="product-card-badge">{{ $main->making ?? '-' }}
