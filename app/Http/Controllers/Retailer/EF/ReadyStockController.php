@@ -23,10 +23,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Http;
@@ -40,83 +36,63 @@ class ReadyStockController extends Controller
     function search(Request $request)
     {
         ini_set('memory_limit', '512M');
-        ini_set('max_execution_time', 180); //3 minutes
+        ini_set('max_execution_time', 180);
+
         $search = $request->search;
-        $searchSubstring = substr($search, 0, 4);
         $secret = 'EmeraldAdmin';
 
         $products = $this->getproducts(Auth::user()->id)
-            ->whereIn('products.project', [Projects::EF, Projects::LASERCUT, Projects::CASTING, Projects::IMPREZ, Projects::INDIANIA, Projects::MMD, Projects::STAMPING, Projects::TURKISH, Projects::UNIKRAFT])
-            ->where(function ($query) use ($search) {
-                $query->where('products.DesignNo', 'like', '%' . $search . '%');
-            })
+            ->whereIn('products.project', [
+                Projects::EF,
+                Projects::LASERCUT,
+                Projects::CASTING,
+                Projects::IMPREZ,
+                Projects::INDIANIA,
+                Projects::MMD,
+                Projects::STAMPING,
+                Projects::TURKISH,
+                Projects::UNIKRAFT
+            ])
+            ->where('products.DesignNo', 'like', '%' . $search . '%')
+            ->where('products.qty', '>', 0)
             ->orderBy('products.DesignNo', 'ASC')
             ->get();
 
-        if ($products->isEmpty()) {
-            $product = $this->getproducts(Auth::user()->id)
-                ->whereIn('products.project', [Projects::EF, Projects::LASERCUT, Projects::CASTING, Projects::IMPREZ, Projects::INDIANIA, Projects::MMD, Projects::STAMPING, Projects::TURKISH, Projects::UNIKRAFT])
-                ->where(function ($query) use ($search) {
-                    $query->where('products.DesignNo', 'like', '%' . $search . '%');
-                })
-                ->orderBy('products.DesignNo', 'ASC')
-                ->get();
+        $filteredProducts = $products
+            ->map(function ($product) use ($secret) {
+                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                return $product;
+            });
 
-            $filteredProducts = $product->get()
-                ->map(function ($product) use ($secret) {
-                    $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-                    return $product;
-                });
+        // Paginate
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+        $paginatedProducts = new \Illuminate\Pagination\LengthAwarePaginator(
+            $filteredProducts->forPage($page, $perPage),
+            $filteredProducts->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
-            // Manually paginate the filtered products
-            $page = request()->get('page', 1);
-            $perPage = $this->paginate;
-            $paginatedProducts = new LengthAwarePaginator(
-                $filteredProducts->forPage($page, $perPage),
-                $filteredProducts->count(),
-                $perPage,
-                $page,
-                ['path' => request()->url(), 'query' => request()->query()]
-            );
-
-            $product = $paginatedProducts;
-        } else {
-            $product = $this->getproducts(Auth::user()->id)
-                ->whereIn('products.project', [Projects::EF, Projects::LASERCUT, Projects::CASTING, Projects::IMPREZ, Projects::INDIANIA, Projects::MMD, Projects::STAMPING, Projects::TURKISH, Projects::UNIKRAFT])
-                ->where(function ($query) use ($search) {
-                    $query->where('products.DesignNo', 'like', '%' . $search . '%');
-                })
-                ->orderBy('products.DesignNo', 'ASC')
-                ->get();
-
-            $filteredProducts = $product->get()
-                ->map(function ($product) use ($secret) {
-                    $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-                    return $product;
-                });
-
-            // Manually paginate the filtered products
-            $page = request()->get('page', 1);
-            $perPage = $this->paginate;
-            $paginatedProducts = new LengthAwarePaginator(
-                $filteredProducts->forPage($page, $perPage),
-                $filteredProducts->count(),
-                $perPage,
-                $page,
-                ['path' => request()->url(), 'query' => request()->query()]
-            );
-
-            $product = $paginatedProducts;
-        }
-
+        $product = $paginatedProducts;
         $allProduct = Product::get();
         $stock = 1;
         $breadcrum = null;
         $breadcrumUrl = null;
         $project_id = null;
+
         $request->session()->put('ret_ses', $search);
 
-        return view('retailer.readystock.readystock', compact('product', 'allProduct', 'stock', 'search', 'breadcrumUrl', 'breadcrum', 'project_id'));
+        return view('retailer.readystock.readystock', compact(
+            'product',
+            'allProduct',
+            'stock',
+            'search',
+            'breadcrumUrl',
+            'breadcrum',
+            'project_id'
+        ));
     }
 
     public function ef(Request $request)
@@ -1463,7 +1439,7 @@ class ReadyStockController extends Controller
 
         if ($getItem) {
             $itemwiseproduct->whereIn('products.Item', $getItem)
-            ->where('products.qty', '>', 0);
+                ->where('products.qty', '>', 0);
         }
 
         if (!empty($request->project_id)) {

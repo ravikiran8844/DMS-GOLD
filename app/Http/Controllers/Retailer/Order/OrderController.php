@@ -115,7 +115,6 @@ class OrderController extends Controller
                     'qty' => $cart->qty,
                     'weight' => $cart->weight,
                     'size' => $request->input('size' . $cart->id),
-                    'finish' => $request->input('finish' . $cart->id),
                     'remarks' => $cart->remarks,
                 ]);
 

@@ -21,9 +21,7 @@ class OrderDetail extends Model
         'box',
         'box_details',
         'others',
-        'finish',
         'is_approved',
-        'approved_qty',
-        'is_ready_stock'
+        'approved_qty'
     ];
 }
