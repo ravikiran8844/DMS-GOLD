@@ -85,12 +85,13 @@ Product Details Page - Emerald RMS
                 <div class="col-12 col-lg-6 mb-lg-0">
                     <div class="single-images-block position-relative">
 
-                        <div class="zoom-wrapper">
-                            <img id="product-main-image" class="img-fluid product-main-image load-secure-image"
-                                src="http://imageurl.ejindia.com/api/image/secure"
-                                data-secure="{{ $product->secureFilename }}" alt>
-                            <div id="magnifier-lens" class="magnifier-lens"></div>
-                        </div>
+                        <img
+                            id="product-main-image"
+                            class="img-fluid product-main-image load-secure-image"
+                            src=""
+                            data-secure="{{ $product->secureFilename }}"
+                            data-zoom-image=""
+                            alt />
 
                         <script>
                             document.addEventListener("DOMContentLoaded", async function() {
@@ -109,63 +110,37 @@ Product Details Page - Emerald RMS
                                             method: "POST",
                                             headers: {
                                                 "Content-Type": "application/json",
-                                                "Authorization": `${token}`
+                                                "Authorization": `${token}`,
                                             },
                                             body: JSON.stringify({
                                                 secureFilename
-                                            })
+                                            }),
                                         });
 
                                         const blob = await res.blob();
                                         const blobUrl = URL.createObjectURL(blob);
+
+                                        // Set both the visible image and zoom image source
                                         img.src = blobUrl;
+                                        img.setAttribute("data-zoom-image", blobUrl);
 
-                                        img.onload = () => setupMagnifier(img, blobUrl);
+                                        // Wait for jQuery to be ready
+                                        $(img).on("load", function() {
+                                            // Initialize ezPlus on this image
+                                            $(this).ezPlus({
+                                                zoomType: 'inner',
+                                                cursor: 'crosshair',
+                                                scrollZoom: true,
+                                                containLensZoom: true
+                                            });
+                                        });
                                     } catch (e) {
-                                        console.error("Failed to load secure image", e);
-                                    }
-                                }
-
-                                function setupMagnifier(img, imageUrl) {
-                                    const lens = document.getElementById("magnifier-lens");
-                                    lens.style.backgroundImage = `url('${imageUrl}')`;
-
-                                    const zoom = 2; // Zoom factor
-
-                                    img.addEventListener("mousemove", moveLens);
-                                    lens.addEventListener("mousemove", moveLens);
-                                    img.addEventListener("mouseenter", () => lens.style.display = "block");
-                                    img.addEventListener("mouseleave", () => lens.style.display = "none");
-
-                                    function moveLens(e) {
-                                        const imgRect = img.getBoundingClientRect();
-                                        const lensSize = lens.offsetWidth / 2;
-
-                                        // Mouse x/y relative to image
-                                        const x = e.clientX - imgRect.left;
-                                        const y = e.clientY - imgRect.top;
-
-                                        // Prevent lens from going outside
-                                        if (x < 0 || y < 0 || x > img.width || y > img.height) {
-                                            lens.style.display = "none";
-                                            return;
-                                        }
-
-                                        const left = x - lensSize;
-                                        const top = y - lensSize;
-
-                                        lens.style.left = `${left}px`;
-                                        lens.style.top = `${top}px`;
-
-                                        const bgX = (x / img.width) * 100;
-                                        const bgY = (y / img.height) * 100;
-
-                                        lens.style.backgroundPosition = `${bgX}% ${bgY}%`;
-                                        lens.style.backgroundSize = `${img.width * zoom}px ${img.height * zoom}px`;
+                                        console.error("Secure image fetch failed", e);
                                     }
                                 }
                             });
                         </script>
+
 
 
 
