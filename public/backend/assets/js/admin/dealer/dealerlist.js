@@ -93,10 +93,7 @@ function dealerList() {
                 data: "id"
             },
             {
-                data: "company_name"
-            },
-            {
-                data: "email"
+                data: "party_name",
             },
             {
                 data: "mobile"
@@ -136,43 +133,12 @@ function getDealerById(id) {
         dataType: "json",
         success: function (data) {
             $("#userId").val(data.dealer.user_id);
-            $("#cheque_leaf").removeAttr("required");
-            $("#gst_certificate").removeAttr("required");
-            $("#chequeleaf").val(data.dealer.cheque_leaf);
-            $("#gstcertificate").val(data.dealer.gst_certificate);
-            if (data.dealer.cheque_leaf) {
-                $("#chequeview").removeAttr("style").css("display", "block");
-                $("#chequelink").attr('href', baseurl + '/' + data.dealer.cheque_leaf)
-                    .attr('target', '_blank');
-            }
-            if (data.dealer.gst_certificate) {
-                $("#gstview").removeAttr("style").css("display", "block");
-                $("#gstlink").attr('href', baseurl + '/' + data.dealer.gst_certificate)
-                    .attr('target', '_blank');
-            }
-            $("#company_name").val(data.dealer.company_name);
-            $("#communication_address").val(data.dealer.communication_address);
-            $("#email").val(data.dealer.email);
+            $("#party_name").val(data.dealer.party_name);
+            $("#code").val(data.dealer.code);
+            $("#customer_code").val(data.dealer.customer_code);
             $("#mobile").val(data.dealer.mobile);
-            $("#zone").val(data.dealer.zone_id);
-            $("#city").val(data.dealer.city);
-            $("#state").val(data.dealer.state);
-            $("#a_name").val(data.dealer.a_name);
-            $("#a_desingation").val(data.dealer.a_designation);
-            $("#a_mobile").val(data.dealer.a_mobile);
-            $("#a_email").val(data.dealer.a_email);
-            $("#b_name").val(data.dealer.b_name);
-            $("#b_designation").val(data.dealer.b_designation);
-            $("#b_mobile").val(data.dealer.b_mobile);
-            $("#b_email").val(data.dealer.b_email);
-            $("#gst").val(data.dealer.gst);
-            $("#income_tax_pan").val(data.dealer.income_tax_pan);
-            $("#bank_name").val(data.dealer.bank_name);
-            $("#branch_name").val(data.dealer.branch_name);
-            $("#address").val(data.dealer.address);
-            $("#account_number").val(data.dealer.account_number);
-            $("#account_type").val(data.dealer.account_type);
-            $("#ifsc").val(data.dealer.ifsc);
+            $("#zone").val(data.dealer.zone);
+            $("#person_name").val(data.dealer.person_name);
         },
     });
 }

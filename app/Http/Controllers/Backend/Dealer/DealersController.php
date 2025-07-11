@@ -115,7 +115,6 @@ class DealersController extends Controller
     {
         $dealer = "";
         $dealer = Dealer::whereNull('deleted_at');
-        // ->whereRaw("DATE(created_at) BETWEEN '{$request->startdate}' AND '{$request->enddate}'");
         if ($request->user_ids > 0) {
             $dealer = $dealer->where('dealers.user_id', $request->user_ids);
         }
@@ -132,122 +131,33 @@ class DealersController extends Controller
 
     function dealerUpdate(Request $request)
     {
-        // $request->validate([
-        //     'company_name' => 'required',
-        //     'communication_address' => 'required',
-        //     'mobile' => 'required',
-        //     'email' => 'required',
-        //     'a_name' => 'required',
-        //     'a_designation' => 'required',
-        //     'a_mobile' => 'required',
-        //     'a_email' => 'required',
-        //     'b_name' => 'required',
-        //     'b_designation' => 'required',
-        //     'b_mobile' => 'required',
-        //     'b_email' => 'required',
-        //     'gst' => 'required',
-        //     'income_tax_pan' => 'required',
-        //     'bank_name' => 'required',
-        //     'branch_name' => 'required',
-        //     'address' => 'required',
-        //     'account_number' => 'required',
-        //     'account_type' => 'required',
-        //     'ifsc' => 'required'
-        // ]);
-
-        $validator = Validator::make($request->all(), [
-            'company_name' => 'required',
-            'communication_address' => 'required',
+        $request->validate([
             'mobile' => [
                 'required',
-                Rule::unique('dealers', 'mobile')
-                    ->ignore($request->dealerId)
-            ],
-            'email' => [
-                'required',
-                Rule::unique('dealers', 'email')
-                    ->ignore($request->dealerId)
+                Rule::unique('dealers', 'mobile'),
             ],
             'zone' => 'required',
-            'city' =>  'required',
-            'state' =>  'required',
-            'a_name' => 'required',
-            'a_designation' => 'required',
-            'a_mobile' => 'required',
-            'a_email' => 'required',
-            'b_name' => 'required',
-            'b_designation' => 'required',
-            'b_mobile' => 'required',
-            'b_email' => 'required',
-            'gst' => 'required',
-            'income_tax_pan' => 'required',
-            'bank_name' => 'required',
-            'branch_name' => 'required',
-            'address' => 'required',
-            'account_number' => 'required',
-            'account_type' => 'required',
-            'ifsc' => 'required'
+            'party_name' => 'required',
+            'code' => 'required',
+            'customer_code' => 'required',
+            'person_name' => 'required',
         ]);
 
-        if ($validator->fails()) {
-            $notification = array(
-                'message' => implode(",", $validator->errors()->all()),
-                'alert' => 'error'
-            );
-            return redirect()->back()->with($notification);
-        }
         DB::beginTransaction();
         try {
-
-            $oldChequeLeaf = $request->chequeleaf;
-            $dealerId = $request->dealerId;
-            if ($request->hasFile('cheque_leaf')) {
-                @unlink($oldChequeLeaf);
-                $file = $request->file('cheque_leaf');
-                $extension = $file->getClientOriginalExtension();
-                $fileName = $dealerId . '.' . $extension;
-            }
-
-            $oldGstCertificate = $request->gstcertificate;
-            if ($request->hasFile('gst_certificate')) {
-                $files = $request->file('gst_certificate');
-                @unlink($oldGstCertificate);
-                $extensions = $files->getClientOriginalExtension();
-                $fileNames = $dealerId . '.' . $extensions;
-            }
             Dealer::where('id', $request->dealerId)->Update([
-                'company_name' => $request->company_name,
-                'communication_address' => $request->communication_address,
                 'mobile' => $request->mobile,
-                'email' => $request->email,
-                'zone_id' => $request->zone,
-                'city' => $request->city,
-                'state' => $request->state,
-                'a_name' => $request->a_name,
-                'a_designation' => $request->a_designation,
-                'a_mobile' => $request->a_mobile,
-                'a_email' => $request->a_email,
-                'b_name' => $request->b_name,
-                'b_designation' => $request->b_designation,
-                'b_mobile' => $request->b_mobile,
-                'b_email' => $request->b_email,
-                'gst' => $request->gst,
-                'income_tax_pan' => $request->income_tax_pan,
-                'bank_name' => $request->bank_name,
-                'branch_name' => $request->branch_name,
-                'address' => $request->address,
-                'account_number' => $request->account_number,
-                'account_type' => $request->account_type,
-                'ifsc' => $request->ifsc,
-                'cheque_leaf' => ($request->hasFile('cheque_leaf')) ? $this->fileUpload($request->file('cheque_leaf'), 'upload/dealer/chequeleaf', $fileName) : $oldChequeLeaf,
-                'gst_certificate' => ($request->hasFile('gst_certificate')) ? $this->fileUpload($request->file('gst_certificate'), 'upload/dealer/gstcertificate', $fileNames) : $oldGstCertificate,
+                'zone' => $request->zone,
+                'code' => $request->code,
+                'customer_code' => $request->customer_code,
+                'person_name' => $request->person_name,
+                'party_name' => $request->party_name,
                 'updated_by' => Auth::user()->id
             ]);
 
             //user update
             User::where('id', $request->userId)->Update([
-                'name' => $request->company_name,
-                'email' => $request->email,
+                'name' => $request->party_name,
                 'mobile' => $request->mobile
             ]);
 
