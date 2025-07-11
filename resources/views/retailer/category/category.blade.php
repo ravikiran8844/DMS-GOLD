@@ -118,7 +118,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-12 mb-3">
+            {{-- <div class="col-12 mb-3">
                 <a href="{{ route('retailerutensilreadystock') }}" class="text-decoration-none">
                     <div class="card category-page-card">
                         <div class="card-body">
@@ -144,7 +144,7 @@
                         </div>
                     </div>
                 </a>
-            </div>
+            </div> --}}
             <div class="col-12 mb-3">
                 <a href="{{ route('mmd') }}" class="text-decoration-none">
                     <div class="card category-page-card">
@@ -199,7 +199,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-12 mb-3">
+            {{-- <div class="col-12 mb-3">
                 <a href="{{ route('turkish') }}" class="text-decoration-none">
                     <div class="card category-page-card">
                         <div class="card-body">
@@ -252,7 +252,7 @@
                         </div>
                     </div>
                 </a>
-            </div>
+            </div> --}}
         </div>
     </section>
 </main>

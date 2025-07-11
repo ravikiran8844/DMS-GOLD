@@ -335,7 +335,7 @@ $("#otpForm").submit(function (event) {
                 console.log($("#hdroleid").val());
 
                 if ($("#hdroleid").val() == 3) {
-                    window.location.href = "/home";
+                    window.location.href = "/retailer/home";
                 } else {
                     window.location.href = "retailer/home";
                 }

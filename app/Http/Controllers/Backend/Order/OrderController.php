@@ -65,6 +65,7 @@ class OrderController extends Controller
 
     function orderData(Request $request)
     {
+        $secret = 'EmeraldAdmin';
         $order = "";
         $order = Order::select(
             'orders.id',
@@ -147,9 +148,18 @@ class OrderController extends Controller
             ->get()
             ->groupBy('order_id');
 
-        // Combining Results
-        $orderData = $order->map(function ($order) use ($productDetailsQuery) {
-            $order->products = $productDetailsQuery->get($order->id);
+        // Attach Products and Encrypt Image Filename
+        $orderData = $order->map(function ($order) use ($productDetailsQuery, $secret) {
+            $products = $productDetailsQuery->get($order->id);
+
+            if ($products) {
+                $products = $products->map(function ($product) use ($secret) {
+                    $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                    return $product;
+                });
+            }
+
+            $order->products = $products;
             return $order;
         });
 

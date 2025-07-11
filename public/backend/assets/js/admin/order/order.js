@@ -170,104 +170,122 @@ function createDealerOptions(dealer_id) {
 function format(d) {
     let productsHtml = d.products
         .map((product) => {
-            let totalQuantity = parseInt(product.order_qty);
-            let availableQuantity = parseInt(product.available_qty);
-            let badgeClass =
-                availableQuantity < totalQuantity
-                    ? "badge-danger"
-                    : "badge-success";
-
             return `
-                    <tr>
-                        <td><a href="${baseurl}/upload/product/${
-                product.product_image
-            }"
-                        data-lightbox="image-${Math.random()}" data-title="${
-                product.sku
-            }"><img
-                       width="50" height="50"
-                      src="${baseurl}/upload/product/${
-                product.product_image
-            }" alt="img"></a>
-                        </td>
-                        <td>${product.product_unique_id}</td>
-                        <td>${product.style_name}</td>
-                        <td id="totalWeight">${product.weight}</td>
-                        <td>${product.order_qty}</td>  
-                        <td>
-                            <span id="avlqty" class="badge ${badgeClass}" style="width:70px;">
-                                ${product.available_qty}
-                            </span>
-                        </td>
-                        <td class="d-flex justify-content-center">
-                        <input type="checkbox" name="order" id="order-${d.id}-${
-                product.product_id
-            }" class="form-check checkbox-class" value=${
-                product.order_detail_id
-            } data-product-id="${product.product_id}" />
-                        </td>
-                    </tr>`;
+                <tr>
+                    <td>
+                        <a href="${baseurl}/upload/product/${product.product_image}"
+                           data-lightbox="image-${Math.random()}"
+                           data-title="${product.sku}">
+                            <img class="img-fluid prouduct_card-image load-secure-image"
+                                 width="50"
+                                 height="50"
+                                 src="http://imageurl.ejindia.com/api/image/secure"
+                                 data-secure="${product.secureFilename}" alt>
+                        </a>
+                    </td>
+                    <td>${product.DesignNo}</td>
+                    <td>${product.style ?? "-"}</td>
+                    <td id="totalWeight">${product.weight}</td>
+                    <td>${product.order_qty}</td>
+                </tr>`;
         })
         .join("");
 
-    return `<table cellpadding="5" cellspacing="0" border="0" class="table" style="padding-left:50px;" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>SKU</th>
-                            <th>Box</th>
-                            <th>Total Weight</th>
-                            <th>Total Quantity</th>
-                            <th>Available Quantity</th>
-                            <th class="d-flex justify-content-center">
-                            <input type="checkbox" class="form-check parent-checkbox" id="parent-checkbox-${
-                                d.id
-                            }" data-order-id="${d.id}">
-                        </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${productsHtml}
-                    </tbody>
-                </table>
-                <div class="d-flex flex-wrap align-items-center justify-content-between px-5 pt-2 border-1 border-bottom">
-                  <div class="d-flex flex-wrap"> 
-                    
-                        <div class="d-flex flex-column  align-items-center  mr-3">
-                        <label for="" class="mr-2" style="font-weight: 700;color: #000;">Select Dealer</label>
-                        <select class="form-control mb-4 select-dealers" name="dealer" id="dealer" required>
-                            <option value="">Select Dealer</option>
-                            ${createDealerOptions(d.preferred_dealer_id)}
-                        </select>
-                        </div>
-                            <div class="mb-4 mr-4">
-                            <label for="" class="mr-2" style="font-weight: 700;color: #000;">Remarks</label>
-                                <textarea class="form-control" style="width:350px;" name="admin_remarks" id="admin_remarks"></textarea>
-                        </div>
-                  </div>
-
-                <div>
-                  <button type="button" class="btn btn-warning mb-4" onclick=proceed(${
-                      d.id
-                  });>Proceed Now</button>
-                  <button type="button" class="btn btn-outline-dark mb-4" onclick=orderCancel(${
-                      d.id
-                  });>Cancel Order</button>
+    return `
+        <table cellpadding="5" cellspacing="0" border="0" class="table" style="padding-left:50px;" width="100%">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>SKU</th>
+                    <th>Box</th>
+                    <th>Total Weight</th>
+                    <th>Total Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${productsHtml}
+            </tbody>
+        </table>
+        <div class="d-flex flex-wrap align-items-center justify-content-between px-5 pt-2 border-1 border-bottom">
+            <div class="d-flex flex-wrap">
+                <div class="d-flex flex-column align-items-center mr-3">
+                    <label for="" class="mr-2" style="font-weight: 700;color: #000;">Select Dealer</label>
+                    <select class="form-control mb-4 select-dealers" name="dealer" id="dealer" required>
+                        <option value="">Select Dealer</option>
+                        ${createDealerOptions(d.preferred_dealer_id)}
+                    </select>
                 </div>
-              </div>
-              <script>
-                    document.getElementById("parent-checkbox-${
-                        d.id
-                    }").addEventListener("change", function() {
-                        const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="order-${
-                            d.id
-                        }-"]');
-                        checkboxes.forEach(checkbox => {
-                            checkbox.checked = this.checked;
-                        });
-                    });
-                </script>
-                `;
+                <div class="mb-4 mr-4">
+                    <label for="" class="mr-2" style="font-weight: 700;color: #000;">Remarks</label>
+                    <textarea class="form-control" style="width:350px;" name="admin_remarks" id="admin_remarks"></textarea>
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-warning mb-4" onclick="proceed(${d.id});">Proceed Now</button>
+                <button type="button" class="btn btn-outline-dark mb-4" onclick="orderCancel(${d.id});">Cancel Order</button>
+            </div>
+        </div>
+        <div class="form-check px-5">
+            <input class="form-check-input" type="checkbox" value="" id="parent-checkbox-${d.id}">
+            <label class="form-check-label" for="parent-checkbox-${d.id}">Select All Items in Order</label>
+        </div>
+    `;
+}
+
+
+$(document).on("change", "[id^='parent-checkbox-']", function () {
+    const orderId = this.id.replace("parent-checkbox-", "");
+    const checkboxes = document.querySelectorAll(
+        `input[type="checkbox"][id^="order-${orderId}-"]`
+    );
+    checkboxes.forEach((cb) => (cb.checked = this.checked));
+});
+
+
+async function loadSecureImages() {
+    try {
+        const res = await fetch("/retailer/proxy/token");
+        const data = await res.json();
+        const token = data.token;
+
+        if (!token) {
+            throw new Error("Token not received from /retailer/proxy/token");
+        }
+
+        const secureImages = document.querySelectorAll(".load-secure-image");
+
+        secureImages.forEach(async (img) => {
+            const secureFilename = img.dataset.secure;
+
+            try {
+                const imageRes = await fetch("/retailer/proxy/secure-image", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `${token}`,
+                    },
+                    body: JSON.stringify({
+                        secureFilename,
+                    }),
+                });
+
+                if (!imageRes.ok) {
+                    throw new Error(
+                        `Failed to fetch image for ${secureFilename}`
+                    );
+                }
+
+                const blob = await imageRes.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                img.src = imageUrl;
+            } catch (error) {
+                console.error("Image load failed:", error);
+                img.alt = "Image load failed";
+            }
+        });
+    } catch (err) {
+        console.error("Token fetch failed:", err);
+    }
 }
 
 $(document).ready(function () {
@@ -291,6 +309,9 @@ $(document).ready(function () {
         // Show the child row and add 'shown' class
         row.child(format(row.data())).show();
         tr.addClass("shown");
+
+        // ✅ Load secure images inside the expanded row
+        loadSecureImages();
     });
 });
 

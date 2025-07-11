@@ -122,4 +122,24 @@ trait Common
 
         return $product;
     }
+
+    function cryptoJsAesEncrypt($passphrase, $plaintext)
+    {
+        $salt = openssl_random_pseudo_bytes(8);
+        $salted = '';
+        $dx = '';
+
+        while (strlen($salted) < 48) {
+            $dx = md5($dx . $passphrase . $salt, true);
+            $salted .= $dx;
+        }
+
+        $key = substr($salted, 0, 32);
+        $iv = substr($salted, 32, 16);
+
+        $encrypted = openssl_encrypt($plaintext, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+        $ciphertext = 'Salted__' . $salt . $encrypted;
+
+        return urlencode(base64_encode($ciphertext));
+    }
 }

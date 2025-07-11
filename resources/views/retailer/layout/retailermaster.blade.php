@@ -148,21 +148,21 @@
                     <li class="nav-item">
                         <a href="{{ route('retailerindianiareadystock') }}">INDIANIA</a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="{{ route('retailerutensilreadystock') }}">LASERCUT</a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a href="{{ route('mmd') }}">MMD</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('stamping') }}">STAMPING</a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="{{ route('turkish') }}">TURKISH</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('unikraft') }}">UNIKRAFT</a>
-                    </li>
+                    </li> --}}
                 </ul>
             </div>
         </section>

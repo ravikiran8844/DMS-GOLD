@@ -186,38 +186,6 @@
     </div>
 
     <input type="hidden" id="dealers" value="{{ json_encode($dealer) }}">
-    {{-- <div class="row mb-4">
-        <div class="col-md-6 col-lg md-me-4">
-            <div class="d-flex flex-wrap  justify-content-between align-items-center w-100">
-                <div class="d-flex flex-wrap align-items-center">
-                    <div class="d-flex flex-column">
-                        <label class="mb-0" for="">User Filter</label>
-                        <select name="userfilter" id="userfilter" class="form-control select2">
-                            <option value="">Select User Name</option>
-                            @foreach ($users as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg">
-            <div class="d-flex flex-wrap  justify-content-between align-items-center w-100">
-                <div class="d-flex flex-wrap align-items-center">
-                    <div class="d-flex flex-column">
-                        <label class="mb-0" for="">Role</label>
-                        <select name="rolefilter" id="rolefilter" class="form-control select2">
-                            <option value="">Select Role Name</option>
-                            @foreach ($roles as $item)
-                                <option value="{{ $item->id }}">{{ $item->role_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     <div class="row">
         <div class="col-12 d-flex flex-wrap" style="gap:20px;">

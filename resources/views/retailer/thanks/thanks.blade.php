@@ -15,7 +15,7 @@
                     process...</span></div>
         </div>
 
-        <div class="col-12 col-lg-10 col-xl-8 mt-4 m-auto">
+        {{-- <div class="col-12 col-lg-10 col-xl-8 mt-4 m-auto">
             <div class="fs-3 fw-semibold text-center">
                 Please read the instructions regarding your order:
             </div>
@@ -34,7 +34,7 @@
                         cannot be fulfilled. You will receive a call incase of such a cancellation occurs.</div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
     </div>
 

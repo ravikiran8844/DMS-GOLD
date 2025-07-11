@@ -89,7 +89,7 @@ class ProcessOrder implements ShouldQueue
         ]);
 
         // Send email to user and admin
-        Mail::to($this->user->email)->send(new RetailerOrderMail($datas, $excelFilePath, $pdfFilePath));
+        Mail::to('vivin.emerald@gmail.com')->send(new RetailerOrderMail($datas, $excelFilePath, $pdfFilePath));
         $adminMail = User::where('role_id', Roles::Admin)->value('email');
         Mail::to($adminMail)->bcc('sundaram@brightbridgeinfotech.com')->send(new RetailerOrderMail($datas, $excelFilePath, $pdfFilePath));
         Mail::to($adminMail)->bcc('sundaram@brightbridgeinfotech.com')->send(new RetailerOrderWithoutImageMail($datas, $excelFilePaths, $this->user->shop_name));
