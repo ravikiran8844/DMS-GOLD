@@ -32,7 +32,7 @@ class User extends Authenticatable
         'shop_name',
         'GST',
         'PAN',
-        'zone_id',
+        'zone',
         'city',
         'district',
         'state',

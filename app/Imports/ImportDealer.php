@@ -23,59 +23,30 @@ class ImportDealer implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         // Define validation rules
-        $validator = Validator::make(['email' => $row['email']], [
-            'email' => [
+        $validator = Validator::make(['mobile' => $row['phone_number']], [
+            'mobile' => [
                 'required',
-                Rule::unique('dealers', 'email'),
-                Rule::unique('users', 'email'),
+                Rule::unique('dealers', 'mobile'),
+                Rule::unique('users', 'mobile'),
             ]
         ]);
         if ($validator->fails()) {
-            throw new Exception('Duplicate record found for dealer: ' . $row['email']);
+            throw new Exception('Duplicate record found for dealer: ' . $row['phone_number']);
         }
-
-        $zones = Zone::where('zone_name', $row['zone'])->get();
-        // Choose the first matching zone, or handle multiple matches as needed
-        $zone = $zones->first();
-
-        $zoneId = $zone ? $zone->id : null;
-
         $dealer = new Dealer([
-            'company_name' => $row['company_name'],
-            'communication_address' => $row['communication_address'],
-            'mobile' => $row['mobile'],
-            'email' => $row['email'],
-            'a_name' => $row['a_name'],
-            'a_designation' => $row['a_designation'],
-            'a_mobile' => $row['a_mobile'],
-            'a_email' => $row['a_email'],
-            'b_name' => $row['b_name'],
-            'b_designation' => $row['b_designation'],
-            'b_mobile' => $row['b_mobile'],
-            'b_email' => $row['b_email'],
-            'gst' => $row['gst'],
-            'income_tax_pan' => $row['income_tax_pan'],
-            'bank_name' => $row['bank_name'],
-            'branch_name' => $row['branch_name'],
-            'address' => $row['address'],
-            'account_number' => $row['account_number'],
-            'account_type' => $row['account_type'],
-            'ifsc' => $row['ifsc'],
-            'cheque_leaf' => $row['cheque_leaf'],
-            'gst_certificate' => $row['gst_certificate'],
-            'zone_id' =>  $zoneId,
-            'city' => $row['city'],
-            'state' => $row['state'],
+            'mobile' => $row['phone_number'],
+            'zone' => $row['zone'],
+            'code' => $row['code'],
+            'customer_code' => $row['cus_code'],
+            'person_name' => $row['person_name'],
+            'party_name' => $row['party_name'],
             'created_by' => Auth::user()->id
         ]);
         $user = User::create([
             'role_id' => Roles::Dealer,
-            'name' => $row['company_name'],
-            'email' => $row['email'],
-            'mobile' => $row['mobile'],
-            'zone_id' => $zoneId,
-            'city' => $row['city'],
-            'state' => $row['state'],
+            'name' => $row['party_name'],
+            'mobile' => $row['phone_number'],
+            'zone' => $row['zone'],
         ]);
         // Update the user_id on the Dealer model
         $dealer->user_id = $user->id;

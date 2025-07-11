@@ -40,92 +40,32 @@ class DealersController extends Controller
     function dealerCreate(Request $request)
     {
         $request->validate([
-            'company_name' => 'required',
-            'communication_address' => 'required',
             'mobile' => [
                 'required',
                 Rule::unique('dealers', 'mobile'),
             ],
-            'email' => [
-                'required',
-                Rule::unique('dealers', 'email'),
-            ],
             'zone' => 'required',
-            'state' => 'required',
-            'city' => 'required',
-            'a_name' => 'required',
-            'a_designation' => 'required',
-            'a_mobile' => 'required',
-            'a_email' => 'required',
-            'b_name' => 'required',
-            'b_designation' => 'required',
-            'b_mobile' => 'required',
-            'b_email' => 'required',
-            'gst' => 'required',
-            'income_tax_pan' => 'required',
-            'bank_name' => 'required',
-            'branch_name' => 'required',
-            'address' => 'required',
-            'account_number' => 'required',
-            'account_type' => 'required',
-            'ifsc' => 'required',
-            // 'cheque_leaf' => 'required',
-            // 'gst_certificate' => 'required'
+            'party_name' => 'required',
+            'code' => 'required',
+            'customer_code' => 'required',
+            'person_name' => 'required',
         ]);
 
         DB::beginTransaction();
         try {
             $dealer = Dealer::Create([
-                'company_name' => $request->company_name,
-                'communication_address' => $request->communication_address,
                 'mobile' => $request->mobile,
-                'email' => $request->email,
-                'zone_id' => $request->zone,
-                'city' => $request->city,
-                'state' => $request->state,
-                'a_name' => $request->a_name,
-                'a_designation' => $request->a_designation,
-                'a_mobile' => $request->a_mobile,
-                'a_email' => $request->a_email,
-                'b_name' => $request->b_name,
-                'b_designation' => $request->b_designation,
-                'b_mobile' => $request->b_mobile,
-                'b_email' => $request->b_email,
-                'gst' => $request->gst,
-                'income_tax_pan' => $request->income_tax_pan,
-                'bank_name' => $request->bank_name,
-                'branch_name' => $request->branch_name,
-                'address' => $request->address,
-                'account_number' => $request->account_number,
-                'account_type' => $request->account_type,
-                'ifsc' => $request->ifsc,
+                'zone' => $request->zone,
+                'code' => $request->code,
+                'customer_code' => $request->customer_code,
+                'person_name' => $request->person_name,
+                'party_name' => $request->party_name,
                 'created_by' => Auth::user()->id
             ]);
 
-            if ($request->hasFile('cheque_leaf')) {
-                $file = $request->file('cheque_leaf');
-                $extension = $file->getClientOriginalExtension();
-                $fileName = $dealer->id . '.' . $extension;
-
-                Dealer::where('id', $dealer->id)->update([
-                    'cheque_leaf' => $this->fileUpload($file, 'upload/dealer/chequeleaf', $fileName)
-                ]);
-            }
-
-            if ($request->hasFile('gst_certificate')) {
-                $files = $request->file('gst_certificate');
-                $extensions = $files->getClientOriginalExtension();
-                $fileNames = $dealer->id . '.' . $extensions;
-
-                Dealer::where('id', $dealer->id)->update([
-                    'gst_certificate' => $this->fileUpload($files, 'upload/dealer/gstcertificate', $fileNames)
-                ]);
-            }
-
             //user create
             $user = $this->createUser(
-                $request->company_name,
-                $request->email,
+                $request->party_name,
                 $request->mobile,
                 Roles::Dealer
             );
@@ -175,7 +115,7 @@ class DealersController extends Controller
     {
         $dealer = "";
         $dealer = Dealer::whereNull('deleted_at');
-            // ->whereRaw("DATE(created_at) BETWEEN '{$request->startdate}' AND '{$request->enddate}'");
+        // ->whereRaw("DATE(created_at) BETWEEN '{$request->startdate}' AND '{$request->enddate}'");
         if ($request->user_ids > 0) {
             $dealer = $dealer->where('dealers.user_id', $request->user_ids);
         }

@@ -61,12 +61,11 @@ trait Common
         return true; // User has role_id 1 or does not exist
     }
 
-    function createUser($company_name, $email, $mobile, $role_id)
+    function createUser($company_name, $mobile, $role_id)
     {
         $user = User::Create([
             'role_id' => $role_id,
             'name' => $company_name,
-            'email' => $email,
             'mobile' => $mobile
         ]);
 
