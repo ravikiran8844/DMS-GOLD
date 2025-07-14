@@ -722,28 +722,51 @@ function getProduct(id, page = 1) {
         <div>
 
        <div class="mt-3 grid cols-3 card-content_wrapper">
+                                            ${
+                                                value.color
+                                                    ? `
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">Colour</div>
                                                 <div class="product-card-badge product-card-badge-light">
                                                     ${value.color ?? "-"}</div>
-                                            </div>
+                                            </div>`
+                                                    : ""
+                                            }
+                                             ${
+                                                 value.unit
+                                                     ? `
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">Unit</div>
                                                 <div class="product-card-badge product-card-badge-light">
                                                     ${value.unit ?? "-"}</div>
-                                            </div>
+                                            </div>`
+                                                     : ""
+                                             }
+                                            ${
+                                                value.style
+                                                    ? `
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">Style</div>
                                                 <div class="product-card-badge product-card-badge-light">
                                                     ${value.style ?? "-"}</div>
-                                            </div>
+                                            </div>`
+                                                    : ""
+                                            }
+                                            ${
+                                                value.making
+                                                    ? `
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">Making %</div>
                                                 <div class="product-card-badge">${
                                                     value.making ?? "-"
                                                 }
                                                 </div>
-                                            </div>
+                                            </div>`
+                                                    : ""
+                                            }
+                                            ${
+                                                value.size
+                                                    ? `
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">
                                                     Size
@@ -752,8 +775,12 @@ function getProduct(id, page = 1) {
                                                     value.size ?? "-"
                                                 }
                                                 </div>
-                                            </div>
-
+                                            </div>`
+                                                    : ""
+                                            }
+                                            ${
+                                                value.weight
+                                                    ? `
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">
                                                     Weight
@@ -762,7 +789,9 @@ function getProduct(id, page = 1) {
                                                     ${
                                                         value.weight ?? "-"
                                                     }g</div>
-                                            </div>
+                                            </div>`
+                                                    : ""
+                                            }
                                         </div>
              </div>
               <div class="d-flex flex-wrap gap-2 align-items-center">
@@ -1010,10 +1039,6 @@ function getProductFilter(id, page = 1) {
                         value.id
                     }"
                         value="${value.weight}">
-                        <input type="hidden" name="finish${
-                            value.id
-                        }" id="finish${value.id}"
-                            value="${value.finish_id}">
                     <input type="hidden" name="size${value.id}" id="size${
                         value.id
                     }"
@@ -1026,14 +1051,10 @@ function getProductFilter(id, page = 1) {
                         value.id
                     }"
                         value="${value.color_id}">
-                        <input type="hidden" name="stock${value.id}" id="stock${
-                        value.id
-                    }"
-                            value="${stockid}">
                             <input type="hidden" name="box${value.id}" id="box${
                         value.id
                     }"
-  value="${value.style_id}">
+  value="${value.style}">
                     <div class="card shop-page_product-card">
                         <div class="card-checkbox_wrapper">
                             <input class="card-checkbox" type="checkbox" name="product${
@@ -1507,7 +1528,9 @@ async function loadSecureImages() {
                 });
 
                 if (!imageRes.ok) {
-                    throw new Error(`Failed to fetch image for ${secureFilename}`);
+                    throw new Error(
+                        `Failed to fetch image for ${secureFilename}`
+                    );
                 }
 
                 const blob = await imageRes.blob();
@@ -1518,9 +1541,7 @@ async function loadSecureImages() {
                 img.alt = "Image load failed";
             }
         });
-
     } catch (err) {
         console.error("Token fetch failed:", err);
     }
 }
-

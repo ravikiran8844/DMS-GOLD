@@ -16,10 +16,10 @@
                             <div class="d-flex justify-content-between  align-items-center">
                                 <div class="d-flex gap-2 align-items-center">
 
-                                    <div class="category-page-card__img-wrapper">
+                                    {{-- <div class="category-page-card__img-wrapper">
                                         <img width="50" height="50" class="img-fluid"
                                             src="{{ asset('retailer/assets/img/img1.png') }}" alt="">
-                                    </div>
+                                    </div> --}}
                                     <div class="item-title">
                                         EF
                                     </div>
@@ -44,10 +44,10 @@
                             <div class="d-flex justify-content-between  align-items-center">
                                 <div class="d-flex gap-2 align-items-center">
 
-                                    <div class="category-page-card__img-wrapper">
+                                    {{-- <div class="category-page-card__img-wrapper">
                                         <img width="50" height="50" class="img-fluid"
                                             src="{{ asset('retailer/assets/img/img2.png') }}" alt="">
-                                    </div>
+                                    </div> --}}
                                     <div class="item-title">
                                         CASTING
                                     </div>
@@ -71,10 +71,10 @@
                             <div class="d-flex justify-content-between  align-items-center">
                                 <div class="d-flex gap-2 align-items-center">
 
-                                    <div class="category-page-card__img-wrapper">
+                                    {{-- <div class="category-page-card__img-wrapper">
                                         <img width="50" height="50" class="img-fluid"
                                             src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
-                                    </div>
+                                    </div> --}}
                                     <div class="item-title">
                                         IMPREZ
                                     </div>
@@ -98,10 +98,10 @@
                             <div class="d-flex justify-content-between  align-items-center">
                                 <div class="d-flex gap-2 align-items-center">
 
-                                    <div class="category-page-card__img-wrapper">
+                                    {{-- <div class="category-page-card__img-wrapper">
                                         <img width="50" height="50" class="img-fluid"
                                             src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
-                                    </div>
+                                    </div> --}}
                                     <div class="item-title">
                                         INDIANIA
                                     </div>
@@ -152,10 +152,10 @@
                             <div class="d-flex justify-content-between  align-items-center">
                                 <div class="d-flex gap-2 align-items-center">
 
-                                    <div class="category-page-card__img-wrapper">
+                                    {{-- <div class="category-page-card__img-wrapper">
                                         <img width="50" height="50" class="img-fluid"
                                             src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
-                                    </div>
+                                    </div> --}}
                                     <div class="item-title">
                                         MMD
                                     </div>
@@ -179,10 +179,10 @@
                             <div class="d-flex justify-content-between  align-items-center">
                                 <div class="d-flex gap-2 align-items-center">
 
-                                    <div class="category-page-card__img-wrapper">
+                                    {{-- <div class="category-page-card__img-wrapper">
                                         <img width="50" height="50" class="img-fluid"
                                             src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
-                                    </div>
+                                    </div> --}}
                                     <div class="item-title">
                                         STAMPING
                                     </div>

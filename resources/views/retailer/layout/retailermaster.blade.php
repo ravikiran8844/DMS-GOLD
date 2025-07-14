@@ -371,10 +371,10 @@
                                             <span class="loginBtn_text">Login</span>
                                         </button>
                                     </form>
-                                    <div class="mt-3">Don’t have an account? <a href="#"
+                                    {{-- <div class="mt-3">Don’t have an account? <a href="#"
                                             class="sign-up-text text-decoration-none fw-medium"
                                             onclick="showSignupScreenFromLogin()">Sign
-                                            Up Now</a></div>
+                                            Up Now</a></div> --}}
                                 </div>
                             </div>
 

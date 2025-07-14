@@ -602,16 +602,20 @@
                                         </div>
 
                                         <div class="mt-3 grid cols-3 card-content_wrapper">
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Colour</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    {{ $main->color ?? '-' }}</div>
-                                            </div>
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Unit</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    {{ $main->unit ?? '-' }}</div>
-                                            </div>
+                                            @if ($main->color)
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">Colour</div>
+                                                    <div class="product-card-badge product-card-badge-light">
+                                                        {{ $main->color ?? '-' }}</div>
+                                                </div>
+                                            @endif
+                                            @if ($main->unit)
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">Unit</div>
+                                                    <div class="product-card-badge product-card-badge-light">
+                                                        {{ $main->unit ?? '-' }}</div>
+                                                </div>
+                                            @endif
                                             @if ($main->style)
                                                 <div class="d-flex flex-column gap-1">
                                                     <div class="card-text text-dark">Style</div>
@@ -619,26 +623,31 @@
                                                         {{ $main->style ?? '-' }}</div>
                                                 </div>
                                             @endif
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Making %</div>
-                                                <div class="product-card-badge">{{ $main->making ?? '-' }}
+                                            @if ($main->making)
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">Making %</div>
+                                                    <div class="product-card-badge">{{ $main->making ?? '-' }}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">
-                                                    Size
+                                            @endif
+                                            @if ($main->size)
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">
+                                                        Size
+                                                    </div>
+                                                    <div class="product-card-badge">{{ $main->size ?? '-' }}
+                                                    </div>
                                                 </div>
-                                                <div class="product-card-badge">{{ $main->size ?? '-' }}
+                                            @endif
+                                            @if ($main->weight)
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">
+                                                        Weight
+                                                    </div>
+                                                    <div class="product-card-badge">
+                                                        {{ $main->weight ?? '-' }}g</div>
                                                 </div>
-                                            </div>
-
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">
-                                                    Weight
-                                                </div>
-                                                <div class="product-card-badge">
-                                                    {{ $main->weight ?? '-' }}g</div>
-                                            </div>
+                                            @endif
                                         </div>
 
                                         <div class="card-multiple-sizes-wrapper">

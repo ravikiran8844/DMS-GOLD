@@ -132,17 +132,17 @@
             <tr>
                 <td style=" border: 1px solid #14744F; text-align: center;">1</td>
                 <td style=" border: 1px solid #14744F; text-align: center; "><img
-                        src="{{ public_path('upload/product/' . $item->product_image) }}" alt="Product"
+                        src="" alt="Product"
                         width="50" height="50"></td>
-                <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->project_name }}</td>
-                <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->product_unique_id }}</td>
+                <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->project }}</td>
+                <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->DesignNo }}</td>
                 <td style=" border: 1px solid #14744F; text-align: center; ">
-                    {{ str_replace('SIL-', '', $item->silver_purity_percentage) }}
+                    {{ $item->Purity }}
                 </td>
                 <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->weight }}</td>
                 <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->qty }}</td>
                 <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->weight * $item->qty }}</td>
-                <td style=" border: 1px solid #14744F;  text-align: center;">{{ $item->style_name }}</td>
+                <td style=" border: 1px solid #14744F;  text-align: center;">{{ $item->style }}</td>
             </tr>
             @endforeach
             @php
