@@ -33,7 +33,7 @@ Route::prefix('retailer')->group(function () {
 
     //Login Verification
     Route::get('loginverfication', [\App\Http\Controllers\Retailer\Login\LoginController::class, 'loginVerification'])->name('retailerloginverfication');
-    Route::get('proxy/pincode/{pincode}', [\App\Http\Controllers\Retailer\Login\LoginController::class, 'getPincodeData'])->name('retailerpincode');
+    // Route::get('proxy/pincode/{pincode}', [\App\Http\Controllers\Retailer\Login\LoginController::class, 'getPincodeData'])->name('retailerpincode');
 
     //Sitemap
     Route::get('sitemap', [\App\Http\Controllers\Retailer\SitemapController::class, 'index']);
@@ -89,8 +89,8 @@ Route::prefix('retailer')->group(function () {
         //weightrangefilter
         Route::get('weightrange/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'weightrange'])->name('retailerweightrange');
 
-        //subcollectionwiseproductfilter
-        Route::get('subcollectionwiseproduct/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'subcollectionwiseproduct'])->name('retailersubcollectionwiseproduct');
+        //procategorywiseproductfilter
+        Route::get('procategorywiseproduct/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'getProcategorywiseProduct'])->name('retailerprocategorynwiseproduct');
 
         //classificatiowiseproduct
         Route::get('classificationwiseproduct/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'classificationwiseproduct'])->name('retailerclassificationwiseproduct');

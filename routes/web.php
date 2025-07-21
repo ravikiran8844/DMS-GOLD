@@ -41,7 +41,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('electroforming/krishna', [\App\Http\Controllers\Frontend\Landing\LandingController::class, 'krishna'])->name('krishna');
         Route::get('electroforming/lakshmi', [\App\Http\Controllers\Frontend\Landing\LandingController::class, 'lakshmi'])->name('lakshmi');
         Route::get('electroforming/buddha', [\App\Http\Controllers\Frontend\Landing\LandingController::class, 'buddha'])->name('buddha');
-        Route::get('electroforming/category', [\App\Http\Controllers\Frontend\Landing\LandingController::class, 'category'])->name('category');
+        // Route::get('electroforming/category', [\App\Http\Controllers\Frontend\Landing\LandingController::class, 'category'])->name('category');
 
         //Solid Idol
         Route::get('solid-idol/siganesha', [\App\Http\Controllers\Frontend\Landing\LandingController::class, 'siGanesh'])->name('ganesha');

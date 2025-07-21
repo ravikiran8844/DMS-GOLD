@@ -12,36 +12,41 @@
 
         </div>
         @php
-            $weights = App\Models\Weight::where('is_active', 1)->whereNull('deleted_at')->get();
+            $usedWeights = App\Models\Product::where('qty', '>', 0)->pluck('weight')->toArray();
+
+            $weights = App\Models\Weight::where(function ($query) use ($usedWeights) {
+                foreach ($usedWeights as $productWeight) {
+                    $query->orWhere(function ($q) use ($productWeight) {
+                        $q->where('weight_range_from', '<=', $productWeight)->where(
+                            'weight_range_to',
+                            '>=',
+                            $productWeight,
+                        );
+                    });
+                }
+            })->get();
             $currentProjectId = $project_id;
             $products = App\Models\Product::where('Project', $currentProjectId)
                 ->where('qty', '>', 0)
                 ->select('Item', DB::raw('MIN(id) as id'))
                 ->groupBy('Item')
                 ->get();
+            $procategorys = App\Models\Product::where('Project', $currentProjectId)
+                ->where('qty', '>', 0)
+                ->select('Procatgory', DB::raw('MIN(id) as id'))
+                ->groupBy('Procatgory')
+                ->get();
         @endphp
         <input type="hidden" name="product" id="product" value="">
         <input type="hidden" name="hdweightfrom" id="hdweightfrom" value="">
         <input type="hidden" name="hdweightto" id="hdweightto" value="">
+        <input type="hidden" name="procategory" id="procategory" value="">
         <input type="hidden" name="weights" id="weights" value="{{ $weights->toJson() }}">
         <input type="hidden" name="productFilter" id="productFilter" value="{{ $products->toJson() }}">
+        <input type="hidden" name="procategoryFilter" id="procategoryFilter" value="{{ $procategorys->toJson() }}">
+
         <div class="col-12 custom-accordian">
             <div class="accordion sidebarFilters">
-                {{-- <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#weightRangeFilter" aria-expanded="true" aria-controls="weightRangeFilter">
-                            Weight Range
-                        </button>
-                    </h2>
-                    <input type="hidden" name="stock" id="stock" value="{{ json_encode($stock) }}">
-
-                    <div id="weightRangeFilter" class="accordion-collapse collapse show">
-                        <div class="accordion-body" id="weight-filters-container">
-                            <!-- Weight filters will be appended here -->
-                        </div>
-                    </div>
-                </div> --}}
 
                 <div class="accordion-item">
                     <h2 class="accordion-header">
@@ -55,6 +60,37 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="accordion-item mt-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#weightRangeFilter" aria-expanded="true" aria-controls="weightRangeFilter">
+                            Weight Range
+                        </button>
+                    </h2>
+
+                    <div id="weightRangeFilter" class="accordion-collapse collapse show">
+                        <div class="accordion-body" id="weight-filters-container">
+                            <!-- Weight filters will be appended here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mt-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#proCategoryFilter" aria-expanded="true" aria-controls="proCategoryFilter">
+                            Pro Category
+                        </button>
+                    </h2>
+
+                    <div id="proCategoryFilter" class="accordion-collapse collapse show">
+                        <div class="accordion-body" id="procategory-filters-container">
+                            <!-- Procategory filters will be appended here -->
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

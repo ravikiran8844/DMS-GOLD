@@ -83,6 +83,7 @@
             <th style="font-weight: bold; text-align: center;">Weight Per Piece</th>
             <th style="font-weight: bold; text-align: center;">Total Weight</th>
             <th style="font-weight: bold; text-align: center;">Box</th>
+            <th style="font-weight: bold; text-align: center;">Size</th>
         </tr>
     </thead>
     <tbody>
@@ -90,13 +91,14 @@
         @foreach ($details as $detail)
             <tr>
                 <td style="text-align: center;">{{ $i }}</td>
-                <td style="text-align: center;">{{ $detail->projec }}</td>
+                <td style="text-align: center;">{{ $detail->Project }}</td>
                 <td style="text-align: center;">{{ $detail->DesignNo }}</td>
                 <td style="text-align: center;">{{ $detail->Purity }}</td>
                 <td style="text-align: center;">{{ $detail->qty }}</td>
                 <td style="text-align: center;">{{ $detail->weight }}</td>
                 <td style="text-align: center;">{{ $detail->weight * $detail->qty }}</td>
-                <td style="text-align: center;">{{ $detail->style }}</td>
+                <td style="text-align: center;">{{ $detail->style ?? '-' }}</td>
+                <td style="text-align: center;">{{ $detail->size ?? '-' }}</td>
                 @php $i++; @endphp
             </tr>
         @endforeach
@@ -112,7 +114,6 @@
             <th></th>
         </tr>
         <tr>
-            <th></th>
             <th></th>
             <th></th>
             <th></th>
@@ -155,12 +156,11 @@
                     Box</th>
                 <th
                     style="text-align: center; font-size: 12px; font-weight: bold; border: 1px solid #000;background-color: yellow;">
-                    {{ $orders->box }}</th>
+                    {{ $orders->style }}</th>
             </tr>
         @endif
         @if ($orders->others != null)
             <tr>
-                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>

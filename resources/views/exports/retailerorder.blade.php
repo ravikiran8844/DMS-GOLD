@@ -77,13 +77,13 @@
         <tr>
             <th style="font-weight: bold; text-align: center;">S.No</th>
             <th style="font-weight: bold; text-align: center;">Project</th>
-            <th style="font-weight: bold; text-align: center;">Product Image</th>
             <th style="font-weight: bold; text-align: center;">Product SKU</th>
             <th style="font-weight: bold; text-align: center;">Purity</th>
             <th style="font-weight: bold; text-align: center;">Order Quantity</th>
             <th style="font-weight: bold; text-align: center;">Weight Per Piece</th>
             <th style="font-weight: bold; text-align: center;">Total Weight</th>
             <th style="font-weight: bold; text-align: center;">Box</th>
+            <th style="font-weight: bold; text-align: center;">Size</th>
         </tr>
     </thead>
     <tbody>
@@ -91,17 +91,14 @@
         @foreach ($details as $detail)
             <tr>
                 <td style="text-align: center;">{{ $i }}</td>
-                <td style="text-align: center;">{{ $detail->project }}</td>
-                <td style="text-align: center;"><img
-                        src="{{ public_path('upload/product/' . $detail->product_image) }}" alt="Description of Image"
-                        width="100" height="100">
-                </td>
+                <td style="text-align: center;">{{ $detail->Project }}</td>
                 <td style="text-align: center;">{{ $detail->DesignNo }}</td>
-                <td style="text-align: center;">{{ str_replace('SIL-', '', $detail->Purity) }}</td>
+                <td style="text-align: center;">{{ $detail->Purity }}</td>
                 <td style="text-align: center;">{{ $detail->qty }}</td>
                 <td style="text-align: center;">{{ $detail->weight }}</td>
                 <td style="text-align: center;">{{ $detail->weight * $detail->qty }}</td>
-                <td style="text-align: center;">{{ $detail->style }}</td>
+                <td style="text-align: center;">{{ $detail->style ?? '-' }}</td>
+                <td style="text-align: center;">{{ $detail->size ?? '-' }}</td>
                 @php $i++; @endphp
             </tr>
         @endforeach
@@ -117,8 +114,6 @@
             <th></th>
         </tr>
         <tr>
-            <th></th>
-            <th></th>
             <th></th>
             <th></th>
             <th></th>
@@ -161,7 +156,7 @@
                     Box</th>
                 <th
                     style="text-align: center; font-size: 12px; font-weight: bold; border: 1px solid #000;background-color: yellow;">
-                    {{ $orders->box }}</th>
+                    {{ $orders->style }}</th>
             </tr>
         @endif
         @if ($orders->others != null)

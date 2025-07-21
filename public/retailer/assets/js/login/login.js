@@ -288,7 +288,7 @@ function generateOTP(event) {
                         progressBar: true,
                         timeOut: 1500,
                     };
-                    showScreen("signupScreen");
+                    // showScreen("signupScreen");
                 }
             },
             error: function (xhr, status, error) {

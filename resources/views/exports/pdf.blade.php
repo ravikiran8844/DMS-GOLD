@@ -30,29 +30,29 @@
             <!-- Row for customer details and order details -->
             <tr style="vertical-align: top;">
                 @foreach ($datas as $item)
-                <!-- Left column with customer details -->
-                <td style="text-align: start; border: none;" width="50%">
-                    <table width="100%" cellpadding="0" cellspacing="10px" border="0"
-                        style="margin-top: 20px;">
-                        <tr>
-                            <td style="font-weight: 600; padding-bottom: 10px;">Name:</td>
-                            <td style="padding-bottom: 10px;">{{ $item->name }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: 600; padding-bottom: 10px;">Date:</td>
-                            <td style="padding-bottom: 10px;">{{ $item->created_at }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: 600; padding-bottom: 10px;">Email:</td>
-                            <td style="padding-bottom: 10px;">{{ $item->email }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: 600; padding-bottom: 10px;">Mobile:</td>
-                            <td style="padding-bottom: 10px;">+91 {{ $item->mobile }}</td>
-                        </tr>
-                    </table>
-                </td>
-                @php break; @endphp
+                    <!-- Left column with customer details -->
+                    <td style="text-align: start; border: none;" width="50%">
+                        <table width="100%" cellpadding="0" cellspacing="10px" border="0"
+                            style="margin-top: 20px;">
+                            <tr>
+                                <td style="font-weight: 600; padding-bottom: 10px;">Name:</td>
+                                <td style="padding-bottom: 10px;">{{ $item->name }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600; padding-bottom: 10px;">Date:</td>
+                                <td style="padding-bottom: 10px;">{{ $item->created_at }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600; padding-bottom: 10px;">Email:</td>
+                                <td style="padding-bottom: 10px;">{{ $item->email }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600; padding-bottom: 10px;">Mobile:</td>
+                                <td style="padding-bottom: 10px;">+91 {{ $item->mobile }}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    @php break; @endphp
                 @endforeach
                 <!-- Right column with order details -->
                 <td style="text-align: start; border: none;" width="50%">
@@ -112,8 +112,6 @@
                 <th style="background-color: #ccf0f0;padding: 5px;border: 1px solid #14744F; text-align: center;">S.No
                 </th>
                 <th style="background-color: #ccf0f0;padding: 5px;border: 1px solid #14744F; text-align: center;">
-                    Product Image</th>
-                <th style="background-color: #ccf0f0;padding: 5px;border: 1px solid #14744F; text-align: center;">
                     Project</th>
                 <th style="background-color: #ccf0f0;padding: 5px;border: 1px solid #14744F; text-align: center;">
                     Product SKU</th>
@@ -127,32 +125,32 @@
                     Weight</th>
                 <th style="background-color: #ccf0f0;padding: 5px;border: 1px solid #14744F; text-align: center;">Box
                 </th>
+                <th style="background-color: #ccf0f0;padding: 5px;border: 1px solid #14744F; text-align: center;">SIZE
+                </th>
             </tr>
             @foreach ($datas as $item)
-            <tr>
-                <td style=" border: 1px solid #14744F; text-align: center;">1</td>
-                <td style=" border: 1px solid #14744F; text-align: center; "><img
-                        src="" alt="Product"
-                        width="50" height="50"></td>
-                <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->project }}</td>
-                <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->DesignNo }}</td>
-                <td style=" border: 1px solid #14744F; text-align: center; ">
-                    {{ $item->Purity }}
-                </td>
-                <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->weight }}</td>
-                <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->qty }}</td>
-                <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->weight * $item->qty }}</td>
-                <td style=" border: 1px solid #14744F;  text-align: center;">{{ $item->style }}</td>
-            </tr>
+                <tr>
+                    <td style=" border: 1px solid #14744F; text-align: center;">1</td>
+                    <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->Project }}</td>
+                    <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->DesignNo }}</td>
+                    <td style=" border: 1px solid #14744F; text-align: center; ">
+                        {{ $item->Purity }}
+                    </td>
+                    <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->weight }}</td>
+                    <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->qty }}</td>
+                    <td style=" border: 1px solid #14744F; text-align: center; ">{{ $item->weight * $item->qty }}</td>
+                    <td style=" border: 1px solid #14744F;  text-align: center;">{{ $item->style ?? '-' }}</td>
+                    <td style=" border: 1px solid #14744F;  text-align: center;">{{ $item->size ?? '-' }}</td>
+                </tr>
             @endforeach
             @php
-            $totalWeight = 0;
-            foreach ($datas as $detail) {
-            $totalWeight += $detail->qty * $detail->weight;
-            }
+                $totalWeight = 0;
+                foreach ($datas as $detail) {
+                    $totalWeight += $detail->qty * $detail->weight;
+                }
             @endphp
             <tr>
-                <td class="no-border" colspan="6" style="border: none;"></td>
+                <td class="no-border" colspan="5" style="border: none;"></td>
                 <td
                     style="text-align: center; font-weight: bold; background-color: #ccf0f0; border: 1px solid #14744F;">
                     Total Quantity: {{ $datas->sum('qty') }}</td>

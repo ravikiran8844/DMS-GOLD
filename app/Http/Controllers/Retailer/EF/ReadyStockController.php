@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -135,7 +136,7 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::EF;
-        $allProduct = Product::select('id')->where('project', Projects::EF)->get();
+        $allProduct = Product::select('id')->where('project', Projects::EF)->where('qty', '>', 0)->get();
         $stock = 1;
         $breadcrum = 'EF';
         $breadcrumUrl = route('retailerefreadystock');
@@ -167,7 +168,7 @@ class ReadyStockController extends Controller
 
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->get()
+        $groupedProducts = $productQuery->paginate($this->paginate)
             ->map(function ($product) use ($secret) {
                 $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
                 return $product;
@@ -185,7 +186,7 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::CASTING;
-        $allProduct = Product::select('id')->where('project', Projects::CASTING)->get();
+        $allProduct = Product::select('id')->where('project', Projects::CASTING)->where('qty', '>', 0)->get();
         $stock = 1;
         $breadcrum = 'CASTING';
         $breadcrumUrl = route('retailersireadystock');
@@ -217,7 +218,7 @@ class ReadyStockController extends Controller
 
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->get()
+        $groupedProducts = $productQuery->paginate($this->paginate)
             ->map(function ($product) use ($secret) {
                 $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
                 return $product;
@@ -235,10 +236,10 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::IMPREZ;
-        $allProduct = Product::select('id')->where('project', Projects::IMPREZ)->get();
+        $allProduct = Product::select('id')->where('project', Projects::IMPREZ)->where('qty', '>', 0)->get();
         $stock = 1;
         $breadcrum = 'IMPREZ';
-        $breadcrumUrl = route('retailersireadystock');
+        $breadcrumUrl = route('retailerjewelleryreadystock');
         $decryptedProjectId = Projects::IMPREZ;
         $request->session()->forget('ret_ses');
 
@@ -267,7 +268,7 @@ class ReadyStockController extends Controller
 
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->get()
+        $groupedProducts = $productQuery->paginate($this->paginate)
             ->map(function ($product) use ($secret) {
                 $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
                 return $product;
@@ -285,7 +286,7 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::INDIANIA;
-        $allProduct = Product::select('id')->where('project', Projects::INDIANIA)->get();
+        $allProduct = Product::select('id')->where('project', Projects::INDIANIA)->where('qty', '>', 0)->get();
         $stock = 1;
         $breadcrum = 'INDIANIA';
         $breadcrumUrl = route('retailerindianiareadystock');
@@ -317,7 +318,7 @@ class ReadyStockController extends Controller
 
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->get()
+        $groupedProducts = $productQuery->paginate($this->paginate)
             ->map(function ($product) use ($secret) {
                 $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
                 return $product;
@@ -335,7 +336,7 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::LASERCUT;
-        $allProduct = Product::select('id')->where('project', Projects::LASERCUT)->get();
+        $allProduct = Product::select('id')->where('project', Projects::LASERCUT)->where('qty', '>', 0)->get();
         $stock = 1;
         $breadcrum = 'LASERCUT';
         $breadcrumUrl = route('retailerindianiareadystock');
@@ -367,7 +368,7 @@ class ReadyStockController extends Controller
 
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->get()
+        $groupedProducts = $productQuery->paginate($this->paginate)
             ->map(function ($product) use ($secret) {
                 $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
                 return $product;
@@ -385,7 +386,7 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::MMD;
-        $allProduct = Product::select('id')->where('project', Projects::MMD)->get();
+        $allProduct = Product::select('id')->where('project', Projects::MMD)->where('qty', '>', 0)->get();
         $stock = 1;
         $breadcrum = 'MMD';
         $breadcrumUrl = route('mmd');
@@ -417,7 +418,7 @@ class ReadyStockController extends Controller
 
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->get()
+        $groupedProducts = $productQuery->paginate($this->paginate)
             ->map(function ($product) use ($secret) {
                 $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
                 return $product;
@@ -435,7 +436,7 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::STAMPING;
-        $allProduct = Product::select('id')->where('project', Projects::STAMPING)->get();
+        $allProduct = Product::select('id')->where('project', Projects::STAMPING)->where('qty', '>', 0)->get();
         $stock = 1;
         $breadcrum = 'STAMPING';
         $breadcrumUrl = route('stamping');
@@ -467,7 +468,7 @@ class ReadyStockController extends Controller
 
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->get()
+        $groupedProducts = $productQuery->paginate($this->paginate)
             ->map(function ($product) use ($secret) {
                 $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
                 return $product;
@@ -485,7 +486,7 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::TURKISH;
-        $allProduct = Product::select('id')->where('project', Projects::TURKISH)->get();
+        $allProduct = Product::select('id')->where('project', Projects::TURKISH)->where('qty', '>', 0)->get();
         $stock = 1;
         $breadcrum = 'TURKISH';
         $breadcrumUrl = route('turkish');
@@ -517,7 +518,7 @@ class ReadyStockController extends Controller
 
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->get()
+        $groupedProducts = $productQuery->paginate($this->paginate)
             ->map(function ($product) use ($secret) {
                 $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
                 return $product;
@@ -535,7 +536,7 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::UNIKRAFT;
-        $allProduct = Product::select('id')->where('project', Projects::UNIKRAFT)->get();
+        $allProduct = Product::select('id')->where('project', Projects::UNIKRAFT)->where('qty', '>', 0)->get();
         $stock = 1;
         $breadcrum = 'UNIKRAFT';
         $breadcrumUrl = route('unikraft');
@@ -547,8 +548,10 @@ class ReadyStockController extends Controller
 
     public function getToken()
     {
-        $response = Http::get('http://imageurl.ejindia.com/api/token');
-        return response()->json($response->json());
+        return Cache::remember('external_api_token', 300, function () {
+            $response = Http::timeout(5)->get('http://imageurl.ejindia.com/api/token');
+            return $response->json();
+        });
     }
 
     public function secureImage(Request $request)
@@ -564,7 +567,7 @@ class ReadyStockController extends Controller
         $response = Http::withHeaders([
             'Authorization' => $token,
             'Accept' => 'application/json',
-        ])->post('http://imageurl.ejindia.com/api/image/secure', [
+        ])->post('https://imageurl.ejindia.com/api/image/secure', [
             'secureFilename' => $request->input('secureFilename')
         ]);
 
@@ -1045,394 +1048,94 @@ class ReadyStockController extends Controller
 
     public function weightrange(Request $request, $id)
     {
-        ini_set('max_execution_time', 1800); //3 minutes
+        ini_set('max_execution_time', 1800); // 30 minutes
+
+        // Validate and collect filters
         $selectedWeightRangesFrom = (array) $request->input('selectedWeightRanges');
         $selectedWeightRangesTo = (array) $request->input('weightToArray');
+        $procategories = (array) $request->input('procategoryArray');
+        $productItems = (array) $request->input('productArray');
+        $project = $request->input('project');
+        $isFilterApplied = !empty($id) && !empty($selectedWeightRangesFrom) && !empty($selectedWeightRangesTo);
 
-        // Check if arrays are not empty
-        if (!empty($id) && !empty($selectedWeightRangesFrom) && !empty($selectedWeightRangesTo)) {
-            // Filter products based on selected weight IDs
-            $weightrange = $this->getproducts(Auth::user()->id);
+        // Start base product query
+        $products = $this->getproducts(Auth::user()->id);
 
-            if (!empty($request->category_id)) {
-                $weightrange = $weightrange->where('products.category_id', $request->category_id);
-            }
+        if (!empty($project)) {
+            $products = $products->where('products.Project', $project);
+        }
 
-            if (!empty($request->project_id)) {
-                $weightrange = $weightrange->where('products.project_id', $request->project_id);
-            }
+        if (!empty(array_filter($procategories))) {
+            $products = $products->whereIn('products.Procatgory', $procategories);
+        }
 
-            if (!empty($request->subcolArray) && !empty(array_filter($request->subcolArray))) {
-                $sub_id = SubCollection::whereIn('sub_collection_name', $request->subcolArray)->pluck('id')->toArray();
-                $weightrange = $weightrange->whereIn('products.sub_collection_id', $sub_id);
-            }
+        if (!empty(array_filter($productItems))) {
+            $products = $products->whereIn('products.Item', $productItems);
+        }
 
-            if (!empty($request->classArray) && !empty(array_filter($request->classArray))) {
-                $class_id = Classification::whereIn('classification_name', $request->classArray)->pluck('id')->toArray();
-                $weightrange = $weightrange->whereIn('products.classification_id', $class_id);
-            }
-
-            if (!empty($request->jewArray) && !empty(array_filter($request->jewArray))) {
-                $cat_id = Category::whereIn('category_name', $request->jewArray)->pluck('id')->toArray();
-                $weightrange = $weightrange->whereIn('products.category_id', $cat_id);
-            }
-
-            if (!empty($request->colArray) && !empty(array_filter($request->colArray))) {
-                $col_id = Collection::whereIn('collection_name', $request->colArray)->pluck('id')->toArray();
-                $weightrange = $weightrange->where('products.collection_id', $col_id);
-            }
-
-            if (!empty($request->boxArray) && !empty(array_filter($request->boxArray))) {
-                $box_id = Style::whereIn('style_name', $request->boxArray)->pluck('id')->toArray();
-                $weightrange = $weightrange->whereIn('products.style_id', $box_id);
-            }
-
-            if (!empty($request->purityArray) && !empty(array_filter($request->purityArray))) {
-                $purity_id = SilverPurity::whereIn('silver_purity_percentage', $request->purityArray)->pluck('id')->toArray();
-                $weightrange = $weightrange->whereIn('products.purity_id', $purity_id);
-            }
-
-            if ($request->session()->has('ret_ses')) {
-                $weightrange = $weightrange->where('products.crwsubcolcode',  'like', '%' . $request->session()->get('ret_ses') . '%');
-            }
-
-            if ($request->stockid == 1) {
-                $weightrange = $weightrange->where('products.qty', '<>', 0);
-            }
-
-            // Combine the two arrays into a single array of ranges
+        if ($isFilterApplied && count($selectedWeightRangesFrom) === count($selectedWeightRangesTo)) {
             $weightRanges = array_map(function ($from, $to) {
                 return ['from' => $from, 'to' => $to];
             }, $selectedWeightRangesFrom, $selectedWeightRangesTo);
 
-            // Build the WHERE IN clauses dynamically
-            $weightrange = $weightrange->where(function ($query) use ($weightRanges) {
+            $products = $products->where(function ($query) use ($weightRanges) {
                 foreach ($weightRanges as $range) {
-                    $query->orWhere(function ($subquery) use ($range) {
-                        $subquery->where('products.weight', '>=', $range['from'])
+                    $query->orWhere(function ($q) use ($range) {
+                        $q->where('products.weight', '>=', $range['from'])
                             ->where('products.weight', '<=', $range['to']);
                     });
                 }
             });
-            $weightrange = $weightrange->orderBy('products.qty', 'DESC')->get();
-
-            // Filter out products without an image in the public/upload/product directory
-            $filteredProducts = $weightrange->filter(function ($product) {
-                return File::exists(public_path("upload/product/{$product->product_image}"));
-            });
-
-            // Manually paginate the filtered products
-            $page = request()->get('page', 1);
-            $perPage = $this->paginate;
-            $paginatedProducts = new LengthAwarePaginator(
-                $filteredProducts->forPage($page, $perPage),
-                $filteredProducts->count(),
-                $perPage,
-                $page,
-                ['path' => request()->url(), 'query' => request()->query()]
-            );
-
-            $weightrange = $paginatedProducts;
-
-            // Calculate the starting counter based on the current page
-            $counter = 50 * ($page - 1);
-
-            $box = [];
-            $purity = [];
-            $cart = [];
-            $cartcount = [];
-
-            // Loop through products and add values to arrays
-            foreach ($weightrange as $item) {
-                // Fetch the box name using the item
-                $boxName = Style::where('id', $item->style_id)
-                    ->where('is_active', 1)
-                    ->value('style_name');
-
-                // Add the box name to the array, with the counter as the key
-                $box[$counter] = $boxName;
-
-                // Fetch the product purity
-                $productPurity = SilverPurity::where('id', $item->purity_id)->value('silver_purity_percentage');
-
-                // Add the purity value to the array, with the counter as the key
-                $purity[$counter] = $productPurity;
-
-                // Fetch the cart status for the item
-                $iscart = Cart::where('user_id', Auth::user()->id)
-                    ->where('product_id', $item->id)->get();
-
-                // Add the cart status to the cart array, with the counter as the key
-                $cart[$counter] = $iscart;
-
-                // Fetch the cart count for the item
-                $currentcart = Cart::where('user_id', Auth::user()->id)
-                    ->where('product_id', $item->id)->value('qty');
-
-                // Add the cart count to the cartcount array, with the counter as the key
-                $cartcount[$counter] = $currentcart;
-
-                // Increment the counter for the next iteration
-                $counter++;
-            }
-
-            // Extract sub_collection_id into another variable
-            $subCollectionIds = $weightrange->pluck('sub_collection_id')->toArray();
-
-            $subCollectionData = SubCollection::whereIn('id', $subCollectionIds)->get();
-            $subcollectionsjson = $subCollectionData->toJson();
-
-            $subCollectionDefaultData = SubCollection::where('project_id', $request->project_id)->get();
-            $subcollectionsDefaultjson = $subCollectionDefaultData->toJson();
-
-            $collectionIds = $weightrange->pluck('classification_id')->toArray();
-
-            $classificationData = Classification::whereIn('id', $collectionIds)->get();
-            $classificationsjson = $classificationData->toJson();
-
-            $classificationDefaultData = Classification::get();
-            $classificationsDefaultjson = $classificationDefaultData->toJson();
-
-            $categoryIds = $weightrange->pluck('category_id')->toArray();
-
-            $categoryData = Category::whereIn('id', $categoryIds)->get();
-            $categoryjson = $categoryData->toJson();
-
-            $categoryDefaultData = Category::where('project_id', $request->project_id)->get();
-            $categoryDefaultjson = $categoryDefaultData->toJson();
-
-            $boxIds = $weightrange->pluck('style_id')->toArray();
-            $boxData = Style::whereIn('id', $boxIds)->get();
-            $boxjson = $boxData->toJson();
-            $validProjects = [
-                // Projects::SOLIDIDOL,
-                // Projects::ELECTROFORMING,
-                // Projects::CASTING,
-                // Projects::UTENSIL,
-                // Projects::INIDIANIA,
-            ];
-
-            if (in_array($request->project_id, $validProjects)) {
-                $boxDefaultData = Style::where('is_active', 1)
-                    ->where('project_id', $request->project_id)
-                    ->whereNull('deleted_at')
-                    ->whereHas('products', function ($query) {
-                        $query->where('qty', '>', 0);
-                    })
-                    ->get();
-            }
-            // $boxDefaultData = Style::where('project_id', $request->project_id)->get();
-            $boxDefaultjson = $boxDefaultData->toJson();
-
-            $ourityIds = $weightrange->pluck('purity_id')->toArray();
-            $purityData = SilverPurity::whereIn('id', $ourityIds)->get();
-            $purityjson = $purityData->toJson();
-            $purityDefaultData = SilverPurity::get();
-            $purityDefaultjson = $purityDefaultData->toJson();
-            $stock = 1;
-            return response()->json([
-                'weightrange' => $weightrange,
-                'box' => $box,
-                'cart' => $cart,
-                'purity' => $purity,
-                'cartcount' => $cartcount,
-                'stock' => $stock,
-                'subcollectionsjson' => $subcollectionsjson,
-                'subcollectionsDefaultjson' => $subcollectionsDefaultjson,
-                'classificationsjson' => $classificationsjson,
-                'classificationsDefaultjson' => $classificationsDefaultjson,
-                'categoryjson' => $categoryjson,
-                'categoryDefaultjson' => $categoryDefaultjson,
-                'boxjson' => $boxjson,
-                'boxDefaultjson' => $boxDefaultjson,
-                'purityjson' => $purityjson,
-                'purityDefaultjson' => $purityDefaultjson
-            ]);
-        } else {
-            $weightrange = $this->getproducts(Auth::user()->id);
-            // if (!empty($request->category_id)) {
-            //     $weightrange = $weightrange->where('products.category_id', $request->category_id);
-            // }
-
-            if (!empty($request->project_id)) {
-                $weightrange = $weightrange->where('products.project_id', $request->project_id);
-            }
-            if (!empty($request->subcolArray) && !empty(array_filter($request->subcolArray))) {
-                $sub_id = SubCollection::whereIn('sub_collection_name', $request->subcolArray)->pluck('id')->toArray();
-                $weightrange = $weightrange->whereIn('products.sub_collection_id', $sub_id);
-            }
-            if (!empty($request->colArray) && !empty(array_filter($request->colArray))) {
-                $col_id = Collection::whereIn('collection_name', $request->colArray)->pluck('id')->toArray();
-                $weightrange = $weightrange->where('products.collection_id', $col_id);
-            }
-            if (!empty($request->jewArray) && !empty(array_filter($request->jewArray))) {
-                $cat_id = Category::whereIn('category_name', $request->jewArray)->pluck('id')->toArray();
-                $weightrange = $weightrange->whereIn('products.category_id', $cat_id);
-            }
-            if ($request->stockid == 1) {
-                $weightrange = $weightrange->where('products.qty', '>', 0);
-            }
-
-            if (!empty($request->classArray) && !empty(array_filter($request->classArray))) {
-                $class_id = Classification::whereIn('classification_name', $request->classArray)->pluck('id')->toArray();
-                $weightrange = $weightrange->whereIn('products.classification_id', $class_id);
-            }
-
-            if (!empty($request->boxArray) && !empty(array_filter($request->boxArray))) {
-                $box_id = Style::whereIn('style_name', $request->boxArray)->pluck('id')->toArray();
-                $weightrange = $weightrange->whereIn('products.style_id', $box_id);
-            }
-
-            if (!empty($request->purityArray) && !empty(array_filter($request->purityArray))) {
-                $purity_id = SilverPurity::whereIn('silver_purity_percentage', $request->purityArray)->pluck('id')->toArray();
-                $weightrange = $weightrange->whereIn('products.purity_id', $purity_id);
-            }
-
-            if ($request->session()->has('ret_ses')) {
-                $weightrange = $weightrange->where('products.crwsubcolcode',  'like', '%' . $request->session()->get('ret_ses') . '%');
-            }
-
-            $weightrange = $weightrange->orderBy('products.qty', 'DESC')->get();
-
-            // Filter out products without an image in the public/upload/product directory
-            $filteredProducts = $weightrange->filter(function ($product) {
-                return File::exists(public_path("upload/product/{$product->product_image}"));
-            });
-
-            // Manually paginate the filtered products
-            $page = request()->get('page', 1);
-            $perPage = $this->paginate;
-            $paginatedProducts = new LengthAwarePaginator(
-                $filteredProducts->forPage($page, $perPage),
-                $filteredProducts->count(),
-                $perPage,
-                $page,
-                ['path' => request()->url(), 'query' => request()->query()]
-            );
-
-            $weightrange = $paginatedProducts;
-
-            // Calculate the starting counter based on the current page
-            $counter = 50 * ($page - 1);
-
-            $box = [];
-            $purity = [];
-            $cart = [];
-            $cartcount = [];
-
-            // Loop through products and add values to arrays
-            foreach ($weightrange as $item) {
-                // Fetch the box name using the item
-                $boxName = Style::where('id', $item->style_id)
-                    ->where('is_active', 1)
-                    ->value('style_name');
-
-                // Add the box name to the array, with the counter as the key
-                $box[$counter] = $boxName;
-
-                // Fetch the product purity
-                $productPurity = SilverPurity::where('id', $item->purity_id)->value('silver_purity_percentage');
-
-                // Add the purity value to the array, with the counter as the key
-                $purity[$counter] = $productPurity;
-
-                // Fetch the cart status for the item
-                $iscart = Cart::where('user_id', Auth::user()->id)
-                    ->where('product_id', $item->id)->get();
-
-                // Add the cart status to the cart array, with the counter as the key
-                $cart[$counter] = $iscart;
-
-                // Fetch the cart count for the item
-                $currentcart = Cart::where('user_id', Auth::user()->id)
-                    ->where('product_id', $item->id)->value('qty');
-
-                // Add the cart count to the cartcount array, with the counter as the key
-                $cartcount[$counter] = $currentcart;
-
-                // Increment the counter for the next iteration
-                $counter++;
-            }
-            // Extract sub_collection_id into another variable
-            $subCollectionIds = $weightrange->pluck('sub_collection_id')->toArray();
-
-            $subCollectionData = SubCollection::whereIn('id', $subCollectionIds)->get();
-            $subcollectionsjson = $subCollectionData->toJson();
-
-            $subCollectionDefaultData = SubCollection::where('project_id', $request->project_id)->get();
-            $subcollectionsDefaultjson = $subCollectionDefaultData->toJson();
-
-            $collectionIds = $weightrange->pluck('classification_id')->toArray();
-
-            $classificationData = Classification::whereIn('id', $collectionIds)->get();
-            $classificationsjson = $classificationData->toJson();
-
-            $classificationDefaultData = Classification::get();
-            $classificationsDefaultjson = $classificationDefaultData->toJson();
-
-            $categoryIds = $weightrange->pluck('category_id')->toArray();
-
-            $categoryData = Category::whereIn('id', $categoryIds)->get();
-            $categoryjson = $categoryData->toJson();
-
-            $categoryDefaultData = Category::where('project_id', $request->project_id)->get();
-            $categoryDefaultjson = $categoryDefaultData->toJson();
-
-            $boxIds = $weightrange->pluck('style_id')->toArray();
-            $boxData = Style::whereIn('id', $boxIds)->get();
-            $boxjson = $boxData->toJson();
-            $validProjects = [
-                // Projects::SOLIDIDOL,
-                // Projects::ELECTROFORMING,
-                // Projects::CASTING,
-                // Projects::UTENSIL,
-                // Projects::INIDIANIA,
-            ];
-
-            if (in_array($request->project_id, $validProjects)) {
-                $boxDefaultData = Style::where('is_active', 1)
-                    ->where('project_id', $request->project_id)
-                    ->whereNull('deleted_at')
-                    ->whereHas('products', function ($query) {
-                        $query->where('qty', '>', 0);
-                    })
-                    ->get();
-            }
-            // $boxDefaultData = Style::get();
-            $boxDefaultjson = $boxDefaultData->toJson();
-
-            $ourityIds = $weightrange->pluck('purity_id')->toArray();
-            $purityData = SilverPurity::whereIn('id', $ourityIds)->get();
-            $purityjson = $purityData->toJson();
-            $purityDefaultData = SilverPurity::get();
-            $purityDefaultjson = $purityDefaultData->toJson();
-
-            $stock = 1;
-            return response()->json([
-                'weightrange' => $weightrange,
-                'box' => $box,
-                'cart' => $cart,
-                'purity' => $purity,
-                'cartcount' => $cartcount,
-                'stock' => $stock,
-                'subcollectionsjson' => $subcollectionsjson,
-                'subcollectionsDefaultjson' => $subcollectionsDefaultjson,
-                'classificationsjson' => $classificationsjson,
-                'classificationsDefaultjson' => $classificationsDefaultjson,
-                'categoryjson' => $categoryjson,
-                'categoryDefaultjson' => $categoryDefaultjson,
-                'boxjson' => $boxjson,
-                'boxDefaultjson' => $boxDefaultjson,
-                'purityjson' => $purityjson,
-                'purityDefaultjson' => $purityDefaultjson
-            ]);
         }
+
+        $products = $products->where('products.qty', '>', 0)
+            ->orderBy('products.qty', 'DESC');
+
+        // Pagination at DB level
+        $perPage = $this->paginate ?? 20;
+        $page = $request->get('page', 1);
+        $paginated = $products->paginate($perPage, ['*'], 'page', $page);
+
+        // Encrypt image filenames
+        $secret = 'EmeraldAdmin';
+        $paginated->getCollection()->transform(function ($product) use ($secret) {
+            $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+            return $product;
+        });
+
+        // Fetch all relevant product IDs to reduce DB hits
+        $productIds = $paginated->pluck('id')->toArray();
+
+        $userId = Auth::user()->id;
+        $cartItems = Cart::where('user_id', $userId)
+            ->whereIn('product_id', $productIds)
+            ->get()
+            ->groupBy('product_id');
+
+        $cart = [];
+        $cartcount = [];
+        $counter = $perPage * ($page - 1);
+
+        foreach ($paginated as $product) {
+            $productCartItems = $cartItems->get($product->id, collect());
+            $cart[$counter] = $productCartItems;
+            $cartcount[$counter] = $productCartItems->sum('qty');
+            $counter++;
+        }
+
+        return response()->json([
+            'weightrange' => $paginated,
+            'cart' => $cart,
+            'cartcount' => $cartcount,
+            'stock' => $isFilterApplied ? 1 : null
+        ]);
     }
 
     public function getItemwiseProduct(Request $request)
     {
         ini_set('max_execution_time', 1800); //3 minutes
         $selectedItem = $request->input('selectedItem', []);
+        $procategories = (array) $request->input('procategoryArray');
         $getItem = Product::whereIn('Item', $selectedItem)->pluck('Item')->toArray();
 
         $itemwiseproduct = $this->getproducts(Auth::user()->id);
@@ -1445,6 +1148,28 @@ class ReadyStockController extends Controller
         if (!empty($request->project_id)) {
             $itemwiseproduct = $itemwiseproduct->where('products.Project', $request->project_id);
         }
+
+        if (!empty(array_filter($procategories))) {
+            $itemwiseproduct = $itemwiseproduct->whereIn('products.Procatgory', $procategories);
+        }
+
+        $selectedWeightRangesFrom = $request->input('weightfrom', []);
+        $selectedWeightRangesTo = $request->input('weightto', []);
+        if (!empty(array_filter($selectedWeightRangesFrom)) && !empty(array_filter($selectedWeightRangesTo))) {
+            // Ensure both arrays have elements
+            if (!empty($selectedWeightRangesFrom) && !empty($selectedWeightRangesTo)) {
+                $itemwiseproduct->where(function ($query) use ($selectedWeightRangesFrom, $selectedWeightRangesTo) {
+                    foreach ($selectedWeightRangesFrom as $index => $from) {
+                        $query->orWhereBetween('products.weight', [$from, $selectedWeightRangesTo[$index]]);
+                    }
+                });
+            }
+        }
+
+        // Clone the query to calculate the min and max weight before paginating
+        $weightQuery = clone $itemwiseproduct;
+        $minWeight = $weightQuery->min('products.weight');
+        $maxWeight = $weightQuery->max('products.weight');
 
         $itemwiseproduct = $itemwiseproduct
             ->orderBy('products.DesignNo', 'ASC');
@@ -1469,11 +1194,51 @@ class ReadyStockController extends Controller
         );
 
         $itemwiseproduct = $paginated;
+
+        // Ensure min is always less than or equal to max
+        if ($minWeight > $maxWeight) {
+            [$minWeight, $maxWeight] = [$maxWeight, $minWeight];
+        }
+
+        // Get weights that match minWeight and maxWeight
+        $matchingWeights = Weight::where('is_active', 1)
+            ->whereNull('deleted_at')
+            ->where(function ($query) use ($minWeight, $maxWeight) {
+                $query->where('weight_range_from', '<=', $maxWeight)
+                    ->where('weight_range_to', '>=', $minWeight);
+            })
+            ->pluck('id')
+            ->toArray();
+
+        $weights = Weight::whereIn('id', $matchingWeights)->where('is_active', 1)->whereNull('deleted_at')->get();
+        $weightJson = $weights->toJson();
+
+        $defaultweights = Weight::where('is_active', 1)->whereNull('deleted_at')->get();
+        $defaultweightJson = $defaultweights->toJson();
+
+        // Get distinct Procatgory values from current products
+        $procategoryIds = $itemwiseproduct->pluck('Procatgory')->filter()->unique()->toArray();
+
+        $procategoryData = Product::whereIn('Procatgory', $procategoryIds)
+            ->whereNotNull('Procatgory')
+            ->where('qty', '>', 0)
+            ->where('Procatgory', '!=', '')
+            ->select('Procatgory', DB::raw('MIN(id) as id'))
+            ->groupBy('Procatgory')
+            ->get();
+        $procategoryjson = $procategoryData->toJson();
+
+        $procategoryDefaultData = Product::where('qty', '>', 0)
+            ->whereNotNull('Procatgory')
+            ->where('Procatgory', '!=', '')
+            ->select('Procatgory', DB::raw('MIN(id) as id'))
+            ->groupBy('Procatgory')
+            ->get();
+        $procategoryDefaultjson = $procategoryDefaultData->toJson();
+
         // Calculate the starting counter based on the current page
         $counter = 50 * ($page - 1);
 
-        $box = [];
-        $purity = [];
         $cart = [];
         $cartcount = [];
 
@@ -1502,6 +1267,131 @@ class ReadyStockController extends Controller
             'itemwiseproduct' => $itemwiseproduct,
             'cart' => $cart,
             'cartcount' => $cartcount,
+            'procategoryjson' => $procategoryjson,
+            'procategoryDefaultjson' => $procategoryDefaultjson,
+            'weightJson' => $weightJson,
+            'defaultweightJson' => $defaultweightJson
+        ]);
+    }
+
+    public function getProcategorywiseProduct(Request $request)
+    {
+        ini_set('max_execution_time', 1800); //3 minutes
+        $selectedprocategory = $request->input('selectedprocategory', []);
+        $products = (array) $request->input('productArray');
+        $getProcategory = Product::whereIn('Procatgory', $selectedprocategory)->pluck('Procatgory')->toArray();
+
+        $procategorywiseproduct = $this->getproducts(Auth::user()->id);
+
+        if ($getProcategory) {
+            $procategorywiseproduct->whereIn('products.Procatgory', $getProcategory)
+                ->where('products.qty', '>', 0);
+        }
+
+        if (!empty($request->project_id)) {
+            $procategorywiseproduct = $procategorywiseproduct->where('products.Project', $request->project_id);
+        }
+
+        if (!empty(array_filter($products))) {
+            $procategorywiseproduct = $procategorywiseproduct->whereIn('products.Item', $products);
+        }
+
+        $selectedWeightRangesFrom = $request->input('weightfrom', []);
+        $selectedWeightRangesTo = $request->input('weightto', []);
+        if (!empty(array_filter($selectedWeightRangesFrom)) && !empty(array_filter($selectedWeightRangesTo))) {
+            // Ensure both arrays have elements
+            if (!empty($selectedWeightRangesFrom) && !empty($selectedWeightRangesTo)) {
+                $procategorywiseproduct->where(function ($query) use ($selectedWeightRangesFrom, $selectedWeightRangesTo) {
+                    foreach ($selectedWeightRangesFrom as $index => $from) {
+                        $query->orWhereBetween('products.weight', [$from, $selectedWeightRangesTo[$index]]);
+                    }
+                });
+            }
+        }
+
+        // Clone the query to calculate the min and max weight before paginating
+        $weightQuery = clone $procategorywiseproduct;
+        $minWeight = $weightQuery->min('products.weight');
+        $maxWeight = $weightQuery->max('products.weight');
+
+        $procategorywiseproduct = $procategorywiseproduct
+            ->orderBy('products.DesignNo', 'ASC');
+
+        $secret = 'EmeraldAdmin';
+
+        $groupedProducts = $procategorywiseproduct->get()
+            ->map(function ($product) use ($secret) {
+                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+                return $product;
+            });
+
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+
+        $paginated = new LengthAwarePaginator(
+            $groupedProducts->forPage($page, $perPage)->values(),
+            $groupedProducts->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $procategorywiseproduct = $paginated;
+
+        // Ensure min is always less than or equal to max
+        if ($minWeight > $maxWeight) {
+            [$minWeight, $maxWeight] = [$maxWeight, $minWeight];
+        }
+
+        // Get weights that match minWeight and maxWeight
+        $matchingWeights = Weight::where('is_active', 1)
+            ->whereNull('deleted_at')
+            ->where(function ($query) use ($minWeight, $maxWeight) {
+                $query->where('weight_range_from', '<=', $maxWeight)
+                    ->where('weight_range_to', '>=', $minWeight);
+            })
+            ->pluck('id')
+            ->toArray();
+
+        $weights = Weight::whereIn('id', $matchingWeights)->where('is_active', 1)->whereNull('deleted_at')->get();
+        $weightJson = $weights->toJson();
+
+        $defaultweights = Weight::where('is_active', 1)->whereNull('deleted_at')->get();
+        $defaultweightJson = $defaultweights->toJson();
+
+        // Calculate the starting counter based on the current page
+        $counter = 50 * ($page - 1);
+
+        $cart = [];
+        $cartcount = [];
+
+        // Loop through products and add values to arrays
+        foreach ($procategorywiseproduct as $item) {
+
+            // Fetch the cart status for the item
+            $iscart = Cart::where('user_id', Auth::user()->id)
+                ->where('product_id', $item->id)->get();
+
+            // Add the cart status to the cart array, with the counter as the key
+            $cart[$counter] = $iscart;
+
+            // Fetch the cart count for the item
+            $currentcart = Cart::where('user_id', Auth::user()->id)
+                ->where('product_id', $item->id)->value('qty');
+
+            // Add the cart count to the cartcount array, with the counter as the key
+            $cartcount[$counter] = $currentcart;
+
+            // Increment the counter for the next iteration
+            $counter++;
+        }
+
+        return response()->json([
+            'procategorywiseproduct' => $procategorywiseproduct,
+            'cart' => $cart,
+            'cartcount' => $cartcount,
+            'weightJson' => $weightJson,
+            'defaultweightJson' => $defaultweightJson
         ]);
     }
 }

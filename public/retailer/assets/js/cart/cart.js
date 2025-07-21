@@ -268,7 +268,7 @@ function populateCart() {
                         <td class="text-center" id="totalweight${
                             item.product_id
                         }">${item.weight * item.qty}gms</td>
-                    <td class="text-center">${item.box}</td>
+                    <td class="text-center">${item.size ?? "-"}</td>
                         <td class="text-center">
                             <button type='button' class="border-0 bg-transparent" onclick="removeItem(this,${
                                 item.id
@@ -319,34 +319,52 @@ function displayItems() {
                     itemDiv.innerHTML = `
                     <div class="d-flex">
                         <div class="me-2">
-                            <a href="${productDetailUrl}"><img class="mobile-cart-img square bg-white load-secure-image"  src="http://imageurl.ejindia.com/api/image/secure" data-secure="${item.secureFilename}" width="80" height="80" alt=""></a>
+                            <a href="${productDetailUrl}"><img class="mobile-cart-img square bg-white load-secure-image"  src="http://imageurl.ejindia.com/api/image/secure" data-secure="${
+                        item.secureFilename
+                    }" width="80" height="80" alt=""></a>
                         </div>
                         
                             <div class="flex-grow-1">
                         <div class="d-flex justify-content-between">
                           
-                            <div class="cart-page_card-bold-title mb-2">${item.DesignNo}</div>
-                            <div class="cart-page_card-bold-title mb-2">${item.weight}gms</div>
+                            <div class="cart-page_card-bold-title mb-2">${
+                                item.DesignNo
+                            }</div>
+                            <div class="cart-page_card-bold-title mb-2">${
+                                item.weight
+                            }gms</div>
                         
                         </div>
 
                         <div class="d-flex justify-content-between">
                           
-                            <div class="cart-page_card-bold-title mb-2 text-success">Box: ${item.box}</div>
+                            <div class="cart-page_card-bold-title mb-2 text-success">Box: ${
+                                item.size ?? "-"
+                            }</div>
                         </div>
 
                         <div class="mb-2">
-                          <div class="available-qty">Qty Available : ${item.stock} Pcs</div>
+                          <div class="available-qty">Qty Available : ${
+                              item.stock
+                          } Pcs</div>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
                           <div class="input-group quantity-input-group quantity-container">
-                                <input type='button' onclick="decrementQuantity(this)" value='-' class='qtyminus' field='quantity'  data-id='${item.product_id}'/>
-                                <input type='text' name='quantity' value='${item.qty}' class='qty' />
-                                <input type='button' onclick="incrementQuantity(this)" value='+' class='qtyplus' field='quantity'  data-id='${item.product_id}' />
+                                <input type='button' onclick="decrementQuantity(this)" value='-' class='qtyminus' field='quantity'  data-id='${
+                                    item.product_id
+                                }'/>
+                                <input type='text' name='quantity' value='${
+                                    item.qty
+                                }' class='qty' />
+                                <input type='button' onclick="incrementQuantity(this)" value='+' class='qtyplus' field='quantity'  data-id='${
+                                    item.product_id
+                                }' />
                             </div>
 
                            <div>
-                            <button type="button" class="border-0 bg-transparent" onclick="removeItem(this,${item.id})">
+                            <button type="button" class="border-0 bg-transparent" onclick="removeItem(this,${
+                                item.id
+                            })">
                                   <svg width="18" height="23" viewBox="0 0 18 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M1.83337 20.1949C1.87332 20.7525 2.12506 21.2739 2.53677 21.652C2.94867 22.0304 3.48935 22.2369 4.04849 22.2294H13.5781C14.1372 22.2369 14.6779 22.0304 15.0898 21.652C15.5016 21.2739 15.7533 20.7525 15.7932 20.1949L16.5412 7.29911C16.8608 7.17433 17.1353 6.95615 17.3289 6.67286C17.5226 6.38974 17.6262 6.05464 17.6264 5.71168V4.50859C17.6259 4.05655 17.446 3.6233 17.1262 3.30368C16.8066 2.98408 16.3733 2.80423 15.9213 2.80348H12.6576L12.4744 1.51685C12.4226 1.10074 12.2214 0.717481 11.9082 0.438542C11.5951 0.159616 11.1912 0.0038294 10.7721 0H6.84925C6.43077 0.00492546 6.02835 0.161442 5.71621 0.440185C5.40427 0.719111 5.20377 1.10164 5.15198 1.51686L4.96627 2.80349H1.70511C1.25307 2.80422 0.81982 2.98409 0.500204 3.30369C0.180416 3.6233 0.000560401 4.05654 0 4.5086V5.71169C0.00018241 6.05464 0.1038 6.38977 0.29753 6.67287C0.491079 6.95617 0.765605 7.17433 1.08522 7.29912L1.83337 20.1949ZM14.4882 20.119C14.467 20.3434 14.3612 20.5513 14.1921 20.7005C14.023 20.8496 13.8033 20.9287 13.5781 20.9218H4.04846C3.82317 20.9287 3.60353 20.8496 3.43444 20.7005C3.26534 20.5513 3.15953 20.3433 3.13838 20.119L2.40341 7.41703H15.2179L14.4882 20.119ZM6.45948 1.7C6.47845 1.48493 6.65175 1.316 6.86738 1.30251H10.7902C10.9936 1.33023 11.1503 1.49551 11.1667 1.7L11.3261 2.79839L6.28954 2.79857L6.45948 1.7ZM1.30753 4.50878C1.3088 4.28987 1.48612 4.11274 1.70502 4.11128H15.921C16.1399 4.11274 16.3172 4.28987 16.3185 4.50878V5.71187C16.3185 5.93132 16.1406 6.10936 15.921 6.10936H1.70502C1.48539 6.10936 1.30753 5.93132 1.30753 5.71187V4.50878Z" fill="#A9A9A9"/>
                                   <path d="M8.813 19.2222C8.98648 19.2222 9.15267 19.1533 9.27526 19.0307C9.39785 18.9081 9.4668 18.7417 9.4668 18.5684V9.02294C9.4668 8.66193 9.17402 8.36914 8.813 8.36914C8.45199 8.36914 8.1592 8.66193 8.1592 9.02294V18.5633C8.15774 18.7375 8.22615 18.9052 8.34892 19.029C8.47151 19.1527 8.63861 19.2224 8.813 19.2224V19.2222Z" fill="#A9A9A9"/>

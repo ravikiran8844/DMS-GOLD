@@ -34,7 +34,7 @@ Product Details Page - Emerald RMS
                         $label = 'CASTING';
                         break;
                         case App\Enums\Projects::IMPREZ:
-                        $route = route('retailerimprezreadystock');
+                        $route = route('retailerjewelleryreadystock');
                         $label = 'IMPREZ';
                         break;
                         case App\Enums\Projects::INDIANIA:

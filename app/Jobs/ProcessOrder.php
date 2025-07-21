@@ -50,7 +50,7 @@ class ProcessOrder implements ShouldQueue
         $excelFileNames = $order->order_no . '.xlsx';
         $excelFilePaths = 'invoices/no-img/' . $excelFileNames;
 
-        $datas = OrderDetail::select('order_details.*', 'products.product_image', 'products.DesignNo', 'products.project', 'orders.totalweight', 'orders.order_no', 'users.name', 'users.email', 'users.mobile' )
+        $datas = OrderDetail::select('order_details.*', 'products.Purity', 'products.DesignNo', 'products.Project', 'products.size', 'products.style', 'orders.totalweight', 'orders.order_no', 'users.name', 'users.email', 'users.mobile')
             ->join('orders', 'orders.id', 'order_details.order_id')
             ->join('users', 'users.id', 'orders.user_id')
             ->join('products', 'products.id', 'order_details.product_id')
@@ -95,6 +95,11 @@ class ProcessOrder implements ShouldQueue
         Mail::to($adminMail)->bcc('sundaram@brightbridgeinfotech.com')->send(new RetailerOrderWithoutImageMail($datas, $excelFilePaths, $this->user->shop_name));
         // Send WhatsApp message
         $this->sendWhatsAppMessage($this->user->mobile, $order->order_no, url($pdfFilePath));
+
+        $mobileNumbers = ['6374262388', '7871116216'];
+        $pdfFilePath = $pdfFilePath; // your actual PDF path
+        $this->sendCustomWhatsAppTemplate($mobileNumbers, $order, $pdfFilePath);
+
         // Optionally, log the message sending status
         Log::info('WhatsApp message sent to: ' . $this->user->mobile);
         Log::info('file: ' . url($pdfFilePath));
@@ -149,5 +154,58 @@ class ProcessOrder implements ShouldQueue
             Log::error('Exception occurred while sending WhatsApp message: ' . $e->getMessage());
             return ['success' => false, 'message' => 'An error occurred: ' . $e->getMessage()];
         }
+    }
+
+    private function sendCustomWhatsAppTemplate(array $mobileNumbers, $order, $pdfFilePath)
+    {
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhNzFjOGNkZC0yMzBjLTQ2OWEtOTlmMy1iNzcxNTVjMjdiZDciLCJ1bmlxdWVfbmFtZSI6InZpc2hhbGhhcmlAZWppbmRpYS5jb20iLCJuYW1laWQiOiJ2aXNoYWxoYXJpQGVqaW5kaWEuY29tIiwiZW1haWwiOiJ2aXNoYWxoYXJpQGVqaW5kaWEuY29tIiwiYXV0aF90aW1lIjoiMTAvMDgvMjAyNCAwOTozMjozMSIsImRiX25hbWUiOiJtdC1wcm9kLVRlbmFudHMiLCJ0ZW5hbnRfaWQiOiI1NzA4IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQURNSU5JU1RSQVRPUiIsImV4cCI6MjUzNDAyMzAwODAwLCJpc3MiOiJDbGFyZV9BSSIsImF1ZCI6IkNsYXJlX0FJIn0.553ARXacQ0-8oLB_QROQIVlWVXx5p3S15q_t9HMGQUk'; // your token
+
+        $customerName = $this->user->name; // Safely get customer name
+        $partyNumber = $this->user->mobile;         // Party number
+        $orderTime = $order->created_at->format('d-m-Y H:i'); // Format time
+        $orderId = $order->order_no;
+        $pdfUrl = url($pdfFilePath);
+
+        foreach ($mobileNumbers as $mobileNumber) {
+
+            $url = 'https://live-mt-server.wati.io/5708/api/v1/sendTemplateMessage?whatsappNumber=' . urlencode('91' . $mobileNumber);
+
+            $data = [
+                'template_name'   => 'gold_rms_opd',
+                'broadcast_name'  => 'OPD_Order_Update',
+                'parameters' => [
+                    ['name' => 'date', 'value' => $orderTime],
+                    ['name' => 'Custorderid', 'value' => $orderId],
+                    ['name' => 'Partyname', 'value' => $customerName],
+                    ['name' => 'Partynumber', 'value' => $partyNumber],
+                    ['name' => 'pdflink', 'value' => $pdfUrl],
+                ]
+            ];
+
+            try {
+                $response = Http::withHeaders([
+                    'Authorization' => $token,
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ])->post($url, $data);
+
+                $responseData = $response->json();
+
+                Log::info("WhatsApp API Response ('gold_rms_opd') to $mobileNumber:", [
+                    'response' => $responseData,
+                ]);
+
+                if (!empty($responseData['response']['result']) && $responseData['response']['result'] === true) {
+                    Log::info("✅ WhatsApp message ('gold_rms_opd') successfully sent to: $mobileNumber");
+                } else {
+                    $error = $responseData['response']['info'] ?? 'Unknown error';
+                    Log::warning("⚠️ Failed to send WhatsApp message ('gold_rms_opd') to $mobileNumber: $error");
+                }
+            } catch (\Exception $e) {
+                Log::error("❌ Exception sending WhatsApp message ('gold_rms_opd') to $mobileNumber: " . $e->getMessage());
+            }
+        }
+
+        return ['success' => true];
     }
 }
