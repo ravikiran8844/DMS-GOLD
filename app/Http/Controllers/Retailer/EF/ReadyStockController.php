@@ -160,6 +160,8 @@ class ReadyStockController extends Controller
             'product_variants.size',
             'product_variants.Purity',
             'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
             'wishlists.is_favourite'
         )
             ->join('product_variants', function ($join) {

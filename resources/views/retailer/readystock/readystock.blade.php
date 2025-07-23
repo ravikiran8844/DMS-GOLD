@@ -291,6 +291,27 @@
                                     @else
                                         {{-- Single Variant Detailed View (First Image Layout) --}}
                                         <div class="mt-3 grid cols-3 card-content_wrapper">
+                                           @if ($main->unit)
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">Unit</div>
+                                                    <div class="product-card-badge product-card-badge">
+                                                        {{ $main->unit ?? '-' }}</div>
+                                                </div>
+                                            @endif
+                                            @if ($main->style)
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">Style</div>
+                                                    <div class="product-card-badge product-card-badge">
+                                                        {{ $main->style ?? '-' }}</div>
+                                                </div>
+                                            @endif
+                                            @if ($main->making)
+                                                <div class="d-flex flex-column gap-1">
+                                                    <div class="card-text text-dark">Making %</div>
+                                                    <div class="product-card-badge">{{ $main->making ?? '-' }}
+                                                    </div>
+                                                </div>
+                                            @endif
                                             @if ($main->color)
                                                 <div class="d-flex flex-column gap-1">
                                                     <div class="card-text text-dark">Colour</div>
