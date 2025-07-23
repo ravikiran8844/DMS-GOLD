@@ -133,24 +133,20 @@ class ReadyStockController extends Controller
         $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
             $base = $items->first();
 
-            // Group variant fields
-            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
-            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
-            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
-            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
-            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
 
-            $summary = [];
-            if ($sizes) $summary[] = "Size: $sizes";
-            if ($colors) $summary[] = "Color: $colors";
-            if ($weights) $summary[] = "Weight: $weights";
-            if ($purities) $summary[] = "Purity: $purities";
-            if ($styles) $summary[] = "Style: $styles";
-
-            $base->variant_summary = implode(' | ', $summary);
             $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
-
-            // Add variant count flag
             $base->variant_count = $items->count();
 
             return $base;
@@ -170,7 +166,10 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::EF;
-        $allProduct = Product::select('id')->where('project', Projects::EF)->where('qty', '>', 0)->get();
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::EF)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
         $stock = 1;
         $breadcrum = 'EF';
         $breadcrumUrl = route('retailerefreadystock');
@@ -257,7 +256,10 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::CASTING;
-        $allProduct = Product::select('id')->where('project', Projects::CASTING)->where('qty', '>', 0)->get();
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::CASTING)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
         $stock = 1;
         $breadcrum = 'CASTING';
         $breadcrumUrl = route('retailersireadystock');
@@ -344,7 +346,10 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::IMPREZ;
-        $allProduct = Product::select('id')->where('project', Projects::IMPREZ)->where('qty', '>', 0)->get();
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::IMPREZ)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
         $stock = 1;
         $breadcrum = 'IMPREZ';
         $breadcrumUrl = route('retailerjewelleryreadystock');
@@ -431,7 +436,10 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::INDIANIA;
-        $allProduct = Product::select('id')->where('project', Projects::INDIANIA)->where('qty', '>', 0)->get();
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::INDIANIA)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
         $stock = 1;
         $breadcrum = 'INDIANIA';
         $breadcrumUrl = route('retailerindianiareadystock');
@@ -518,7 +526,10 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::LASERCUT;
-        $allProduct = Product::select('id')->where('project', Projects::LASERCUT)->where('qty', '>', 0)->get();
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::LASERCUT)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
         $stock = 1;
         $breadcrum = 'LASERCUT';
         $breadcrumUrl = route('retailerutensilreadystock');
@@ -605,7 +616,10 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::MMD;
-        $allProduct = Product::select('id')->where('project', Projects::MMD)->where('qty', '>', 0)->get();
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::MMD)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
         $stock = 1;
         $breadcrum = 'MMD';
         $breadcrumUrl = route('mmd');
@@ -692,7 +706,10 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::STAMPING;
-        $allProduct = Product::select('id')->where('project', Projects::STAMPING)->where('qty', '>', 0)->get();
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::STAMPING)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
         $stock = 1;
         $breadcrum = 'STAMPING';
         $breadcrumUrl = route('stamping');
@@ -779,7 +796,10 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::TURKISH;
-        $allProduct = Product::select('id')->where('project', Projects::TURKISH)->where('qty', '>', 0)->get();
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::TURKISH)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
         $stock = 1;
         $breadcrum = 'TURKISH';
         $breadcrumUrl = route('turkish');
@@ -866,7 +886,10 @@ class ReadyStockController extends Controller
 
         $product = $paginated;
         $project_id = Projects::UNIKRAFT;
-        $allProduct = Product::select('id')->where('project', Projects::UNIKRAFT)->where('qty', '>', 0)->get();
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::UNIKRAFT)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
         $stock = 1;
         $breadcrum = 'UNIKRAFT';
         $breadcrumUrl = route('unikraft');
