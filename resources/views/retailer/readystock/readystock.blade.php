@@ -363,7 +363,7 @@
                                                                                                 class="qtyminus"
                                                                                                 field="quantity">
                                                                                             <input type="text"
-                                                                                                name="quantity"
+                                                                                                name="quantity{{ $main->id }}"
                                                                                                 value="1"
                                                                                                 class="qty">
                                                                                             <input type="button"
@@ -373,11 +373,70 @@
                                                                                         </div>
                                                                                     </td>
                                                                                     <td>
-                                                                                        <button
-                                                                                            class="btn btn-warning btn-sm w-100"
-                                                                                            onclick="addToCartVariant('{{ $main->id }}', '{{ $index }}')">
-                                                                                            Add to Cart
-                                                                                        </button>
+                                                                                        @php
+                                                                                            $isCart = App\Models\Cart::where(
+                                                                                                'user_id',
+                                                                                                Auth::user()->id,
+                                                                                            )
+                                                                                                ->where(
+                                                                                                    'product_id',
+                                                                                                    $main->id,
+                                                                                                )
+                                                                                                ->get();
+                                                                                            $currentcartcount = App\Models\Cart::where(
+                                                                                                'product_id',
+                                                                                                $main->id,
+                                                                                            )
+                                                                                                ->where(
+                                                                                                    'user_id',
+                                                                                                    Auth::user()->id,
+                                                                                                )
+                                                                                                ->value('qty');
+                                                                                        @endphp
+                                                                                        <div
+                                                                                            class="shop-page-add-to-cart-btn mt-3">
+                                                                                            @if (count($isCart))
+                                                                                                <button
+                                                                                                    onclick="addforcart({{ $main->id }})"
+                                                                                                    class="btn added-to-cart-btn mr-2 spinner-button"
+                                                                                                    data_id="card_id_{{ $main->id }}">
+                                                                                                    <span
+                                                                                                        class="submit-text">ADDED
+                                                                                                        TO CART</span>
+                                                                                                    <span
+                                                                                                        class="d-none spinner">
+                                                                                                        <span
+                                                                                                            class="spinner-grow spinner-grow-sm"
+                                                                                                            aria-hidden="true"></span>
+                                                                                                        <span
+                                                                                                            role="status">Adding...</span>
+                                                                                                    </span>
+                                                                                                    <span
+                                                                                                        id="applycurrentcartcount{{ $main->id }}"
+                                                                                                        class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
+                                                                                                </button>
+                                                                                            @else
+                                                                                                <button
+                                                                                                    onclick="addforcart({{ $main->id }})"
+                                                                                                    class="btn add-to-cart-btn mr-2 spinner-button"
+                                                                                                    data_id="card_id_{{ $main->id }}">
+                                                                                                    <span
+                                                                                                        class="submit-text">ADD
+                                                                                                        TO CART</span>
+
+                                                                                                    <span
+                                                                                                        class="d-none spinner">
+                                                                                                        <span
+                                                                                                            class="spinner-grow spinner-grow-sm"
+                                                                                                            aria-hidden="true"></span>
+                                                                                                        <span
+                                                                                                            role="status">Adding...</span>
+                                                                                                    </span>
+                                                                                                    <span
+                                                                                                        class="added-to-cart-badge"></span>
+                                                                                                </button>
+                                                                                            @endif
+                                                                                        </div>
                                                                                     </td>
                                                                                 </tr>
                                                                             @endforeach
@@ -465,11 +524,70 @@
                                                                                 <td>Add to Cart</td>
                                                                                 @foreach ($main->variants as $index => $variant)
                                                                                     <td>
-                                                                                        <button
-                                                                                            class="btn btn-warning w-100"
-                                                                                            onclick="addToCartVariant('{{ $main->id }}', '{{ $index }}')">
-                                                                                            Add to Cart
-                                                                                        </button>
+                                                                                        @php
+                                                                                            $isCart = App\Models\Cart::where(
+                                                                                                'user_id',
+                                                                                                Auth::user()->id,
+                                                                                            )
+                                                                                                ->where(
+                                                                                                    'product_id',
+                                                                                                    $main->id,
+                                                                                                )
+                                                                                                ->get();
+                                                                                            $currentcartcount = App\Models\Cart::where(
+                                                                                                'product_id',
+                                                                                                $main->id,
+                                                                                            )
+                                                                                                ->where(
+                                                                                                    'user_id',
+                                                                                                    Auth::user()->id,
+                                                                                                )
+                                                                                                ->value('qty');
+                                                                                        @endphp
+                                                                                        <div
+                                                                                            class="shop-page-add-to-cart-btn mt-3">
+                                                                                            @if (count($isCart))
+                                                                                                <button
+                                                                                                    onclick="addforcart({{ $main->id }})"
+                                                                                                    class="btn added-to-cart-btn mr-2 spinner-button"
+                                                                                                    data_id="card_id_{{ $main->id }}">
+                                                                                                    <span
+                                                                                                        class="submit-text">ADDED
+                                                                                                        TO CART</span>
+                                                                                                    <span
+                                                                                                        class="d-none spinner">
+                                                                                                        <span
+                                                                                                            class="spinner-grow spinner-grow-sm"
+                                                                                                            aria-hidden="true"></span>
+                                                                                                        <span
+                                                                                                            role="status">Adding...</span>
+                                                                                                    </span>
+                                                                                                    <span
+                                                                                                        id="applycurrentcartcount{{ $main->id }}"
+                                                                                                        class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
+                                                                                                </button>
+                                                                                            @else
+                                                                                                <button
+                                                                                                    onclick="addforcart({{ $main->id }})"
+                                                                                                    class="btn add-to-cart-btn mr-2 spinner-button"
+                                                                                                    data_id="card_id_{{ $main->id }}">
+                                                                                                    <span
+                                                                                                        class="submit-text">ADD
+                                                                                                        TO CART</span>
+
+                                                                                                    <span
+                                                                                                        class="d-none spinner">
+                                                                                                        <span
+                                                                                                            class="spinner-grow spinner-grow-sm"
+                                                                                                            aria-hidden="true"></span>
+                                                                                                        <span
+                                                                                                            role="status">Adding...</span>
+                                                                                                    </span>
+                                                                                                    <span
+                                                                                                        class="added-to-cart-badge"></span>
+                                                                                                </button>
+                                                                                            @endif
+                                                                                        </div>
                                                                                     </td>
                                                                                 @endforeach
                                                                             </tr>
