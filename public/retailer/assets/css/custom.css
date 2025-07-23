@@ -5902,7 +5902,7 @@ textarea {
 }
 
 
-  .modal-details table td{
+.modal-details table th, .modal-details table td,.main-product table td,.main-product table th{
     white-space: nowrap;
   }
 
