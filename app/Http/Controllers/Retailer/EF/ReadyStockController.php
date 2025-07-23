@@ -224,24 +224,20 @@ class ReadyStockController extends Controller
         $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
             $base = $items->first();
 
-            // Group variant fields
-            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
-            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
-            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
-            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
-            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
 
-            $summary = [];
-            if ($sizes) $summary[] = "Size: $sizes";
-            if ($colors) $summary[] = "Color: $colors";
-            if ($weights) $summary[] = "Weight: $weights";
-            if ($purities) $summary[] = "Purity: $purities";
-            if ($styles) $summary[] = "Style: $styles";
-
-            $base->variant_summary = implode(' | ', $summary);
             $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
-
-            // Add variant count flag
             $base->variant_count = $items->count();
 
             return $base;
@@ -280,6 +276,7 @@ class ReadyStockController extends Controller
 
     public function imprez(Request $request)
     {
+        ini_set('max_execution_time', 300);
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
@@ -314,24 +311,20 @@ class ReadyStockController extends Controller
         $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
             $base = $items->first();
 
-            // Group variant fields
-            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
-            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
-            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
-            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
-            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
 
-            $summary = [];
-            if ($sizes) $summary[] = "Size: $sizes";
-            if ($colors) $summary[] = "Color: $colors";
-            if ($weights) $summary[] = "Weight: $weights";
-            if ($purities) $summary[] = "Purity: $purities";
-            if ($styles) $summary[] = "Style: $styles";
-
-            $base->variant_summary = implode(' | ', $summary);
             $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
-
-            // Add variant count flag
             $base->variant_count = $items->count();
 
             return $base;
@@ -370,6 +363,7 @@ class ReadyStockController extends Controller
 
     public function indiania(Request $request)
     {
+        ini_set('max_execution_time', 300);
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
@@ -404,24 +398,20 @@ class ReadyStockController extends Controller
         $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
             $base = $items->first();
 
-            // Group variant fields
-            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
-            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
-            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
-            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
-            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
 
-            $summary = [];
-            if ($sizes) $summary[] = "Size: $sizes";
-            if ($colors) $summary[] = "Color: $colors";
-            if ($weights) $summary[] = "Weight: $weights";
-            if ($purities) $summary[] = "Purity: $purities";
-            if ($styles) $summary[] = "Style: $styles";
-
-            $base->variant_summary = implode(' | ', $summary);
             $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
-
-            // Add variant count flag
             $base->variant_count = $items->count();
 
             return $base;
@@ -460,6 +450,7 @@ class ReadyStockController extends Controller
 
     public function lasercut(Request $request)
     {
+        ini_set('max_execution_time', 300);
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
@@ -494,24 +485,20 @@ class ReadyStockController extends Controller
         $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
             $base = $items->first();
 
-            // Group variant fields
-            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
-            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
-            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
-            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
-            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
 
-            $summary = [];
-            if ($sizes) $summary[] = "Size: $sizes";
-            if ($colors) $summary[] = "Color: $colors";
-            if ($weights) $summary[] = "Weight: $weights";
-            if ($purities) $summary[] = "Purity: $purities";
-            if ($styles) $summary[] = "Style: $styles";
-
-            $base->variant_summary = implode(' | ', $summary);
             $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
-
-            // Add variant count flag
             $base->variant_count = $items->count();
 
             return $base;
@@ -550,6 +537,7 @@ class ReadyStockController extends Controller
 
     public function mmd(Request $request)
     {
+        ini_set('max_execution_time', 300);
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
@@ -584,24 +572,20 @@ class ReadyStockController extends Controller
         $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
             $base = $items->first();
 
-            // Group variant fields
-            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
-            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
-            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
-            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
-            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
 
-            $summary = [];
-            if ($sizes) $summary[] = "Size: $sizes";
-            if ($colors) $summary[] = "Color: $colors";
-            if ($weights) $summary[] = "Weight: $weights";
-            if ($purities) $summary[] = "Purity: $purities";
-            if ($styles) $summary[] = "Style: $styles";
-
-            $base->variant_summary = implode(' | ', $summary);
             $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
-
-            // Add variant count flag
             $base->variant_count = $items->count();
 
             return $base;
@@ -640,6 +624,7 @@ class ReadyStockController extends Controller
 
     public function stamping(Request $request)
     {
+        ini_set('max_execution_time', 300);
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
@@ -674,24 +659,20 @@ class ReadyStockController extends Controller
         $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
             $base = $items->first();
 
-            // Group variant fields
-            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
-            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
-            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
-            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
-            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
 
-            $summary = [];
-            if ($sizes) $summary[] = "Size: $sizes";
-            if ($colors) $summary[] = "Color: $colors";
-            if ($weights) $summary[] = "Weight: $weights";
-            if ($purities) $summary[] = "Purity: $purities";
-            if ($styles) $summary[] = "Style: $styles";
-
-            $base->variant_summary = implode(' | ', $summary);
             $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
-
-            // Add variant count flag
             $base->variant_count = $items->count();
 
             return $base;
@@ -730,6 +711,7 @@ class ReadyStockController extends Controller
 
     public function turkish(Request $request)
     {
+        ini_set('max_execution_time', 300);
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
@@ -764,24 +746,20 @@ class ReadyStockController extends Controller
         $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
             $base = $items->first();
 
-            // Group variant fields
-            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
-            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
-            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
-            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
-            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
 
-            $summary = [];
-            if ($sizes) $summary[] = "Size: $sizes";
-            if ($colors) $summary[] = "Color: $colors";
-            if ($weights) $summary[] = "Weight: $weights";
-            if ($purities) $summary[] = "Purity: $purities";
-            if ($styles) $summary[] = "Style: $styles";
-
-            $base->variant_summary = implode(' | ', $summary);
             $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
-
-            // Add variant count flag
             $base->variant_count = $items->count();
 
             return $base;
@@ -820,6 +798,7 @@ class ReadyStockController extends Controller
 
     public function unikraft(Request $request)
     {
+        ini_set('max_execution_time', 300);
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
@@ -854,24 +833,20 @@ class ReadyStockController extends Controller
         $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
             $base = $items->first();
 
-            // Group variant fields
-            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
-            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
-            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
-            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
-            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
 
-            $summary = [];
-            if ($sizes) $summary[] = "Size: $sizes";
-            if ($colors) $summary[] = "Color: $colors";
-            if ($weights) $summary[] = "Weight: $weights";
-            if ($purities) $summary[] = "Purity: $purities";
-            if ($styles) $summary[] = "Style: $styles";
-
-            $base->variant_summary = implode(' | ', $summary);
             $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
-
-            // Add variant count flag
             $base->variant_count = $items->count();
 
             return $base;
