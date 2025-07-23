@@ -65,9 +65,11 @@
     $currentProjectId = $project_id;
     $projectId = App\Models\Project::where('is_active', 1)->where('id', $currentProjectId)->value('id');
     $products = App\Models\Product::where('Project', $currentProjectId)
-        ->where('qty', '>', 0)
-        ->select('Item', DB::raw('MIN(id) as id'))
-        ->groupBy('Item')
+        ->select('product_variants.qty', 'products.*')
+        ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+        ->where('product_variants.qty', '>', 0)
+        ->select('products.Item', DB::raw('MIN(products.id) as id'))
+        ->groupBy('products.Item')
         ->get();
 @endphp
 <input type="hidden" name="decryptedProjectId" id="decryptedProjectId" value="{{ $decryptedProjectId ?? '' }}">
@@ -291,7 +293,7 @@
                                     @else
                                         {{-- Single Variant Detailed View (First Image Layout) --}}
                                         <div class="mt-3 grid cols-3 card-content_wrapper">
-                                           @if ($main->unit)
+                                            @if ($main->unit)
                                                 <div class="d-flex flex-column gap-1">
                                                     <div class="card-text text-dark">Unit</div>
                                                     <div class="product-card-badge product-card-badge">

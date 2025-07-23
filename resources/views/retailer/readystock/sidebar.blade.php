@@ -27,14 +27,18 @@
             })->get();
             $currentProjectId = $project_id;
             $products = App\Models\Product::where('Project', $currentProjectId)
-                ->where('qty', '>', 0)
-                ->select('Item', DB::raw('MIN(id) as id'))
-                ->groupBy('Item')
+                ->select('product_variants.qty','products.*')
+                ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+                ->where('product_variants.qty', '>', 0)
+                ->select('products.Item', DB::raw('MIN(products.id) as id'))
+                ->groupBy('products.Item')
                 ->get();
             $procategorys = App\Models\Product::where('Project', $currentProjectId)
-                ->where('qty', '>', 0)
-                ->select('Procatgory', DB::raw('MIN(id) as id'))
-                ->groupBy('Procatgory')
+                 ->select('product_variants.qty','products.*')
+                ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+                ->where('product_variants.qty', '>', 0)
+                ->select('products.Procatgory', DB::raw('MIN(products.id) as id'))
+                ->groupBy('products.Procatgory')
                 ->get();
         @endphp
         <input type="hidden" name="product" id="product" value="">
