@@ -261,17 +261,13 @@
                                 value="{{ $main->style }}">
 
                             <div class="card shop-page_product-card">
-                                <div class="card-checkbox_wrapper">
-                                    <input class="card-checkbox" type="checkbox" name="product{{ $main->id }}"
-                                        id="product{{ $main->id }}" data-id="{{ $main->id }}">
-                                </div>
-
                                 <div
                                     class="card-img-top d-flex align-items-center justify-content-center position-relative">
                                     <a href="{{ route('retailerproductdetail', encrypt($main->id)) }}">
-                                        <img class="img-fluid prouduct_card-image load-secure-image" width="255"
-                                            height="255" src="{{ asset('/load-loading.gif') }}"
-                                            data-secure="{{ $main->secureFilename }}" alt>
+                                        <img class="img-fluid prouduct_card-image load-secure-image"
+                                            src="{{ asset('/load-loading.gif') }}"
+                                            data-secure="{{ $main->secureFilename }}" width="255" height="255"
+                                            alt="">
                                     </a>
                                     <div class="position-absolute card-purity purity-list">
                                         Purity: {{ $main->Purity ?? 'N/A' }}
@@ -279,140 +275,104 @@
                                 </div>
 
                                 <div class="card-body d-flex flex-column justify-content-between">
-                                    <div>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center card-title_wrapper">
-                                            <div class="card-title">
-                                                <a class="text-decoration-none"
-                                                    href="#">{{ $main->DesignNo }}</a>
-                                            </div>
-                                            <button class="ml-2 custom-icon-btn wishlist-svg">
-                                                <svg width="26" height="23" viewBox="0 0 26 23"
-                                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                        stroke="inherit" stroke-width="1.5" stroke-linejoin="round">
-                                                    </path>
-                                                </svg>
-                                            </button>
-                                        </div>
+                                    <div class="card-title">
+                                        <a href="#" class="text-decoration-none">{{ $main->DesignNo }}</a>
+                                    </div>
 
+                                    @if ($main->variant_count > 1)
+                                        {{-- Multiple Variants View (Second Image Layout) --}}
+                                        <div class="mt-3">
+                                            <div class="card-text fw-bold">Multiple Sizes Available</div>
+                                            <a href="{{ route('retailerproductdetail', encrypt($main->id)) }}"
+                                                class="btn btn-warning mt-2">
+                                                View All Options
+                                            </a>
+                                        </div>
+                                    @else
+                                        {{-- Single Variant Detailed View (First Image Layout) --}}
                                         <div class="mt-3 grid cols-3 card-content_wrapper">
                                             @if ($main->color)
                                                 <div class="d-flex flex-column gap-1">
                                                     <div class="card-text text-dark">Colour</div>
                                                     <div class="product-card-badge product-card-badge-light">
-                                                        {{ $main->color ?? '-' }}</div>
-                                                </div>
-                                            @endif
-                                            @if ($main->unit)
-                                                <div class="d-flex flex-column gap-1">
-                                                    <div class="card-text text-dark">Unit</div>
-                                                    <div class="product-card-badge product-card-badge-light">
-                                                        {{ $main->unit ?? '-' }}</div>
-                                                </div>
-                                            @endif
-                                            @if ($main->style)
-                                                <div class="d-flex flex-column gap-1">
-                                                    <div class="card-text text-dark">Style</div>
-                                                    <div class="product-card-badge product-card-badge-light">
-                                                        {{ $main->style ?? '-' }}</div>
-                                                </div>
-                                            @endif
-                                            @if ($main->making)
-                                                <div class="d-flex flex-column gap-1">
-                                                    <div class="card-text text-dark">Making %</div>
-                                                    <div class="product-card-badge">{{ $main->making ?? '-' }}
+                                                        {{ $main->color ?? '-' }}
                                                     </div>
                                                 </div>
                                             @endif
                                             @if ($main->size)
                                                 <div class="d-flex flex-column gap-1">
-                                                    <div class="card-text text-dark">
-                                                        Size
-                                                    </div>
-                                                    <div class="product-card-badge">{{ $main->size ?? '-' }}
+                                                    <div class="card-text text-dark">Size</div>
+                                                    <div class="product-card-badge product-card-badge-light">
+                                                        {{ $main->size ?? '-' }}
                                                     </div>
                                                 </div>
                                             @endif
                                             @if ($main->weight)
                                                 <div class="d-flex flex-column gap-1">
-                                                    <div class="card-text text-dark">
-                                                        Weight
+                                                    <div class="card-text text-dark">Weight</div>
+                                                    <div class="product-card-badge product-card-badge-light">
+                                                        {{ $main->weight ?? '-' }}g
                                                     </div>
-                                                    <div class="product-card-badge">
-                                                        {{ $main->weight ?? '-' }}g</div>
                                                 </div>
                                             @endif
                                         </div>
 
-                                        <div class="card-multiple-sizes-wrapper">
-
-                                            <div class="d-flex mt-3">
-                                                <div class="product-cart-qty-text">In Stock:
-                                                    <span> {{ $main->qty ?? '-' }} Pcs</span>
-                                                </div>
-                                            </div>
-
-                                            <div>
-                                                <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">
-                                                    <div class="d-flex align-items-center">
-                                                        <label class="me-2">Qty</label>
-                                                        <div
-                                                            class="input-group quantity-input-group quantity-container">
-                                                            <input type="button" value="-" class="qtyminus"
-                                                                field="quantity">
-                                                            <input type="text" name="quantity"
-                                                                id="quantity{{ $main->id }}" value="1"
-                                                                class="qty">
-                                                            <input type="button" value="+" class="qtyplus"
-                                                                field="quantity">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="product-cart-qty-text mt-2">
+                                            In Stock: <span>{{ $main->qty ?? '-' }} Pcs</span>
                                         </div>
-                                    </div>
 
-                                    @if (Auth::user()->role_id == App\Enums\Roles::Dealer ||
-                                            Auth::user()->role_id == App\Enums\Roles::Retailer ||
-                                            Auth::user()->role_id == App\Enums\Roles::CRM)
-                                        @php
-                                            $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
-                                                ->where('product_id', $main->id)
-                                                ->get();
-                                            $currentcartcount = App\Models\Cart::where('product_id', $main->id)
-                                                ->where('user_id', Auth::user()->id)
-                                                ->value('qty');
-                                        @endphp
+                                        {{-- Add to Cart Section --}}
                                         <div class="shop-page-add-to-cart-btn mt-3">
-                                            @if (count($isCart))
-                                                <button onclick="addforcart({{ $main->id }})"
-                                                    class="btn added-to-cart-btn mr-2 spinner-button"
-                                                    data_id="card_id_{{ $main->id }}">
-                                                    <span class="submit-text">ADDED TO CART</span>
-                                                    <span class="d-none spinner">
-                                                        <span class="spinner-grow spinner-grow-sm"
-                                                            aria-hidden="true"></span>
-                                                        <span role="status">Adding...</span>
-                                                    </span>
-                                                    <span id="applycurrentcartcount{{ $main->id }}"
-                                                        class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
-                                                </button>
-                                            @else
-                                                <button onclick="addforcart({{ $main->id }})"
-                                                    class="btn add-to-cart-btn mr-2 spinner-button"
-                                                    data_id="card_id_{{ $main->id }}">
-                                                    <span class="submit-text">ADD TO CART</span>
+                                            <div class="d-flex align-items-center">
+                                                <label class="me-2">Qty</label>
+                                                <div class="input-group quantity-input-group quantity-container">
+                                                    <input type="button" value="-" class="qtyminus"
+                                                        field="quantity">
+                                                    <input type="text" name="quantity"
+                                                        id="quantity{{ $main->id }}" value="1"
+                                                        class="qty">
+                                                    <input type="button" value="+" class="qtyplus"
+                                                        field="quantity">
+                                                </div>
+                                            </div>
 
-                                                    <span class="d-none spinner">
-                                                        <span class="spinner-grow spinner-grow-sm"
-                                                            aria-hidden="true"></span>
-                                                        <span role="status">Adding...</span>
-                                                    </span>
-                                                    <span class="added-to-cart-badge"></span>
-                                                </button>
-                                            @endif
+                                            @php
+                                                $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
+                                                    ->where('product_id', $main->id)
+                                                    ->get();
+                                                $currentcartcount = App\Models\Cart::where('product_id', $main->id)
+                                                    ->where('user_id', Auth::user()->id)
+                                                    ->value('qty');
+                                            @endphp
+                                            <div class="shop-page-add-to-cart-btn mt-3">
+                                                @if (count($isCart))
+                                                    <button onclick="addforcart({{ $main->id }})"
+                                                        class="btn added-to-cart-btn mr-2 spinner-button"
+                                                        data_id="card_id_{{ $main->id }}">
+                                                        <span class="submit-text">ADDED TO CART</span>
+                                                        <span class="d-none spinner">
+                                                            <span class="spinner-grow spinner-grow-sm"
+                                                                aria-hidden="true"></span>
+                                                            <span role="status">Adding...</span>
+                                                        </span>
+                                                        <span id="applycurrentcartcount{{ $main->id }}"
+                                                            class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
+                                                    </button>
+                                                @else
+                                                    <button onclick="addforcart({{ $main->id }})"
+                                                        class="btn add-to-cart-btn mr-2 spinner-button"
+                                                        data_id="card_id_{{ $main->id }}">
+                                                        <span class="submit-text">ADD TO CART</span>
+
+                                                        <span class="d-none spinner">
+                                                            <span class="spinner-grow spinner-grow-sm"
+                                                                aria-hidden="true"></span>
+                                                            <span role="status">Adding...</span>
+                                                        </span>
+                                                        <span class="added-to-cart-badge"></span>
+                                                    </button>
+                                                @endif
+                                            </div>
                                         </div>
                                     @endif
                                 </div>

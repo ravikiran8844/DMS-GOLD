@@ -151,6 +151,7 @@ class ReadyStockController extends Controller
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
+        // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
             'product_variants.qty',
@@ -172,19 +173,43 @@ class ReadyStockController extends Controller
             ->where('products.project', Projects::CASTING)
             ->orderBy('products.DesignNo', 'ASC');
 
+        $rawProducts = $productQuery->get();
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->paginate($this->paginate)
-            ->map(function ($product) use ($secret) {
-                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-                return $product;
-            });
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
 
+            // Group variant fields
+            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
+            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
+            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
+            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
+            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+
+            $summary = [];
+            if ($sizes) $summary[] = "Size: $sizes";
+            if ($colors) $summary[] = "Color: $colors";
+            if ($weights) $summary[] = "Weight: $weights";
+            if ($purities) $summary[] = "Purity: $purities";
+            if ($styles) $summary[] = "Style: $styles";
+
+            $base->variant_summary = implode(' | ', $summary);
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+
+            // Add variant count flag
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
         $page = $request->get('page', 1);
         $perPage = $this->paginate;
+
         $paginated = new LengthAwarePaginator(
-            $groupedProducts->forPage($page, $perPage)->values(),
-            $groupedProducts->count(),
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
             $perPage,
             $page,
             ['path' => request()->url(), 'query' => request()->query()]
@@ -197,9 +222,18 @@ class ReadyStockController extends Controller
         $breadcrum = 'CASTING';
         $breadcrumUrl = route('retailersireadystock');
         $decryptedProjectId = Projects::CASTING;
+
         $request->session()->forget('ret_ses');
 
-        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
     }
 
     public function imprez(Request $request)
