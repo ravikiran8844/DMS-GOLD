@@ -98,6 +98,7 @@ class ReadyStockController extends Controller
 
     public function ef(Request $request)
     {
+        ini_set('max_execution_time', 300);
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
@@ -188,6 +189,7 @@ class ReadyStockController extends Controller
 
     public function casting(Request $request)
     {
+        ini_set('max_execution_time', 300);
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 

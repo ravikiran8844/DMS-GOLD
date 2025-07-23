@@ -5902,5 +5902,22 @@ textarea {
 }
 
 
-  
+  .modal-details table td{
+    white-space: nowrap;
+  }
+
+  .product-variants-modal{
+    z-index: 99999;
+    backdrop-filter: brightness(0.5);
+  }
+
+  .product-variants-modal img{
+    max-height: 200px;
+  }
+
+  .product-variants-modal .close-btn{
+    right: 10px;
+    position: absolute;
+    top: 10px;
+}
   

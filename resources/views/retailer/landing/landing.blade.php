@@ -452,7 +452,7 @@
             </div>
             <div class="col-12 text-center my-5 d-none d-sm-block">
                 <a href="tel:+918220017619" class="btn btn-warning px-4 py-2 rounded-5 no-login-required">
-                    For Queries: <span class="text-white fw-semibold">Vivin - +9182200 17619</span>
+                    For Queries: <span class="text-white fw-semibold">Vivin - +91 8220017619</span>
                 </a>
             </div>
         </div>

@@ -276,7 +276,7 @@
                                     </div>
                                 </div>
 
-                                <div class="card-body d-flex flex-column justify-content-between">
+                                <div class="card-body d-flex flex-column">
                                     <div class="card-title">
                                         <a href="#" class="text-decoration-none">{{ $main->DesignNo }}</a>
                                     </div>
@@ -285,10 +285,210 @@
                                         {{-- Multiple Variants View (Second Image Layout) --}}
                                         <div class="mt-3">
                                             <div class="card-text fw-bold">Multiple Sizes Available</div>
-                                            <a href="{{ route('retailerproductdetail', encrypt($main->id)) }}"
+                                            {{-- <a href="{{ route('retailerproductdetail', encrypt($main->id)) }}"
                                                 class="btn btn-warning mt-2">
                                                 View All Options
-                                            </a>
+                                            </a> --}}
+                                            <!-- Trigger Button -->
+                                                <button class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#productModal-{{ $main->DesignNo }}">
+                                                    View All Options
+                                                </button>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade product-variants-modal" id="productModal-{{ $main->DesignNo }}" tabindex="-1" aria-labelledby="productModalLabel123" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered modal-xl">
+                                                        <div class="modal-content rounded-4 overflow-hidden">
+                                                            <div class="modal-body p-4 d-flex flex-column flex-lg-row gap-4">
+                                                                <!-- Image Section -->
+                                                                <div class="modal-image text-center flex-shrink-0" style="flex: 0 0 200px;">
+                                                                    <img class="img-fluid prouduct_card-image load-secure-image"
+                                                                        src="{{ asset('/load-loading.gif') }}"
+                                                                        data-secure="{{ $main->secureFilename }}" width="200" height="200"
+                                                                        alt="{{ $main->DesignNo }}">
+                                                                </div>
+
+                                                                <!-- Info Section -->
+                                                                <div class="modal-details flex-grow-1 overflow-auto">
+                                                                    <h6 class="mb-2 fs-5" style="color:#7E7E7E;">Design Code: <span class="font-semibold text-dark">{{ $main->DesignNo }}</span></h6>
+
+                                                                    <p class="fw-medium fs-6 mb-4" style="color:#F78D1E;">Multiple Sizes Available</p>
+
+                                                                    <div class="table-responsive d-none d-xl-block">
+                                                                        <table class="table table-bordered text-center align-middle mb-0">
+                                                                            <thead class="table-dark">
+                                                                                <tr>
+                                                                                    <th>Purity</th>
+                                                                                    <th>Color</th>
+                                                                                    <th>Unit</th>
+                                                                                    <th>Style</th>
+                                                                                    <th>Making %</th>
+                                                                                    <th>Size</th>
+                                                                                    <th>Weight</th>
+                                                                                    <th>In Stock</th>
+                                                                                    <th>Qty</th>
+                                                                                    <th>Add to Cart</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td>22K-91.75</td>
+                                                                                    <td>Y</td>
+                                                                                    <td>Pcs</td>
+                                                                                    <td>BU</td>
+                                                                                    <td>4.50</td>
+                                                                                    <td>16</td>
+                                                                                    <td>1.70g</td>
+                                                                                    <td>1 Pcs</td>
+                                                                                    <td>
+                                                                                        <div class="input-group quantity-input-group quantity-container">
+                                                                                            <input type="button" value="-" class="qtyminus"
+                                                                                                field="quantity">
+                                                                                            <input type="text" name="quantity"
+                                                                                                value="1"
+                                                                                                class="qty">
+                                                                                            <input type="button" value="+" class="qtyplus"
+                                                                                                field="quantity">
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <button class="btn btn-warning btn-sm">ADD TO CART</button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>22K-91.75</td>
+                                                                                    <td>Y</td>
+                                                                                    <td>Pcs</td>
+                                                                                    <td>BU</td>
+                                                                                    <td>4.50</td>
+                                                                                    <td>17</td>
+                                                                                    <td>1.94g</td>
+                                                                                    <td>4 Pcs</td>
+                                                                                    <td>
+                                                                                        <div class="input-group quantity-input-group quantity-container">
+                                                                                            <input type="button" value="-" class="qtyminus"
+                                                                                                field="quantity">
+                                                                                            <input type="text" name="quantity"
+                                                                                                 value="1"
+                                                                                                class="qty">
+                                                                                            <input type="button" value="+" class="qtyplus"
+                                                                                                field="quantity">
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <button class="btn btn-warning btn-sm">ADD TO CART</button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>22K-91.75</td>
+                                                                                    <td>Y</td>
+                                                                                    <td>Pcs</td>
+                                                                                    <td>BU</td>
+                                                                                    <td>4.50</td>
+                                                                                    <td>18</td>
+                                                                                    <td>1.92g</td>
+                                                                                    <td>8 Pcs</td>
+                                                                                    <td>
+                                                                                        <div class="input-group quantity-input-group quantity-container">
+                                                                                            <input type="button" value="-" class="qtyminus"
+                                                                                                field="quantity">
+                                                                                            <input type="text" name="quantity"
+                                                                                                value="1"
+                                                                                                class="qty">
+                                                                                            <input type="button" value="+" class="qtyplus"
+                                                                                                field="quantity">
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <button class="btn btn-warning btn-sm">ADD TO CART</button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+
+
+                                                                    <div class="d-block d-xl-none">
+                                                                        <table class="table table-bordered text-center align-middle">
+                                                                        <thead class="table-dark">
+                                                                            <tr>
+                                                                            <th></th>
+                                                                            <th>Variant #1</th>
+                                                                            <th>Variant #2</th>
+                                                                            <th>Variant #3</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr><td>Purity</td><td>22K-91.75</td><td>22K-91.75</td><td>22K-91.75</td></tr>
+                                                                            <tr><td>Color</td><td>Y</td><td>Y</td><td>Y</td></tr>
+                                                                            <tr><td>Unit</td><td>Pcs</td><td>Pcs</td><td>Pcs</td></tr>
+                                                                            <tr><td>Style</td><td>BU</td><td>BU</td><td>BU</td></tr>
+                                                                            <tr><td>Making %</td><td>4.50</td><td>4.50</td><td>4.50</td></tr>
+                                                                            <tr><td>Size</td><td>16</td><td>16</td><td>16</td></tr>
+                                                                            <tr><td>Weight</td><td>1.70g</td><td>1.70g</td><td>1.70g</td></tr>
+                                                                            <tr><td>In Stock</td><td>1 Pcs</td><td>1 Pcs</td><td>1 Pcs</td></tr>
+                                                                            <tr>
+                                                                            <td>Qty</td>
+                                                                            <td>
+                                                                                <div class="input-group quantity-input-group quantity-container">
+                                                                                    <input type="button" value="-" class="qtyminus"
+                                                                                        field="quantity">
+                                                                                    <input type="text" name="quantity"
+                                                                                        value="1"
+                                                                                        class="qty">
+                                                                                    <input type="button" value="+" class="qtyplus"
+                                                                                        field="quantity">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group quantity-input-group quantity-container">
+                                                                                    <input type="button" value="-" class="qtyminus"
+                                                                                        field="quantity">
+                                                                                    <input type="text" name="quantity"
+                                                                                        value="1"
+                                                                                        class="qty">
+                                                                                    <input type="button" value="+" class="qtyplus"
+                                                                                        field="quantity">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group quantity-input-group quantity-container">
+                                                                                    <input type="button" value="-" class="qtyminus"
+                                                                                        field="quantity">
+                                                                                    <input type="text" name="quantity"
+                                                                                        value="1"
+                                                                                        class="qty">
+                                                                                    <input type="button" value="+" class="qtyplus"
+                                                                                        field="quantity">
+                                                                                </div>
+                                                                            </td>
+                   
+                                                                            </tr>
+                                                                            <tr>
+                                                                            <td>Add to Cart</td>
+                                                                            <td><button class="btn btn-warning w-100">Add to Cart</button></td>
+                                                                            <td><button class="btn btn-warning w-100">Add to Cart</button></td>
+                                                                            <td><button class="btn btn-warning w-100">Add to Cart</button></td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                        </table>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+                                                          
+                                                                <button type="button" class="btn btn-link close-btn" data-bs-dismiss="modal">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                                                                        <path d="M12.375 23.75C10.8812 23.75 9.40205 23.4558 8.02198 22.8841C6.6419 22.3125 5.38793 21.4746 4.33166 20.4183C3.27539 19.3621 2.43752 18.1081 1.86587 16.728C1.29422 15.3479 1 13.8688 1 12.375C1 10.8812 1.29422 9.40205 1.86587 8.02197C2.43752 6.6419 3.27539 5.38793 4.33166 4.33166C5.38793 3.27539 6.6419 2.43752 8.02198 1.86587C9.40206 1.29422 10.8812 1 12.375 1C13.8688 1 15.3479 1.29422 16.728 1.86587C18.1081 2.43752 19.3621 3.2754 20.4183 4.33166C21.4746 5.38793 22.3125 6.6419 22.8841 8.02198C23.4558 9.40206 23.75 10.8812 23.75 12.375C23.75 13.8688 23.4558 15.3479 22.8841 16.728C22.3125 18.1081 21.4746 19.3621 20.4183 20.4183C19.3621 21.4746 18.1081 22.3125 16.728 22.8841C15.3479 23.4558 13.8688 23.75 12.375 23.75L12.375 23.75Z" stroke="#535353" stroke-width="1.47967" stroke-linecap="round"/>
+                                                                        <path d="M8.58203 8.58398L16.1654 16.1673" stroke="#535353" stroke-width="1.47967" stroke-linecap="round"/>
+                                                                        <path d="M16.168 8.58398L8.58464 16.1673" stroke="#535353" stroke-width="1.47967" stroke-linecap="round"/>
+                                                                      </svg>
+                                                                </button>
+                                                           
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                         </div>
                                     @else
                                         {{-- Single Variant Detailed View (First Image Layout) --}}
