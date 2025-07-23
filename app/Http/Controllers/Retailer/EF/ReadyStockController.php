@@ -151,19 +151,25 @@ class ReadyStockController extends Controller
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
-        $subQuery = DB::table('products')
-            ->select('id')
-            ->where('qty', '>', 0)
-            ->where('project', Projects::CASTING);
-
-        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
             ->leftJoin('wishlists', function ($join) use ($user_id) {
                 $join->on('wishlists.product_id', '=', 'products.id')
                     ->where('wishlists.user_id', '=', $user_id);
             })
-            ->joinSub($subQuery, 'sub', function ($join) {
-                $join->on('products.id', '=', 'sub.id');
-            })
+            ->where('products.project', Projects::CASTING)
             ->orderBy('products.DesignNo', 'ASC');
 
         $secret = 'EmeraldAdmin';

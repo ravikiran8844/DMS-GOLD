@@ -53,7 +53,15 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
 @php
-    $weights = App\Models\Weight::where('is_active', 1)->whereNull('deleted_at')->get();
+    $usedWeights = App\Models\ProductVariant::where('qty', '>', 0)->pluck('weight')->toArray();
+
+    $weights = App\Models\Weight::where(function ($query) use ($usedWeights) {
+        foreach ($usedWeights as $productWeight) {
+            $query->orWhere(function ($q) use ($productWeight) {
+                $q->where('weight_range_from', '<=', $productWeight)->where('weight_range_to', '>=', $productWeight);
+            });
+        }
+    })->get();
     $currentProjectId = $project_id;
     $projectId = App\Models\Project::where('is_active', 1)->where('id', $currentProjectId)->value('id');
     $products = App\Models\Product::where('Project', $currentProjectId)
@@ -408,8 +416,6 @@
                                         </div>
                                     @endif
                                 </div>
-
-
                             </div>
                         @endforeach
                     </div>

@@ -12,7 +12,7 @@
 
         </div>
         @php
-            $usedWeights = App\Models\Product::where('qty', '>', 0)->pluck('weight')->toArray();
+            $usedWeights = App\Models\ProductVariant::where('qty', '>', 0)->pluck('weight')->toArray();
 
             $weights = App\Models\Weight::where(function ($query) use ($usedWeights) {
                 foreach ($usedWeights as $productWeight) {

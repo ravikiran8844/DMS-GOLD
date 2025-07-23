@@ -3,17 +3,12 @@
 namespace App\Imports;
 
 use App\Models\Product;
-use App\Models\Style;
-use App\Models\SilverPurity;
-use App\Models\Size;
+use App\Models\ProductVariant;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 use Exception;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 
 class ImportStockUpdate implements ToCollection, WithHeadingRow
 {
@@ -21,46 +16,67 @@ class ImportStockUpdate implements ToCollection, WithHeadingRow
 
     public function collection(Collection $rows)
     {
-        foreach ($rows as $row) {
-            // Try to find a product with the exact match
-            $stock = Product::where('DesignNo', $row['designno'])
-                ->where('style', $row['style'])
-                ->where('weight', $row['weight'])
-                ->where('Purity', $row['purity'])
-                ->where('size', $row['size'])
-                ->first();
-
-            if ($stock) {
-                $this->processedProductIds[] = $stock->id;
-                $stock->qty = $row['qty'];
-                $stock->save();
-            } else {
-                // Fallback: get one product with just the DesignNo to copy project/category/etc
+        foreach ($rows as $index => $row) {
+            try {
+                // Find the base product by DesignNo
                 $base = Product::where('DesignNo', $row['designno'])->first();
 
+                // If not found, create the base product
                 if (!$base) {
-                    continue; // Skip if nothing to clone from
+                    $base = Product::create([
+                        'DesignNo' => $row['designno'],
+                        'product_image' => $row['designno'] . '.jpg',
+                        'weight' => $row['weight'],
+                        'color' => $row['color'],
+                        'style' => $row['style'],
+                        'Project' => $row['project'] ?? null,
+                        'Category' => $row['category'] ?? null,
+                        'Subcategory' => $row['subcategory'] ?? null,
+                        'Purity' => $row['purity'],
+                        'size' => $row['size'],
+                        'qty' => $row['qty'],
+                        'Jeweltype' => $row['jeweltype'],
+                        'Item' => $row['item'] ?? null,
+                        'Procatgory' => $row['procatgory'] ?? null,
+                        'unit' => $row['unit'],
+                        'making' => $row['making']
+                    ]);
                 }
 
-                $newProduct = Product::create([
-                    'DesignNo' => $row['designno'],
-                    'product_image' => $row['designno'] . '.jpg',
-                    'weight' => $row['weight'],
-                    'color' => $row['color'],
-                    'style' => $row['style'],
-                    'Project' => $base->Project,
-                    'Category' => $base->Category,
-                    'Subcategory' => $base->Subcategory,
-                    'Purity' => $row['purity'],
-                    'size' => $row['size'],
-                    'qty' => $row['qty'],
-                    'Jeweltype' => $row['jeweltype'],
-                    'Item' => $base->Item,
-                    'Procatgory' => $base->Procatgory,
-                    'unit' => $row['unit'],
-                    'making' => $row['making']
+                // Check if this specific variant already exists
+                $variant = ProductVariant::where('product_id', $base->id)
+                    ->where('weight', $row['weight'])
+                    ->where('color', $row['color'])
+                    ->where('size', $row['size'])
+                    ->where('Purity', $row['purity'])
+                    ->where('style', $row['style'])
+                    ->where('unit', $row['unit'])
+                    ->where('making', $row['making'])
+                    ->first();
+
+                if ($variant) {
+                    $variant->qty = $row['qty'];
+                    $variant->save();
+                } else {
+                    ProductVariant::create([
+                        'product_id' => $base->id,
+                        'weight' => $row['weight'],
+                        'color' => $row['color'],
+                        'style' => $row['style'],
+                        'Purity' => $row['purity'],
+                        'size' => $row['size'],
+                        'qty' => $row['qty'],
+                        'unit' => $row['unit'],
+                        'making' => $row['making'],
+                    ]);
+                }
+
+                $this->processedProductIds[] = $base->id;
+            } catch (Exception $e) {
+                Log::error('Error processing row ' . $index . ': ' . $e->getMessage(), [
+                    'row_data' => $row->toArray(),
+                    'trace' => $e->getTraceAsString()
                 ]);
-                $this->processedProductIds[] = $newProduct->id;
             }
         }
     }
