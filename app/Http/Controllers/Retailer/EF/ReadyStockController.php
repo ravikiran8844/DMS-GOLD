@@ -101,34 +101,67 @@ class ReadyStockController extends Controller
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
-        $subQuery = DB::table('products')
-            ->select('id')
-            ->where('qty', '>', 0)
-            ->where('project', Projects::EF);
-
-        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
             ->leftJoin('wishlists', function ($join) use ($user_id) {
                 $join->on('wishlists.product_id', '=', 'products.id')
                     ->where('wishlists.user_id', '=', $user_id);
             })
-            ->joinSub($subQuery, 'sub', function ($join) {
-                $join->on('products.id', '=', 'sub.id');
-            })
+            ->where('products.project', Projects::EF)
             ->orderBy('products.DesignNo', 'ASC');
 
+        $rawProducts = $productQuery->get();
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->get()
-            ->map(function ($product) use ($secret) {
-                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-                return $product;
-            });
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
 
+            // Group variant fields
+            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
+            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
+            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
+            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
+            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+
+            $summary = [];
+            if ($sizes) $summary[] = "Size: $sizes";
+            if ($colors) $summary[] = "Color: $colors";
+            if ($weights) $summary[] = "Weight: $weights";
+            if ($purities) $summary[] = "Purity: $purities";
+            if ($styles) $summary[] = "Style: $styles";
+
+            $base->variant_summary = implode(' | ', $summary);
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+
+            // Add variant count flag
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
         $page = $request->get('page', 1);
         $perPage = $this->paginate;
+
         $paginated = new LengthAwarePaginator(
-            $groupedProducts->forPage($page, $perPage)->values(),
-            $groupedProducts->count(),
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
             $perPage,
             $page,
             ['path' => request()->url(), 'query' => request()->query()]
@@ -141,9 +174,16 @@ class ReadyStockController extends Controller
         $breadcrum = 'EF';
         $breadcrumUrl = route('retailerefreadystock');
         $decryptedProjectId = Projects::EF;
-        $request->session()->forget('ret_ses');
 
-        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
     }
 
     public function casting(Request $request)
@@ -225,8 +265,6 @@ class ReadyStockController extends Controller
         $breadcrumUrl = route('retailersireadystock');
         $decryptedProjectId = Projects::CASTING;
 
-        $request->session()->forget('ret_ses');
-
         return view('retailer.readystock.readystock', compact(
             'allProduct',
             'product',
@@ -243,34 +281,67 @@ class ReadyStockController extends Controller
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
-        $subQuery = DB::table('products')
-            ->select('id')
-            ->where('qty', '>', 0)
-            ->where('project', Projects::IMPREZ);
-
-        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
             ->leftJoin('wishlists', function ($join) use ($user_id) {
                 $join->on('wishlists.product_id', '=', 'products.id')
                     ->where('wishlists.user_id', '=', $user_id);
             })
-            ->joinSub($subQuery, 'sub', function ($join) {
-                $join->on('products.id', '=', 'sub.id');
-            })
+            ->where('products.project', Projects::IMPREZ)
             ->orderBy('products.DesignNo', 'ASC');
 
+        $rawProducts = $productQuery->get();
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->paginate($this->paginate)
-            ->map(function ($product) use ($secret) {
-                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-                return $product;
-            });
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
 
+            // Group variant fields
+            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
+            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
+            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
+            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
+            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+
+            $summary = [];
+            if ($sizes) $summary[] = "Size: $sizes";
+            if ($colors) $summary[] = "Color: $colors";
+            if ($weights) $summary[] = "Weight: $weights";
+            if ($purities) $summary[] = "Purity: $purities";
+            if ($styles) $summary[] = "Style: $styles";
+
+            $base->variant_summary = implode(' | ', $summary);
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+
+            // Add variant count flag
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
         $page = $request->get('page', 1);
         $perPage = $this->paginate;
+
         $paginated = new LengthAwarePaginator(
-            $groupedProducts->forPage($page, $perPage)->values(),
-            $groupedProducts->count(),
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
             $perPage,
             $page,
             ['path' => request()->url(), 'query' => request()->query()]
@@ -283,9 +354,16 @@ class ReadyStockController extends Controller
         $breadcrum = 'IMPREZ';
         $breadcrumUrl = route('retailerjewelleryreadystock');
         $decryptedProjectId = Projects::IMPREZ;
-        $request->session()->forget('ret_ses');
 
-        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
     }
 
     public function indiania(Request $request)
@@ -293,34 +371,67 @@ class ReadyStockController extends Controller
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
-        $subQuery = DB::table('products')
-            ->select('id')
-            ->where('qty', '>', 0)
-            ->where('project', Projects::INDIANIA);
-
-        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
             ->leftJoin('wishlists', function ($join) use ($user_id) {
                 $join->on('wishlists.product_id', '=', 'products.id')
                     ->where('wishlists.user_id', '=', $user_id);
             })
-            ->joinSub($subQuery, 'sub', function ($join) {
-                $join->on('products.id', '=', 'sub.id');
-            })
+            ->where('products.project', Projects::INDIANIA)
             ->orderBy('products.DesignNo', 'ASC');
 
+        $rawProducts = $productQuery->get();
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->paginate($this->paginate)
-            ->map(function ($product) use ($secret) {
-                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-                return $product;
-            });
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
 
+            // Group variant fields
+            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
+            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
+            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
+            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
+            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+
+            $summary = [];
+            if ($sizes) $summary[] = "Size: $sizes";
+            if ($colors) $summary[] = "Color: $colors";
+            if ($weights) $summary[] = "Weight: $weights";
+            if ($purities) $summary[] = "Purity: $purities";
+            if ($styles) $summary[] = "Style: $styles";
+
+            $base->variant_summary = implode(' | ', $summary);
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+
+            // Add variant count flag
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
         $page = $request->get('page', 1);
         $perPage = $this->paginate;
+
         $paginated = new LengthAwarePaginator(
-            $groupedProducts->forPage($page, $perPage)->values(),
-            $groupedProducts->count(),
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
             $perPage,
             $page,
             ['path' => request()->url(), 'query' => request()->query()]
@@ -333,9 +444,16 @@ class ReadyStockController extends Controller
         $breadcrum = 'INDIANIA';
         $breadcrumUrl = route('retailerindianiareadystock');
         $decryptedProjectId = Projects::INDIANIA;
-        $request->session()->forget('ret_ses');
 
-        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
     }
 
     public function lasercut(Request $request)
@@ -343,34 +461,67 @@ class ReadyStockController extends Controller
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
-        $subQuery = DB::table('products')
-            ->select('id')
-            ->where('qty', '>', 0)
-            ->where('project', Projects::LASERCUT);
-
-        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
             ->leftJoin('wishlists', function ($join) use ($user_id) {
                 $join->on('wishlists.product_id', '=', 'products.id')
                     ->where('wishlists.user_id', '=', $user_id);
             })
-            ->joinSub($subQuery, 'sub', function ($join) {
-                $join->on('products.id', '=', 'sub.id');
-            })
+            ->where('products.project', Projects::LASERCUT)
             ->orderBy('products.DesignNo', 'ASC');
 
+        $rawProducts = $productQuery->get();
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->paginate($this->paginate)
-            ->map(function ($product) use ($secret) {
-                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-                return $product;
-            });
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
 
+            // Group variant fields
+            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
+            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
+            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
+            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
+            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+
+            $summary = [];
+            if ($sizes) $summary[] = "Size: $sizes";
+            if ($colors) $summary[] = "Color: $colors";
+            if ($weights) $summary[] = "Weight: $weights";
+            if ($purities) $summary[] = "Purity: $purities";
+            if ($styles) $summary[] = "Style: $styles";
+
+            $base->variant_summary = implode(' | ', $summary);
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+
+            // Add variant count flag
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
         $page = $request->get('page', 1);
         $perPage = $this->paginate;
+
         $paginated = new LengthAwarePaginator(
-            $groupedProducts->forPage($page, $perPage)->values(),
-            $groupedProducts->count(),
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
             $perPage,
             $page,
             ['path' => request()->url(), 'query' => request()->query()]
@@ -381,11 +532,18 @@ class ReadyStockController extends Controller
         $allProduct = Product::select('id')->where('project', Projects::LASERCUT)->where('qty', '>', 0)->get();
         $stock = 1;
         $breadcrum = 'LASERCUT';
-        $breadcrumUrl = route('retailerindianiareadystock');
+        $breadcrumUrl = route('retailerutensilreadystock');
         $decryptedProjectId = Projects::LASERCUT;
-        $request->session()->forget('ret_ses');
 
-        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
     }
 
     public function mmd(Request $request)
@@ -393,34 +551,67 @@ class ReadyStockController extends Controller
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
-        $subQuery = DB::table('products')
-            ->select('id')
-            ->where('qty', '>', 0)
-            ->where('project', Projects::MMD);
-
-        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
             ->leftJoin('wishlists', function ($join) use ($user_id) {
                 $join->on('wishlists.product_id', '=', 'products.id')
                     ->where('wishlists.user_id', '=', $user_id);
             })
-            ->joinSub($subQuery, 'sub', function ($join) {
-                $join->on('products.id', '=', 'sub.id');
-            })
+            ->where('products.project', Projects::MMD)
             ->orderBy('products.DesignNo', 'ASC');
 
+        $rawProducts = $productQuery->get();
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->paginate($this->paginate)
-            ->map(function ($product) use ($secret) {
-                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-                return $product;
-            });
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
 
+            // Group variant fields
+            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
+            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
+            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
+            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
+            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+
+            $summary = [];
+            if ($sizes) $summary[] = "Size: $sizes";
+            if ($colors) $summary[] = "Color: $colors";
+            if ($weights) $summary[] = "Weight: $weights";
+            if ($purities) $summary[] = "Purity: $purities";
+            if ($styles) $summary[] = "Style: $styles";
+
+            $base->variant_summary = implode(' | ', $summary);
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+
+            // Add variant count flag
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
         $page = $request->get('page', 1);
         $perPage = $this->paginate;
+
         $paginated = new LengthAwarePaginator(
-            $groupedProducts->forPage($page, $perPage)->values(),
-            $groupedProducts->count(),
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
             $perPage,
             $page,
             ['path' => request()->url(), 'query' => request()->query()]
@@ -433,9 +624,16 @@ class ReadyStockController extends Controller
         $breadcrum = 'MMD';
         $breadcrumUrl = route('mmd');
         $decryptedProjectId = Projects::MMD;
-        $request->session()->forget('ret_ses');
 
-        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
     }
 
     public function stamping(Request $request)
@@ -443,34 +641,67 @@ class ReadyStockController extends Controller
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
-        $subQuery = DB::table('products')
-            ->select('id')
-            ->where('qty', '>', 0)
-            ->where('project', Projects::STAMPING);
-
-        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
             ->leftJoin('wishlists', function ($join) use ($user_id) {
                 $join->on('wishlists.product_id', '=', 'products.id')
                     ->where('wishlists.user_id', '=', $user_id);
             })
-            ->joinSub($subQuery, 'sub', function ($join) {
-                $join->on('products.id', '=', 'sub.id');
-            })
+            ->where('products.project', Projects::STAMPING)
             ->orderBy('products.DesignNo', 'ASC');
 
+        $rawProducts = $productQuery->get();
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->paginate($this->paginate)
-            ->map(function ($product) use ($secret) {
-                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-                return $product;
-            });
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
 
+            // Group variant fields
+            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
+            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
+            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
+            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
+            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+
+            $summary = [];
+            if ($sizes) $summary[] = "Size: $sizes";
+            if ($colors) $summary[] = "Color: $colors";
+            if ($weights) $summary[] = "Weight: $weights";
+            if ($purities) $summary[] = "Purity: $purities";
+            if ($styles) $summary[] = "Style: $styles";
+
+            $base->variant_summary = implode(' | ', $summary);
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+
+            // Add variant count flag
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
         $page = $request->get('page', 1);
         $perPage = $this->paginate;
+
         $paginated = new LengthAwarePaginator(
-            $groupedProducts->forPage($page, $perPage)->values(),
-            $groupedProducts->count(),
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
             $perPage,
             $page,
             ['path' => request()->url(), 'query' => request()->query()]
@@ -483,9 +714,16 @@ class ReadyStockController extends Controller
         $breadcrum = 'STAMPING';
         $breadcrumUrl = route('stamping');
         $decryptedProjectId = Projects::STAMPING;
-        $request->session()->forget('ret_ses');
 
-        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
     }
 
     public function turkish(Request $request)
@@ -493,34 +731,67 @@ class ReadyStockController extends Controller
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
-        $subQuery = DB::table('products')
-            ->select('id')
-            ->where('qty', '>', 0)
-            ->where('project', Projects::TURKISH);
-
-        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
             ->leftJoin('wishlists', function ($join) use ($user_id) {
                 $join->on('wishlists.product_id', '=', 'products.id')
                     ->where('wishlists.user_id', '=', $user_id);
             })
-            ->joinSub($subQuery, 'sub', function ($join) {
-                $join->on('products.id', '=', 'sub.id');
-            })
+            ->where('products.project', Projects::TURKISH)
             ->orderBy('products.DesignNo', 'ASC');
 
+        $rawProducts = $productQuery->get();
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->paginate($this->paginate)
-            ->map(function ($product) use ($secret) {
-                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-                return $product;
-            });
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
 
+            // Group variant fields
+            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
+            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
+            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
+            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
+            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+
+            $summary = [];
+            if ($sizes) $summary[] = "Size: $sizes";
+            if ($colors) $summary[] = "Color: $colors";
+            if ($weights) $summary[] = "Weight: $weights";
+            if ($purities) $summary[] = "Purity: $purities";
+            if ($styles) $summary[] = "Style: $styles";
+
+            $base->variant_summary = implode(' | ', $summary);
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+
+            // Add variant count flag
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
         $page = $request->get('page', 1);
         $perPage = $this->paginate;
+
         $paginated = new LengthAwarePaginator(
-            $groupedProducts->forPage($page, $perPage)->values(),
-            $groupedProducts->count(),
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
             $perPage,
             $page,
             ['path' => request()->url(), 'query' => request()->query()]
@@ -533,9 +804,16 @@ class ReadyStockController extends Controller
         $breadcrum = 'TURKISH';
         $breadcrumUrl = route('turkish');
         $decryptedProjectId = Projects::TURKISH;
-        $request->session()->forget('ret_ses');
 
-        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
     }
 
     public function unikraft(Request $request)
@@ -543,34 +821,67 @@ class ReadyStockController extends Controller
         ini_set('memory_limit', '1024M');
         $user_id = Auth::user()->id;
 
-        $subQuery = DB::table('products')
-            ->select('id')
-            ->where('qty', '>', 0)
-            ->where('project', Projects::UNIKRAFT);
-
-        $productQuery = Product::select('products.*', 'wishlists.is_favourite')
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
             ->leftJoin('wishlists', function ($join) use ($user_id) {
                 $join->on('wishlists.product_id', '=', 'products.id')
                     ->where('wishlists.user_id', '=', $user_id);
             })
-            ->joinSub($subQuery, 'sub', function ($join) {
-                $join->on('products.id', '=', 'sub.id');
-            })
+            ->where('products.project', Projects::UNIKRAFT)
             ->orderBy('products.DesignNo', 'ASC');
 
+        $rawProducts = $productQuery->get();
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $productQuery->paginate($this->paginate)
-            ->map(function ($product) use ($secret) {
-                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-                return $product;
-            });
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
 
+            // Group variant fields
+            $sizes = $items->pluck('size')->filter()->unique()->implode(', ');
+            $colors = $items->pluck('color')->filter()->unique()->implode(', ');
+            $weights = $items->pluck('weight')->filter()->unique()->map(fn($w) => $w . 'g')->implode(', ');
+            $purities = $items->pluck('Purity')->filter()->unique()->implode(', ');
+            $styles = $items->pluck('style')->filter()->unique()->implode(', ');
+
+            $summary = [];
+            if ($sizes) $summary[] = "Size: $sizes";
+            if ($colors) $summary[] = "Color: $colors";
+            if ($weights) $summary[] = "Weight: $weights";
+            if ($purities) $summary[] = "Purity: $purities";
+            if ($styles) $summary[] = "Style: $styles";
+
+            $base->variant_summary = implode(' | ', $summary);
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+
+            // Add variant count flag
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
         $page = $request->get('page', 1);
         $perPage = $this->paginate;
+
         $paginated = new LengthAwarePaginator(
-            $groupedProducts->forPage($page, $perPage)->values(),
-            $groupedProducts->count(),
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
             $perPage,
             $page,
             ['path' => request()->url(), 'query' => request()->query()]
@@ -583,9 +894,16 @@ class ReadyStockController extends Controller
         $breadcrum = 'UNIKRAFT';
         $breadcrumUrl = route('unikraft');
         $decryptedProjectId = Projects::UNIKRAFT;
-        $request->session()->forget('ret_ses');
 
-        return view('retailer.readystock.readystock', compact('allProduct', 'product', 'decryptedProjectId', 'project_id', 'breadcrum', 'breadcrumUrl', 'stock'));
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
     }
 
     public function getToken()
