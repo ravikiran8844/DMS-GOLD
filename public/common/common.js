@@ -201,9 +201,7 @@ function statusUpdate(id, url, status) {
 function addtocart(id) {
     var product_id = id;
     var qty = $("#quantity").val();
-    var size = $("input[name='size']:checked").val();
-    var weight = $("input[name='weight']:checked").val();
-    var box = $("input[name='box']").val();
+    var mqty = $("#quantity" + id).val();
     $.ajax({
         type: "POST",
         url: "/retailer/addtocart",
@@ -211,9 +209,7 @@ function addtocart(id) {
             _token: $('meta[name="csrf-token"]').attr("content"),
             product_id: product_id,
             qty: qty,
-            size: size,
-            box: box,
-            weight: weight,
+            mqty: mqty,
         },
         dataType: "json",
         success: function (data, textStatus, xhr) {
@@ -401,7 +397,7 @@ function addAllToCart() {
             }
             if (data.notification_response.message) {
                 var type = data.notification_response.alert;
-                var message = data.notification_response.message;       
+                var message = data.notification_response.message;
                 switch (type) {
                     case "success":
                         Swal.fire({

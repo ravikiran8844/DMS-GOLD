@@ -197,21 +197,66 @@
                                                     <td>{{ $variant['making'] ?? '-' }}</td>
                                                     <td>{{ $variant['size'] ?? '-' }}</td>
                                                     <td>{{ $variant['weight'] ?? '-' }}</td>
-                                                    <td>{{ $variant['unit'] }}{{ $variant['unit'] ?? '-' }}</td>
+                                                    <td>{{ $variant['qty'] }}</td>
                                                     <td>
                                                         <div
                                                             class="input-group quantity-input-group quantity-container">
                                                             <input type="button" value="-" class="qtyminus"
                                                                 field="quantity">
-                                                            <input type="text" name="quantity[{{ $index }}]"
+                                                            <input type="text"
+                                                                name="quantity{{ $variant['productID'] }}" 
                                                                 value="1" class="qty">
                                                             <input type="button" value="+" class="qtyplus"
                                                                 field="quantity">
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <button class="btn btn-warning btn-sm add-to-cart-btn"
-                                                            data-index="{{ $index }}">ADD TO CART</button>
+                                                        @php
+                                                            $isCart = App\Models\Cart::where(
+                                                                'user_id',
+                                                                Auth::user()->id,
+                                                            )
+                                                                ->where('product_id', $variant['productID'])
+                                                                ->get();
+                                                            $currentcartcount = App\Models\Cart::where(
+                                                                'product_id',
+                                                                $variant['productID'],
+                                                            )
+                                                                ->where('user_id', Auth::user()->id)
+                                                                ->value('qty');
+                                                        @endphp
+                                                        <div class="shop-page-add-to-cart-btn mt-3">
+                                                            @if (count($isCart))
+                                                                <button
+                                                                    onclick="addtocart({{ $variant['productID'] }})"
+                                                                    class="btn added-to-cart-btn mr-2 spinner-button"
+                                                                    data_id="card_id_{{ $variant['productID'] }}">
+                                                                    <span class="submit-text">ADDED TO CART</span>
+                                                                    <span class="d-none spinner">
+                                                                        <span class="spinner-grow spinner-grow-sm"
+                                                                            aria-hidden="true"></span>
+                                                                        <span role="status">Adding...</span>
+                                                                    </span>
+                                                                    <span
+                                                                        id="applycurrentcartcount{{ $variant['productID'] }}"
+                                                                        class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
+                                                                </button>
+                                                            @else
+                                                                <button
+                                                                    onclick="addtocart({{ $variant['productID'] }})"
+                                                                    class="btn add-to-cart-btn mr-2 spinner-button"
+                                                                    data_id="card_id_{{ $variant['productID'] }}">
+                                                                    <span class="submit-text">ADD TO CART</span>
+
+                                                                    <span class="d-none spinner">
+                                                                        <span class="spinner-grow spinner-grow-sm"
+                                                                            aria-hidden="true"></span>
+                                                                        <span role="status">Adding...</span>
+                                                                    </span>
+                                                                    <span class="added-to-cart-badge"></span>
+                                                                </button>
+                                                            @endif
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -273,7 +318,7 @@
                                                                 <input type="button" value="-" class="qtyminus"
                                                                     field="quantity">
                                                                 <input type="text"
-                                                                    name="quantity_mobile[{{ $index }}]"
+                                                                    name="quantity{{ $variant['productID'] }}"
                                                                     value="1" class="qty">
                                                                 <input type="button" value="+" class="qtyplus"
                                                                     field="quantity">
@@ -285,8 +330,52 @@
                                                     <td>Add to Cart</td>
                                                     @foreach ($product->variants as $index => $variant)
                                                         <td>
-                                                            <button class="btn btn-warning w-100 add-to-cart-btn"
-                                                                data-index="{{ $index }}">Add to Cart</button>
+                                                            @php
+                                                                $isCart = App\Models\Cart::where(
+                                                                    'user_id',
+                                                                    Auth::user()->id,
+                                                                )
+                                                                    ->where('product_id', $variant['productID'])
+                                                                    ->get();
+                                                                $currentcartcount = App\Models\Cart::where(
+                                                                    'product_id',
+                                                                    $variant['productID'],
+                                                                )
+                                                                    ->where('user_id', Auth::user()->id)
+                                                                    ->value('qty');
+                                                            @endphp
+                                                            <div class="shop-page-add-to-cart-btn mt-3">
+                                                                @if (count($isCart))
+                                                                    <button
+                                                                        onclick="addtocart({{ $variant['productID'] }})"
+                                                                        class="btn added-to-cart-btn mr-2 spinner-button"
+                                                                        data_id="card_id_{{ $variant['productID'] }}">
+                                                                        <span class="submit-text">ADDED TO CART</span>
+                                                                        <span class="d-none spinner">
+                                                                            <span class="spinner-grow spinner-grow-sm"
+                                                                                aria-hidden="true"></span>
+                                                                            <span role="status">Adding...</span>
+                                                                        </span>
+                                                                        <span
+                                                                            id="applycurrentcartcount{{ $variant['productID'] }}"
+                                                                            class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
+                                                                    </button>
+                                                                @else
+                                                                    <button
+                                                                        onclick="addtocart({{ $variant['productID'] }})"
+                                                                        class="btn add-to-cart-btn mr-2 spinner-button"
+                                                                        data_id="card_id_{{ $variant['productID'] }}">
+                                                                        <span class="submit-text">ADD TO CART</span>
+
+                                                                        <span class="d-none spinner">
+                                                                            <span class="spinner-grow spinner-grow-sm"
+                                                                                aria-hidden="true"></span>
+                                                                            <span role="status">Adding...</span>
+                                                                        </span>
+                                                                        <span class="added-to-cart-badge"></span>
+                                                                    </button>
+                                                                @endif
+                                                            </div>
                                                         </td>
                                                     @endforeach
                                                 </tr>

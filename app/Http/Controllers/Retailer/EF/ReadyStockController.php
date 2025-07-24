@@ -922,8 +922,6 @@ class ReadyStockController extends Controller
             return response()->json(['error' => 'Authorization token missing'], 401);
         }
 
-        Log::info('Received token in header:', [$token]);
-
         $response = Http::withHeaders([
             'Authorization' => $token,
             'Accept' => 'application/json',
@@ -965,6 +963,7 @@ class ReadyStockController extends Controller
         // Fetch product and variant details for a single product
         $rawProduct = Product::select(
             'products.*',
+            'product_variants.id as productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -994,6 +993,7 @@ class ReadyStockController extends Controller
         $base = $rawProduct->first();
         $base->variants = $rawProduct->map(function ($item) {
             return [
+                'productID' => $item->productID,
                 'Purity' => $item->Purity,
                 'color' => $item->color,
                 'unit' => $item->unit,

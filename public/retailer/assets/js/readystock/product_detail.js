@@ -5,7 +5,7 @@ $(document).ready(function () {
         var qtyInput = container.find(".qty");
         var moq = parseInt($("#moq").val());
         var qty = parseInt($("#qty").val());
-        var stock = parseInt($("#stockqty").val());
+        var stock = 1;
         console.log(stock);
 
         container.find(".qtyplus").click(function (e) {
