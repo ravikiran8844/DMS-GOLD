@@ -74,8 +74,27 @@
 @endphp
 <input type="hidden" name="decryptedProjectId" id="decryptedProjectId" value="{{ $decryptedProjectId ?? '' }}">
 
+<div>
+    <picture>
+        <source 
+            media="(min-width: 768px)" 
+            srcset="{{ asset('retailer/assets/img/shop/casting.webp') }}" 
+            type="image/webp">
+        <source 
+            media="(max-width: 767px)" 
+            srcset="{{ asset('retailer/assets/img/shop/casting-mobile.webp') }}" 
+            type="image/webp">
+        <img 
+            width="1920" height="340" 
+            class="img-fluid w-100" 
+            src="{{ asset('retailer/assets/img/shop/casting.webp') }}" 
+            alt="banner">
+    </picture>
+
+</div>
+
 <div class="container-fluid">
-    <div class="my-2 text-center d-block d-lg-none">
+    <div class="mb-2 mt-4 text-center d-block d-lg-none">
         <div class="mobile-filters-offcanvas" id="mobile-sticky-filter">
             <div>
                 <button class="btn mobile-filters-trigger-btn" type="button" data-bs-toggle="offcanvas"
