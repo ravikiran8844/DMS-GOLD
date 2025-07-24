@@ -965,17 +965,27 @@ class ReadyStockController extends Controller
 
 
         if ($product) {
-            $secret = 'EmeraldAdmin'; // make sure you define this
+            $secret = 'EmeraldAdmin';
             $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+
+            // Attach variants using JOIN into the same object
+            $product->variants = DB::table('product_variants')
+                ->join('products', 'products.id', '=', 'product_variants.product_id')
+                ->where('products.id', $decryptedId)
+                ->select(
+                    'product_variants.purity',
+                    'product_variants.color',
+                    'product_variants.unit',
+                    'product_variants.style',
+                    'product_variants.making',
+                    'product_variants.size',
+                    'product_variants.weight',
+                    'product_variants.qty'
+                )
+                ->get();
         }
-        // dd($product);
-        $stock = 1;
-        $sizes = Size::where('is_active', 1)->get();
-        $weights = Weight::where('is_active', 1)->get();
-        $colors = Color::where('is_active', 1)->whereNull('deleted_at')->get();
-        $finishes = Finish::where('is_active', 1)->where('project_id', $product->project_id)->whereNull('deleted_at')->get();
         $currentcartcount = Cart::where('user_id', Auth::user()->id)->where('product_id', $product->id)->value('qty');
-        return view('retailer.readystock.productdetail', compact('product', 'sizes', 'weights', 'colors', 'finishes', 'stock', 'currentcartcount'));
+        return view('retailer.readystock.productdetail', compact('product', 'currentcartcount'));
     }
 
     public function addToCart(Request $request)
