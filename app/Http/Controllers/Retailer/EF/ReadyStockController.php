@@ -1020,7 +1020,7 @@ class ReadyStockController extends Controller
     }
 
     public function addToCart(Request $request)
-    {dd($request->all());
+    {
         DB::beginTransaction();
         try {
             $existingCartlist = Cart::where('user_id', Auth::user()->id)
