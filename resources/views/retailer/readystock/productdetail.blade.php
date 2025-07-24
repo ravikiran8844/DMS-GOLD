@@ -173,26 +173,111 @@
 
 
 
-                            <div x-data="{ accordionOpened: true }">
-                                <div class="mt-4">
-                                    <button @click="accordionOpened = !accordionOpened" class="custom-accordion-button">
-                                        <span>
-                                            Product Specification
-                                        </span>
+                        <div id="accordion-parent">
+                        <div class="mt-4">
+                            <button id="accordion-toggle" class="custom-accordion-button">
+                                <span>Product Specification</span>
+                                <span id="accordion-icon">
+                                    <svg width="14" height="8" viewBox="0 0 17 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.68208 9.63477L8.16563 3.37628L14.7317 9.59317L16.3733 7.98744L8.24811 0.000248548L-7.55998e-08 7.90524L1.68208 9.63477Z" fill="#F78D1E"/>
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+                        <div id="accordion-content" class="mt-3" style="display: none;">
+                                <!-- <div class="table-responsive d-none d-xl-block overflow-x-auto mt-5">
+                                    <table class="table table-bordered text-center align-middle mb-0">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Purity</th>
+                                                <th>Color</th>
+                                                <th>Unit</th>
+                                                <th>Style</th>
+                                                <th>Making %</th>
+                                                <th>Size</th>
+                                                <th>Weight</th>
+                                                <th>In Stock</th>
+                                                <th>Qty</th>
+                                                <th>Add to Cart</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($product->variants as $index => $variant)
+                                                <tr>
+                                                    <td>{{ $variant['Purity'] ?? '-' }}</td>
+                                                    <td>{{ $variant['color'] ?? '-' }}</td>
+                                                    <td>{{ $variant['unit'] ?? '-' }}</td>
+                                                    <td>{{ $variant['style'] ?? '-' }}</td>
+                                                    <td>{{ $variant['making'] ?? '-' }}</td>
+                                                    <td>{{ $variant['size'] ?? '-' }}</td>
+                                                    <td>{{ $variant['weight'] ?? '-' }}</td>
+                                                    <td>{{ $variant['qty'] }}</td>
+                                                    <td>
+                                                        <div
+                                                            class="input-group quantity-input-group quantity-container">
+                                                            <input type="button" value="-" class="qtyminus"
+                                                                field="quantity">
+                                                            <input type="text"
+                                                                name="quantity{{ $variant['productID'] }}" 
+                                                                value="1" class="qty">
+                                                            <input type="button" value="+" class="qtyplus"
+                                                                field="quantity">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        @php
+                                                            $isCart = App\Models\Cart::where(
+                                                                'user_id',
+                                                                Auth::user()->id,
+                                                            )
+                                                                ->where('product_id', $variant['productID'])
+                                                                ->get();
+                                                            $currentcartcount = App\Models\Cart::where(
+                                                                'product_id',
+                                                                $variant['productID'],
+                                                            )
+                                                                ->where('user_id', Auth::user()->id)
+                                                                ->value('qty');
+                                                        @endphp
+                                                        <div class="shop-page-add-to-cart-btn mt-3">
+                                                            @if (count($isCart))
+                                                                <button
+                                                                    onclick="addtocart({{ $variant['productID'] }})"
+                                                                    class="btn added-to-cart-btn mr-2 spinner-button"
+                                                                    data_id="card_id_{{ $variant['productID'] }}">
+                                                                    <span class="submit-text">ADDED TO CART</span>
+                                                                    <span class="d-none spinner">
+                                                                        <span class="spinner-grow spinner-grow-sm"
+                                                                            aria-hidden="true"></span>
+                                                                        <span role="status">Adding...</span>
+                                                                    </span>
+                                                                    <span
+                                                                        id="applycurrentcartcount{{ $variant['productID'] }}"
+                                                                        class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
+                                                                </button>
+                                                            @else
+                                                                <button
+                                                                    onclick="addtocart({{ $variant['productID'] }})"
+                                                                    class="btn add-to-cart-btn mr-2 spinner-button"
+                                                                    data_id="card_id_{{ $variant['productID'] }}">
+                                                                    <span class="submit-text">ADD TO CART</span>
 
-                                        <span :class="{ 'rotate-180': !accordionOpened }">
-                                            <svg width="14" height="8" viewBox="0 0 17 10" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M1.68208 9.63477L8.16563 3.37628L14.7317 9.59317L16.3733 7.98744L8.24811 0.000248548L-7.55998e-08 7.90524L1.68208 9.63477Z"
-                                                    fill="#F78D1E" />
-                                            </svg>
-                                        </span>
-                                    </button>
-                                </div>
+                                                                    <span class="d-none spinner">
+                                                                        <span class="spinner-grow spinner-grow-sm"
+                                                                            aria-hidden="true"></span>
+                                                                        <span role="status">Adding...</span>
+                                                                    </span>
+                                                                    <span class="added-to-cart-badge"></span>
+                                                                </button>
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div> -->
 
-
-                                <div x-show="accordionOpened" x-cloak class="mt-3">
                                     <div class="overflow-x-auto">
                                         @if ($product->variants->isNotEmpty())
                                             <table class="table table-bordered text-center align-middle">
@@ -454,7 +539,7 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{{ asset('retailer/assets/js/readystock/product_detail.js') }}"></script>
     <script src="{{ asset('retailer/assets/lib/js/jquery.ez-plus.js') }}"></script>
-    <script src="//unpkg.com/alpinejs" defer></script>
+    <!-- <script src="//unpkg.com/alpinejs" defer></script> -->
 
     <script>
         var swiper = new Swiper(".recommended-products-slider", {
@@ -491,6 +576,23 @@
                 this.classList.toggle("active");
             });
         });
+    </script>
+
+    <script>
+        $(function () {
+    // Toggle accordion
+    $('#accordion-toggle').on('click', function () {
+        var $content = $('#accordion-content');
+        $content.slideToggle(200);
+
+        // Optionally rotate the icon
+        $('#accordion-icon').toggleClass('rotate-180');
+    });
+
+    $('#accordion-content').show();
+
+});
+
     </script>
 @endsection
 @endsection
