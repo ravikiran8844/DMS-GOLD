@@ -86,7 +86,8 @@
                     <div class="single-images-block position-relative">
 
                         <img id="product-main-image" class="img-fluid product-main-image load-secure-image"
-                            src="" data-secure="{{ $product->secureFilename }}" data-zoom-image="" alt />
+                            src="{{ asset('/load-loading.gif') }}" width="500px" height="auto"
+                            data-secure="{{ $product->secureFilename }}" data-zoom-image="" alt />
 
                         <script>
                             document.addEventListener("DOMContentLoaded", async function() {
@@ -168,7 +169,7 @@
                             </div>
 
                         </div>
-                        @if ($product->variants && $product->variants->count())
+                        @if ($product->variants->count() > 1)
                             <div>
                                 <div class="table-responsive d-none d-xl-block overflow-x-auto mt-5">
                                     <table class="table table-bordered text-center align-middle mb-0">
@@ -187,163 +188,117 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>22K-91.75</td>
-                                                <td>Y</td>
-                                                <td>Pcs</td>
-                                                <td>BU</td>
-                                                <td>4.50</td>
-                                                <td>16</td>
-                                                <td>1.70g</td>
-                                                <td>1 Pcs</td>
-                                                <td>
-                                                    <div class="input-group quantity-input-group quantity-container">
-                                                        <input type="button" value="-" class="qtyminus"
-                                                            field="quantity">
-                                                        <input type="text" name="quantity" value="1"
-                                                            class="qty">
-                                                        <input type="button" value="+" class="qtyplus"
-                                                            field="quantity">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-warning btn-sm">ADD TO CART</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>22K-91.75</td>
-                                                <td>Y</td>
-                                                <td>Pcs</td>
-                                                <td>BU</td>
-                                                <td>4.50</td>
-                                                <td>17</td>
-                                                <td>1.94g</td>
-                                                <td>4 Pcs</td>
-                                                <td>
-                                                    <div class="input-group quantity-input-group quantity-container">
-                                                        <input type="button" value="-" class="qtyminus"
-                                                            field="quantity">
-                                                        <input type="text" name="quantity" value="1"
-                                                            class="qty">
-                                                        <input type="button" value="+" class="qtyplus"
-                                                            field="quantity">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-warning btn-sm">ADD TO CART</button>
-                                                </td>
-                                            </tr>
+                                            @foreach ($product->variants as $index => $variant)
+                                                <tr>
+                                                    <td>{{ $variant['Purity'] ?? '-' }}</td>
+                                                    <td>{{ $variant['color'] ?? '-' }}</td>
+                                                    <td>{{ $variant['unit'] ?? '-' }}</td>
+                                                    <td>{{ $variant['style'] ?? '-' }}</td>
+                                                    <td>{{ $variant['making'] ?? '-' }}</td>
+                                                    <td>{{ $variant['size'] ?? '-' }}</td>
+                                                    <td>{{ $variant['weight'] ?? '-' }}</td>
+                                                    <td>{{ $variant['unit'] ?? '-' }}</td>
+                                                    <td>
+                                                        <div
+                                                            class="input-group quantity-input-group quantity-container">
+                                                            <input type="button" value="-" class="qtyminus"
+                                                                field="quantity">
+                                                            <input type="text" name="quantity[{{ $index }}]"
+                                                                value="1" class="qty">
+                                                            <input type="button" value="+" class="qtyplus"
+                                                                field="quantity">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-warning btn-sm add-to-cart-btn"
+                                                            data-index="{{ $index }}">ADD TO CART</button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
 
                                 <div class="d-block d-xl-none overflow-x-auto">
-                                    <table class="table table-bordered text-center align-middle">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th></th>
-                                                <th>Variant #1</th>
-                                                <th>Variant #2</th>
-                                                <th>Variant #3</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Purity</td>
-                                                <td>22K-91.75</td>
-                                                <td>22K-91.75</td>
-                                                <td>22K-91.75</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Color</td>
-                                                <td>Y</td>
-                                                <td>Y</td>
-                                                <td>Y</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Unit</td>
-                                                <td>Pcs</td>
-                                                <td>Pcs</td>
-                                                <td>Pcs</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Style</td>
-                                                <td>BU</td>
-                                                <td>BU</td>
-                                                <td>BU</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Making %</td>
-                                                <td>4.50</td>
-                                                <td>4.50</td>
-                                                <td>4.50</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Size</td>
-                                                <td>16</td>
-                                                <td>16</td>
-                                                <td>16</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Weight</td>
-                                                <td>1.70g</td>
-                                                <td>1.70g</td>
-                                                <td>1.70g</td>
-                                            </tr>
-                                            <tr>
-                                                <td>In Stock</td>
-                                                <td>1 Pcs</td>
-                                                <td>1 Pcs</td>
-                                                <td>1 Pcs</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Qty</td>
-                                                <td>
-                                                    <div class="input-group quantity-input-group quantity-container">
-                                                        <input type="button" value="-" class="qtyminus"
-                                                            field="quantity">
-                                                        <input type="text" name="quantity" value="1"
-                                                            class="qty">
-                                                        <input type="button" value="+" class="qtyplus"
-                                                            field="quantity">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group quantity-input-group quantity-container">
-                                                        <input type="button" value="-" class="qtyminus"
-                                                            field="quantity">
-                                                        <input type="text" name="quantity" value="1"
-                                                            class="qty">
-                                                        <input type="button" value="+" class="qtyplus"
-                                                            field="quantity">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group quantity-input-group quantity-container">
-                                                        <input type="button" value="-" class="qtyminus"
-                                                            field="quantity">
-                                                        <input type="text" name="quantity" value="1"
-                                                            class="qty">
-                                                        <input type="button" value="+" class="qtyplus"
-                                                            field="quantity">
-                                                    </div>
-                                                </td>
+                                    @if ($product->variants->isNotEmpty())
+                                        <table class="table table-bordered text-center align-middle">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th></th>
+                                                    @foreach ($product->variants as $i => $v)
+                                                        <th>Variant #{{ $i + 1 }}</th>
+                                                    @endforeach
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $fields = [
+                                                        'Purity',
+                                                        'color',
+                                                        'unit',
+                                                        'style',
+                                                        'making',
+                                                        'size',
+                                                        'weight',
+                                                        'qty',
+                                                    ];
+                                                    $labels = [
+                                                        'Purity',
+                                                        'Color',
+                                                        'Unit',
+                                                        'Style',
+                                                        'Making %',
+                                                        'Size',
+                                                        'Weight',
+                                                        'In Stock',
+                                                    ];
+                                                @endphp
 
-                                            </tr>
-                                            <tr>
-                                                <td>Add to Cart</td>
-                                                <td><button class="btn btn-warning w-100">Add to Cart</button></td>
-                                                <td><button class="btn btn-warning w-100">Add to Cart</button></td>
-                                                <td><button class="btn btn-warning w-100">Add to Cart</button></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                @foreach ($fields as $fIndex => $field)
+                                                    <tr>
+                                                        <td>{{ $labels[$fIndex] }}</td>
+                                                        @foreach ($product->variants as $variant)
+                                                            <td>{{ $field === 'qty' ? $variant[$field] . ' ' . $variant['unit'] : $variant[$field] }}
+                                                            </td>
+                                                        @endforeach
+                                                    </tr>
+                                                @endforeach
+
+                                                <tr>
+                                                    <td>Qty</td>
+                                                    @foreach ($product->variants as $index => $variant)
+                                                        <td>
+                                                            <div
+                                                                class="input-group quantity-input-group quantity-container">
+                                                                <input type="button" value="-" class="qtyminus"
+                                                                    field="quantity">
+                                                                <input type="text"
+                                                                    name="quantity_mobile[{{ $index }}]"
+                                                                    value="1" class="qty">
+                                                                <input type="button" value="+" class="qtyplus"
+                                                                    field="quantity">
+                                                            </div>
+                                                        </td>
+                                                    @endforeach
+                                                </tr>
+                                                <tr>
+                                                    <td>Add to Cart</td>
+                                                    @foreach ($product->variants as $index => $variant)
+                                                        <td>
+                                                            <button class="btn btn-warning w-100 add-to-cart-btn"
+                                                                data-index="{{ $index }}">Add to Cart</button>
+                                                        </td>
+                                                    @endforeach
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    @endif
                                 </div>
                             </div>
                         @else
                             <div>
                                 @if ($product->qty > 0)
-                                    <div class="d-none d-md-block">
+                                    <div class="d-none d-md-block mt-3">
                                         <div class="text-success">
                                             Product Stock - <span class="fw-semibold">{{ $product->qty }}</span>
                                         </div>
@@ -352,10 +307,9 @@
 
                                 <div class="py-4 mt-4 d-flex gap-5 flex-row flex-wrap align-items-center"
                                     style=" border-top: 1px solid #bcbcbc;">
-                                    <div class="product-weight_text mb-0 mb-md-0">{{ $product->weight }}gm</div>
 
                                     <div class="d-flex gap-2 align-items-center">
-                                        <div class="fs-6" style=" color: #717171; ">Qty</div>
+                                        <div class="fs-6" style=" color: #717171; ">Quantity</div>
                                         <div
                                             class="input-group quantity-input-group quantity-container align-items-center">
                                             <input type="hidden" name="moq" id="moq" value="1">

@@ -955,37 +955,68 @@ class ReadyStockController extends Controller
         return urlencode(base64_encode($ciphertext));
     }
 
-    function productDetail($id)
+    public function productDetail($id)
     {
-        ini_set('max_execution_time', 1800); //3 minutes
+        ini_set('max_execution_time', 1800); // 3 minutes
         $decryptedId = decrypt($id);
+        $user_id = Auth::user()->id;
+        $secret = 'EmeraldAdmin';
 
-        $product = Product::where('products.id', $decryptedId)
-            ->first();
+        // Fetch product and variant details for a single product
+        $rawProduct = Product::select(
+            'products.*',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->where('products.id', $decryptedId)
+            ->get();
 
-
-        if ($product) {
-            $secret = 'EmeraldAdmin';
-            $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-
-            // Attach variants using JOIN into the same object
-            $product->variants = DB::table('product_variants')
-                ->join('products', 'products.id', '=', 'product_variants.product_id')
-                ->where('products.id', $decryptedId)
-                ->select(
-                    'product_variants.purity',
-                    'product_variants.color',
-                    'product_variants.unit',
-                    'product_variants.style',
-                    'product_variants.making',
-                    'product_variants.size',
-                    'product_variants.weight',
-                    'product_variants.qty'
-                )
-                ->get();
+        if ($rawProduct->isEmpty()) {
+            abort(404, 'Product not found');
         }
-        $currentcartcount = Cart::where('user_id', Auth::user()->id)->where('product_id', $product->id)->value('qty');
-        return view('retailer.readystock.productdetail', compact('product', 'currentcartcount'));
+
+        // Prepare structure just like 'unikraft'
+        $base = $rawProduct->first();
+        $base->variants = $rawProduct->map(function ($item) {
+            return [
+                'Purity' => $item->Purity,
+                'color' => $item->color,
+                'unit' => $item->unit,
+                'style' => $item->style,
+                'making' => $item->making,
+                'size' => $item->size,
+                'weight' => $item->weight,
+                'qty' => $item->qty,
+            ];
+        });
+
+        $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+        $base->variant_count = $rawProduct->count();
+
+        // Get current cart qty for this product
+        $currentcartcount = Cart::where('user_id', $user_id)
+            ->where('product_id', $base->id)
+            ->value('qty');
+
+        return view('retailer.readystock.productdetail', [
+            'product' => $base,
+            'currentcartcount' => $currentcartcount
+        ]);
     }
 
     public function addToCart(Request $request)
