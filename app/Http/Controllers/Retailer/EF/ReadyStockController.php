@@ -105,6 +105,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
+            'product_variants.productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -135,6 +136,7 @@ class ReadyStockController extends Controller
 
             $base->variants = $items->map(function ($item) {
                 return [
+                    'productID' => $item->productID,
                     'Purity' => $item->Purity,
                     'color' => $item->color,
                     'unit' => $item->unit,
@@ -195,6 +197,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
+            'product_variants.productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -225,6 +228,7 @@ class ReadyStockController extends Controller
 
             $base->variants = $items->map(function ($item) {
                 return [
+                    'productID' => $item->productID,
                     'Purity' => $item->Purity,
                     'color' => $item->color,
                     'unit' => $item->unit,
@@ -285,6 +289,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
+            'product_variants.productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -315,6 +320,7 @@ class ReadyStockController extends Controller
 
             $base->variants = $items->map(function ($item) {
                 return [
+                    'productID' => $item->productID,
                     'Purity' => $item->Purity,
                     'color' => $item->color,
                     'unit' => $item->unit,
@@ -375,6 +381,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
+            'product_variants.productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -405,6 +412,7 @@ class ReadyStockController extends Controller
 
             $base->variants = $items->map(function ($item) {
                 return [
+                    'productID' => $item->productID,
                     'Purity' => $item->Purity,
                     'color' => $item->color,
                     'unit' => $item->unit,
@@ -465,6 +473,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
+            'product_variants.productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -495,6 +504,7 @@ class ReadyStockController extends Controller
 
             $base->variants = $items->map(function ($item) {
                 return [
+                    'productID' => $item->productID,
                     'Purity' => $item->Purity,
                     'color' => $item->color,
                     'unit' => $item->unit,
@@ -555,6 +565,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
+            'product_variants.productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -585,6 +596,7 @@ class ReadyStockController extends Controller
 
             $base->variants = $items->map(function ($item) {
                 return [
+                    'productID' => $item->productID,
                     'Purity' => $item->Purity,
                     'color' => $item->color,
                     'unit' => $item->unit,
@@ -645,6 +657,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
+            'product_variants.productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -675,6 +688,7 @@ class ReadyStockController extends Controller
 
             $base->variants = $items->map(function ($item) {
                 return [
+                    'productID' => $item->productID,
                     'Purity' => $item->Purity,
                     'color' => $item->color,
                     'unit' => $item->unit,
@@ -735,6 +749,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
+            'product_variants.productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -765,6 +780,7 @@ class ReadyStockController extends Controller
 
             $base->variants = $items->map(function ($item) {
                 return [
+                    'productID' => $item->productID,
                     'Purity' => $item->Purity,
                     'color' => $item->color,
                     'unit' => $item->unit,
@@ -825,6 +841,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
+            'product_variants.productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -855,6 +872,7 @@ class ReadyStockController extends Controller
 
             $base->variants = $items->map(function ($item) {
                 return [
+                    'productID' => $item->productID,
                     'Purity' => $item->Purity,
                     'color' => $item->color,
                     'unit' => $item->unit,
