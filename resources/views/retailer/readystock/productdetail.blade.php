@@ -173,23 +173,18 @@
 
 
 
-                        <div x-data="{ accordionOpened: true }">
-                                <div class="mt-4">
-                                    <button @click="accordionOpened = !accordionOpened" class="custom-accordion-button">
-                                    <span>
-                                    Product Specification
-                                    </span>
-
-                                    <span :class="{ 'rotate-180': !accordionOpened }">
+                        <div id="accordion-parent">
+                        <div class="mt-4">
+                            <button id="accordion-toggle" class="custom-accordion-button">
+                                <span>Product Specification</span>
+                                <span id="accordion-icon">
                                     <svg width="14" height="8" viewBox="0 0 17 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M1.68208 9.63477L8.16563 3.37628L14.7317 9.59317L16.3733 7.98744L8.24811 0.000248548L-7.55998e-08 7.90524L1.68208 9.63477Z" fill="#F78D1E"/>
                                     </svg>
-                                    </span>
-                                    </button>
-                                </div>
-
-
-                            <div x-show="accordionOpened" x-cloak class="mt-3">
+                                </span>
+                            </button>
+                        </div>
+                        <div id="accordion-content" class="mt-3" style="display: none;">
                                 <!-- <div class="table-responsive d-none d-xl-block overflow-x-auto mt-5">
                                     <table class="table table-bordered text-center align-middle mb-0">
                                         <thead class="table-dark">
@@ -499,7 +494,7 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{{ asset('retailer/assets/js/readystock/product_detail.js') }}"></script>
     <script src="{{ asset('retailer/assets/lib/js/jquery.ez-plus.js') }}"></script>
-    <script src="//unpkg.com/alpinejs" defer></script>
+    <!-- <script src="//unpkg.com/alpinejs" defer></script> -->
 
     <script>
         var swiper = new Swiper(".recommended-products-slider", {
@@ -536,6 +531,23 @@
                 this.classList.toggle("active");
             });
         });
+    </script>
+
+    <script>
+        $(function () {
+    // Toggle accordion
+    $('#accordion-toggle').on('click', function () {
+        var $content = $('#accordion-content');
+        $content.slideToggle(200);
+
+        // Optionally rotate the icon
+        $('#accordion-icon').toggleClass('rotate-180');
+    });
+
+    $('#accordion-content').show();
+
+});
+
     </script>
 @endsection
 @endsection
