@@ -5919,6 +5919,9 @@ textarea {
     align-items: center !important;
 }
 
+.main-product table .btn.btn-sm.add-to-cart-btn{
+    font-size: 12px !important;
+}
 .product-variants-modal {
     z-index: 99999;
     backdrop-filter: brightness(0.5);
