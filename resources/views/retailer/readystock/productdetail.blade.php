@@ -197,7 +197,7 @@
                                                     <td>{{ $variant['making'] ?? '-' }}</td>
                                                     <td>{{ $variant['size'] ?? '-' }}</td>
                                                     <td>{{ $variant['weight'] ?? '-' }}</td>
-                                                    <td>{{ $variant['unit'] ?? '-' }}</td>
+                                                    <td>{{ $variant['unit'] }}{{ $variant['unit'] ?? '-' }}</td>
                                                     <td>
                                                         <div
                                                             class="input-group quantity-input-group quantity-container">
