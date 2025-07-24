@@ -82,7 +82,7 @@
     <div class="col-12">
         <section class="main-product mb-5">
             <div class="row g-4">
-                <div class="col-12 col-lg-5 mb-lg-0">
+                <div class="col-12 col-lg-6 mb-lg-0">
                     <div class="single-images-block position-relative">
 
                         <img id="product-main-image" class="img-fluid product-main-image load-secure-image"
@@ -160,7 +160,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-7">
+                <div class="col-12 col-lg-6">
                     <div class="product-page_content_wrapper d-flex flex-column h-100">
                         {{-- <div class="purity-badge mb-2">Purity: 22K-91.75</div> --}}
                         <div class="d-flex flex-wrap gap-2 align-items-center">
@@ -170,8 +170,27 @@
 
                         </div>
                         @if ($product->variants->count() > 1)
-                            <div>
-                                <div class="table-responsive d-none d-xl-block overflow-x-auto mt-5">
+
+
+
+                        <div x-data="{ accordionOpened: true }">
+                                <div class="mt-4">
+                                    <button @click="accordionOpened = !accordionOpened" class="custom-accordion-button">
+                                    <span>
+                                    Product Specification
+                                    </span>
+
+                                    <span :class="{ 'rotate-180': !accordionOpened }">
+                                    <svg width="14" height="8" viewBox="0 0 17 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.68208 9.63477L8.16563 3.37628L14.7317 9.59317L16.3733 7.98744L8.24811 0.000248548L-7.55998e-08 7.90524L1.68208 9.63477Z" fill="#F78D1E"/>
+                                    </svg>
+                                    </span>
+                                    </button>
+                                </div>
+
+
+                            <div x-show="accordionOpened" x-cloak class="mt-3">
+                                <!-- <div class="table-responsive d-none d-xl-block overflow-x-auto mt-5">
                                     <table class="table table-bordered text-center align-middle mb-0">
                                         <thead class="table-dark">
                                             <tr>
@@ -262,14 +281,14 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                </div>
+                                </div> -->
 
-                                    <div class="d-block d-xl-none overflow-x-auto">
+                                    <div class="overflow-x-auto">
                                         @if ($product->variants->isNotEmpty())
                                             <table class="table table-bordered text-center align-middle">
-                                                <thead class="table-dark">
-                                                    <tr>
-                                                        <th></th>
+                                            <thead class="table-dark border-0">
+                                                    <tr class="border-0">
+                                                        <th class="bg-transparent border-0"></th>
                                                         @foreach ($product->variants as $i => $v)
                                                             <th>Variant #{{ $i + 1 }}</th>
                                                         @endforeach

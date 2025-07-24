@@ -213,7 +213,7 @@
                 </div>
             </div>
         </form>
-        <a style=" position: fixed; bottom: 30px; right: 10px; z-index: 9999; " target="_blank"
+        <a style=" position: fixed; bottom: 80px; right: 10px; z-index: 9999; " target="_blank"
             href="https://api.whatsapp.com/send?phone=919791714333&text=I%20have%20questions%20regarding%20Retailer%20Management%20System">
             <img src="{{ asset('retailer/assets/img/whatsapp.png') }}" width="62" height="62" 
                 alt="whatsapp icon">

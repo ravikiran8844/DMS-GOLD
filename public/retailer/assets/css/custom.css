@@ -5919,7 +5919,7 @@ textarea {
     align-items: center !important;
 }
 
-.main-product table .btn.btn-sm.add-to-cart-btn{
+.btn.btn-warning.add-to-cart-btn{
     font-size: 12px !important;
 }
 .product-variants-modal {
