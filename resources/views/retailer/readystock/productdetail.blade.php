@@ -82,7 +82,7 @@
     <div class="col-12">
         <section class="main-product mb-5">
             <div class="row g-4">
-                <div class="col-12 col-lg-6 mb-lg-0">
+                <div class="col-12 col-lg-5 mb-lg-0">
                     <div class="single-images-block position-relative">
 
                         <img id="product-main-image" class="img-fluid product-main-image load-secure-image"
@@ -160,7 +160,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-6">
+                <div class="col-12 col-lg-7">
                     <div class="product-page_content_wrapper d-flex flex-column h-100">
                         {{-- <div class="purity-badge mb-2">Purity: 22K-91.75</div> --}}
                         <div class="d-flex flex-wrap gap-2 align-items-center">

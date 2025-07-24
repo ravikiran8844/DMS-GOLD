@@ -338,7 +338,7 @@
                                                                 <p class="fw-medium fs-6 mb-4" style="color:#F78D1E;">
                                                                     Multiple Sizes Available</p>
 
-                                                                <div class="table-responsive d-none d-xl-block">
+                                                                <!-- <div class="table-responsive d-none d-xl-block">
                                                                     <table
                                                                         class="table table-bordered text-center align-middle mb-0">
                                                                         <thead class="table-dark">
@@ -461,14 +461,14 @@
                                                                             @endforeach
                                                                         </tbody>
                                                                     </table>
-                                                                </div>
+                                                                </div> -->
 
-                                                                <div class="d-block d-xl-none">
+                                                                <div class="overflow-auto">
                                                                     <table
                                                                         class="table table-bordered text-center align-middle">
-                                                                        <thead class="table-dark">
-                                                                            <tr>
-                                                                                <th></th>
+                                                                        <thead class="table-dark border-0">
+                                                                            <tr class="border-0">
+                                                                                <th class="bg-transparent border-0"></th>
                                                                                 @foreach ($main->variants as $index => $variant)
                                                                                     <th>Variant #{{ $index + 1 }}
                                                                                     </th>
