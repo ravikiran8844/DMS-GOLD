@@ -3,13 +3,20 @@ $(document).ready(function () {
     $(".quantity-container").each(function () {
         var container = $(this);
         var qtyInput = container.find(".qty");
+        var mqtyInput = container.find(".mqty");
+        var productId = container.data("id");
+        var option = container.data("option");
         var moq = 1;
         var qty = parseInt($("#qty").val());
         var stock = 1;
 
         container.find(".qtyplus").click(function (e) {
             e.preventDefault();
-            var currentVal = parseInt(qtyInput.val());
+            if (conditions[option] && option === "multiple") {
+                currentVal = parseInt(mqtyInput.val());
+            }else {
+                currentVal = parseInt(qtyInput.val());
+            }
             if (!isNaN(currentVal)) {
                 qtyInput.val(currentVal + 1);
             } else {

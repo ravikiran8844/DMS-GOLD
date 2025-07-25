@@ -238,8 +238,8 @@
                                                                 class="input-group quantity-input-group quantity-container">
                                                                 <input type="button" value="-" class="qtyminus"
                                                                     field="quantity">
-                                                                <input type="hidden" name="qty"
-                                                                    id="mqty"
+                                                                <input type="hidden" name="mqty"
+                                                                    id="mqty" class="mqty" data-option="multiple" data-id="{{ $variant['productID'] }}"
                                                                     value="{{ $variant['qty'] }}">
                                                                 <input type="hidden" name="box"
                                                                     id="box{{ $variant['productID'] }}"
@@ -338,7 +338,7 @@
                                         <div
                                             class="input-group quantity-input-group quantity-container align-items-center">
                                             <input type="hidden" name="qty" id="qty"
-                                                value="{{ $product->qty }}">
+                                                value="{{ $product->qty }}" data-option="single">
                                             <input type="hidden" name="box" id="box"
                                                 value="{{ $product->style }}">
                                             <input type="hidden" name="size" id="size"
