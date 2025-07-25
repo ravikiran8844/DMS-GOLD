@@ -12,6 +12,7 @@ use App\Models\Color;
 use App\Models\Finish;
 use App\Models\OrderDetail;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Project;
 use App\Models\SilverPurity;
 use App\Models\Size;
@@ -105,7 +106,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
-            'product_variants.productID',
+            'product_variants.id as productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -197,7 +198,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
-            'product_variants.productID',
+            'product_variants.id as productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -289,7 +290,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
-            'product_variants.productID',
+            'product_variants.id as productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -381,7 +382,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
-            'product_variants.productID',
+            'product_variants.id as productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -473,7 +474,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
-            'product_variants.productID',
+            'product_variants.id as productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -565,7 +566,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
-            'product_variants.productID',
+            'product_variants.id as productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -657,7 +658,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
-            'product_variants.productID',
+            'product_variants.id as productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -749,7 +750,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
-            'product_variants.productID',
+            'product_variants.id as productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -841,7 +842,7 @@ class ReadyStockController extends Controller
         // Fetch all matching products with variants
         $productQuery = Product::select(
             'products.*',
-            'product_variants.productID',
+            'product_variants.id as productID',
             'product_variants.qty',
             'product_variants.weight',
             'product_variants.color',
@@ -1045,8 +1046,8 @@ class ReadyStockController extends Controller
                 ->where('product_id', $request->product_id)
                 ->first();
 
-            $stock = Product::where('id', $request->product_id)->value('qty');
-            if ($request->qty > $stock) {
+            $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
+            if ($request->qty ?? $request->mqty > $stock) {
                 $notification = array(
                     'message' => 'Please order within available stock limit',
                     'alert' => 'error'
@@ -1073,7 +1074,7 @@ class ReadyStockController extends Controller
                     $cartcount = Cart::where('user_id', Auth::user()->id)->count();
                     $cartqtycount = Cart::where('user_id', Auth::user()->id)->sum('qty');
                     $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * products.weight) as totalWeight'))
-                        ->join('products', 'products.id', '=', 'carts.product_id')
+                        ->join('product_variants', 'product_variants.id', '=', 'carts.product_id')
                         ->where('carts.user_id', Auth::user()->id)
                         ->value('totalWeight');
 
@@ -1090,15 +1091,15 @@ class ReadyStockController extends Controller
                     'user_id' => Auth::user()->id,
                     'product_id' => $request->product_id,
                     'qty' => $request->qty ?? $request->mqty,
-                    'size' => $request->size,
-                    'weight' => $request->weight,
-                    'box' => $request->box,
+                    'size' => $request->size ?? $request->msize,
+                    'weight' => $request->weight ?? $request->mweight,
+                    'box' => $request->box ?? $request->mbox,
                 ]);
 
                 $cartcount = Cart::where('user_id', Auth::user()->id)->count();
                 $cartqtycount = Cart::where('user_id', Auth::user()->id)->sum('qty');
                 $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * products.weight) as totalWeight'))
-                    ->join('products', 'products.id', '=', 'carts.product_id')
+                    ->join('product_variants', 'product_variants.id', '=', 'carts.product_id')
                     ->where('carts.user_id', Auth::user()->id)
                     ->value('totalWeight');
 

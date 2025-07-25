@@ -201,7 +201,13 @@ function statusUpdate(id, url, status) {
 function addtocart(id) {
     var product_id = id;
     var qty = $("#quantity").val();
+    var size = $("#size").val();
+    var weight = $("#weight").val();
+    var box = $("#box").val();
     var mqty = $("#quantity" + id).val();
+    var msize = $("#size" + id).val();
+    var mweight = $("#weight" + id).val();
+    var mbox = $("#box" + id).val();
     $.ajax({
         type: "POST",
         url: "/retailer/addtocart",
@@ -209,7 +215,13 @@ function addtocart(id) {
             _token: $('meta[name="csrf-token"]').attr("content"),
             product_id: product_id,
             qty: qty,
+            size: size,
+            box: box,
+            weight: weight,
             mqty: mqty,
+            msize: msize,
+            mweight: mweight,
+            mbox: mbox,
         },
         dataType: "json",
         success: function (data, textStatus, xhr) {

@@ -76,19 +76,12 @@
 
 <div>
     <picture>
-        <source 
-            media="(min-width: 768px)" 
-            srcset="{{ asset('retailer/assets/img/shop/casting.webp') }}" 
+        <source media="(min-width: 768px)" srcset="{{ asset('retailer/assets/img/shop/casting.webp') }}"
             type="image/webp">
-        <source 
-            media="(max-width: 767px)" 
-            srcset="{{ asset('retailer/assets/img/shop/casting-mobile.webp') }}" 
+        <source media="(max-width: 767px)" srcset="{{ asset('retailer/assets/img/shop/casting-mobile.webp') }}"
             type="image/webp">
-        <img 
-            width="1920" height="340" 
-            class="img-fluid w-100" 
-            src="{{ asset('retailer/assets/img/shop/casting.webp') }}" 
-            alt="banner">
+        <img width="1920" height="340" class="img-fluid w-100"
+            src="{{ asset('retailer/assets/img/shop/casting.webp') }}" alt="banner">
     </picture>
 
 </div>
@@ -233,28 +226,6 @@
             </div>
 
             <div class="product-cards_wrapper position-relative pt-0">
-                <div class="col-12 mb-3 d-flex justify-content-end gap-3 align-items-center sticky-add-to-cart">
-                    @if (!$product->isEmpty())
-                        <div class="moq-inputs_wrapper" id="checkboxhidden">
-                            <input id="add-moq" type="checkbox" class="card-checkbox">
-                            <label for="add-moq">Select All</label>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div id="addtocarthidden">
-                                <span data-bs-toggle="tooltip" data-placement="top"
-                                    data-bs-title="Please add atleast one product to the cart">
-                                    <button id="addalltocart" onclick="addAllToCart()"
-                                        class="spinner-button1 btn btn-warning card-button text-uppercase" disabled>
-                                        <span>Add All to cart</span> <span class="d-none spinner">
-                                            <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
-                                            <span role="status">Adding...</span>
-                                        </span>
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                    @endif
-                </div>
                 <div id="pageloader">
                     <div class="text-center d-flex flex-column h-100 justify-content-center align-items-center">
                         <div class="mb-2">
@@ -343,7 +314,8 @@
                                                                         class="table table-bordered text-center align-middle">
                                                                         <thead class="table-dark border-0">
                                                                             <tr class="border-0">
-                                                                                <th class="bg-transparent border-0"></th>
+                                                                                <th class="bg-transparent border-0">
+                                                                                </th>
                                                                                 @foreach ($main->variants as $index => $variant)
                                                                                     <th>Variant #{{ $index + 1 }}
                                                                                     </th>
@@ -403,7 +375,8 @@
                                                                                                 class="qtyminus"
                                                                                                 field="quantity">
                                                                                             <input type="text"
-                                                                                                name="quantity"
+                                                                                                name="quantity{{ $variant['productID'] }}"
+                                                                                                id="quantity{{ $variant['productID'] }}"
                                                                                                 value="1"
                                                                                                 class="qty">
                                                                                             <input type="button"

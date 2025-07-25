@@ -3,23 +3,15 @@ $(document).ready(function () {
     $(".quantity-container").each(function () {
         var container = $(this);
         var qtyInput = container.find(".qty");
-        var moq = parseInt($("#moq").val());
+        var moq = 1;
         var qty = parseInt($("#qty").val());
         var stock = 1;
-        console.log(stock);
 
         container.find(".qtyplus").click(function (e) {
             e.preventDefault();
             var currentVal = parseInt(qtyInput.val());
             if (!isNaN(currentVal)) {
-                if (stock === 1 && currentVal + 1 > qty) {
-                    // If stock is 1 and increasing the quantity exceeds available stock, do nothing
-                    container.find(".qtyplus").css("color", "red");
-                    return;
-                }
                 qtyInput.val(currentVal + 1);
-                // Show the ".qtyminus" button when incrementing
-                container.find(".qtyminus").css("color", "black");
             } else {
                 qtyInput.val(stock === 1 ? qty : moq);
             }
@@ -30,11 +22,8 @@ $(document).ready(function () {
             var currentVal = parseInt(qtyInput.val());
             if (!isNaN(currentVal) && currentVal > moq) {
                 qtyInput.val(currentVal - 1);
-                container.find(".qtyplus").css("color", "black");
-                container.find(".qtyminus").css("color", "black");
             } else {
                 qtyInput.val(moq);
-                container.find(".qtyminus").css("color", "red");
             }
         });
     });

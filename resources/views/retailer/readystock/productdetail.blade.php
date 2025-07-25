@@ -170,269 +170,283 @@
 
                         </div>
                         @if ($product->variants->count() > 1)
-
-
-
-                        <div id="accordion-parent">
-                        <div class="mt-4">
-                            <button id="accordion-toggle" class="custom-accordion-button">
-                                <span>Product Specification</span>
-                                <span id="accordion-icon">
-                                    <svg width="14" height="8" viewBox="0 0 17 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.68208 9.63477L8.16563 3.37628L14.7317 9.59317L16.3733 7.98744L8.24811 0.000248548L-7.55998e-08 7.90524L1.68208 9.63477Z" fill="#F78D1E"/>
-                                    </svg>
-                                </span>
-                            </button>
-                        </div>
-                        <div id="accordion-content" class="mt-3" style="display: none;"
-                                    <div class="overflow-x-auto">
-                                        @if ($product->variants->isNotEmpty())
-                                            <table class="table table-bordered text-center align-middle">
-                                                <thead class="table-dark border-0">
-                                                    <tr class="border-0">
-                                                        <th class="bg-transparent border-0"></th>
-                                                        @foreach ($product->variants as $i => $v)
-                                                            <th>Variant #{{ $i + 1 }}</th>
-                                                        @endforeach
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php
-                                                        $fields = [
-                                                            'Purity',
-                                                            'color',
-                                                            'unit',
-                                                            'style',
-                                                            'making',
-                                                            'size',
-                                                            'weight',
-                                                            'qty',
-                                                        ];
-                                                        $labels = [
-                                                            'Purity',
-                                                            'Color',
-                                                            'Unit',
-                                                            'Style',
-                                                            'Making %',
-                                                            'Size',
-                                                            'Weight',
-                                                            'In Stock',
-                                                        ];
-                                                    @endphp
-
-                                                    @foreach ($fields as $fIndex => $field)
-                                                        <tr>
-                                                            <td>{{ $labels[$fIndex] }}</td>
-                                                            @foreach ($product->variants as $variant)
-                                                                <td>{{ $field === 'qty' ? $variant[$field] . ' ' . $variant['unit'] : $variant[$field] }}
-                                                                </td>
-                                                            @endforeach
-                                                        </tr>
+                            <div id="accordion-parent">
+                                <div class="mt-4">
+                                    <button id="accordion-toggle" class="custom-accordion-button">
+                                        <span>Product Specification</span>
+                                        <span id="accordion-icon">
+                                            <svg width="14" height="8" viewBox="0 0 17 10" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M1.68208 9.63477L8.16563 3.37628L14.7317 9.59317L16.3733 7.98744L8.24811 0.000248548L-7.55998e-08 7.90524L1.68208 9.63477Z"
+                                                    fill="#F78D1E" />
+                                            </svg>
+                                        </span>
+                                    </button>
+                                </div>
+                                <div id="accordion-content" class="mt-3" style="display: none;" <div
+                                    class="overflow-x-auto">
+                                    @if ($product->variants->isNotEmpty())
+                                        <table class="table table-bordered text-center align-middle">
+                                            <thead class="table-dark border-0">
+                                                <tr class="border-0">
+                                                    <th class="bg-transparent border-0"></th>
+                                                    @foreach ($product->variants as $i => $v)
+                                                        <th>Variant #{{ $i + 1 }}</th>
                                                     @endforeach
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $fields = [
+                                                        'Purity',
+                                                        'color',
+                                                        'unit',
+                                                        'style',
+                                                        'making',
+                                                        'size',
+                                                        'weight',
+                                                        'qty',
+                                                    ];
+                                                    $labels = [
+                                                        'Purity',
+                                                        'Color',
+                                                        'Unit',
+                                                        'Style',
+                                                        'Making %',
+                                                        'Size',
+                                                        'Weight',
+                                                        'In Stock',
+                                                    ];
+                                                @endphp
 
+                                                @foreach ($fields as $fIndex => $field)
                                                     <tr>
-                                                        <td>Qty</td>
-                                                        @foreach ($product->variants as $index => $variant)
-                                                            <td>
-                                                                <div
-                                                                    class="input-group quantity-input-group quantity-container">
-                                                                    <input type="button" value="-"
-                                                                        class="qtyminus" field="quantity">
-                                                                    <input type="text"
-                                                                        name="quantity{{ $variant['productID'] }}" id="quantity{{ $variant['productID'] }}"
-                                                                        value="1" class="qty">
-                                                                    <input type="button" value="+" class="qtyplus"
-                                                                        field="quantity">
-                                                                </div>
+                                                        <td>{{ $labels[$fIndex] }}</td>
+                                                        @foreach ($product->variants as $variant)
+                                                            <td>{{ $field === 'qty' ? $variant[$field] . ' ' . $variant['unit'] : $variant[$field] }}
                                                             </td>
                                                         @endforeach
                                                     </tr>
-                                                    <tr>
-                                                        <td>Add to Cart</td>
-                                                        @foreach ($product->variants as $index => $variant)
-                                                            <td>
-                                                                @php
-                                                                    $isCart = App\Models\Cart::where(
-                                                                        'user_id',
-                                                                        Auth::user()->id,
-                                                                    )
-                                                                        ->where('product_id', $variant['productID'])
-                                                                        ->get();
-                                                                    $currentcartcount = App\Models\Cart::where(
-                                                                        'product_id', $variant['productID']
-                                                                    )
-                                                                        ->where('user_id', Auth::user()->id)
-                                                                        ->value('qty');
-                                                                @endphp
-                                                                <div class="shop-page-add-to-cart-btn mt-3">
-                                                                    @if (count($isCart))
-                                                                        <button
-                                                                            onclick="addtocart({{ $variant['productID'] }})"
-                                                                            class="btn added-to-cart-btn mr-2 spinner-button"
-                                                                            data_id="card_id_{{ $variant['productID'] }}">
-                                                                            <span class="submit-text">ADDED
-                                                                                TO CART</span>
-                                                                            <span class="d-none spinner">
-                                                                                <span
-                                                                                    class="spinner-grow spinner-grow-sm"
-                                                                                    aria-hidden="true"></span>
-                                                                                <span role="status">Adding...</span>
-                                                                            </span>
-                                                                            <span
-                                                                                id="applycurrentcartcount{{ $variant['productID'] }}"
-                                                                                class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
-                                                                        </button>
-                                                                    @else
-                                                                        <button
-                                                                            onclick="addtocart({{ $variant['productID'] }})"
-                                                                            class="btn add-to-cart-btn mr-2 spinner-button"
-                                                                            data_id="card_id_{{ $variant['productID'] }}">
-                                                                            <span class="submit-text">ADD
-                                                                                TO CART</span>
+                                                @endforeach
 
-                                                                            <span class="d-none spinner">
-                                                                                <span
-                                                                                    class="spinner-grow spinner-grow-sm"
-                                                                                    aria-hidden="true"></span>
-                                                                                <span role="status">Adding...</span>
-                                                                            </span>
-                                                                            <span class="added-to-cart-badge"></span>
-                                                                        </button>
-                                                                    @endif
-                                                                </div>
-                                                            </td>
-                                                        @endforeach
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        @endif
+                                                <tr>
+                                                    <td>Qty</td>
+                                                    @foreach ($product->variants as $index => $variant)
+                                                        <td>
+                                                            <div
+                                                                class="input-group quantity-input-group quantity-container">
+                                                                <input type="button" value="-" class="qtyminus"
+                                                                    field="quantity">
+                                                                <input type="hidden" name="qty"
+                                                                    id="mqty"
+                                                                    value="{{ $variant['qty'] }}">
+                                                                <input type="hidden" name="box"
+                                                                    id="box{{ $variant['productID'] }}"
+                                                                    value="{{ $variant['style'] }}">
+                                                                <input type="hidden" name="size"
+                                                                    id="size{{ $variant['productID'] }}"
+                                                                    value="{{ $variant['size'] }}">
+                                                                <input type="hidden" name="weight"
+                                                                    id="weight{{ $variant['productID'] }}"
+                                                                    value="{{ $variant['weight'] }}">
+                                                                <input type="text"
+                                                                    name="quantity{{ $variant['productID'] }}"
+                                                                    id="quantity{{ $variant['productID'] }}"
+                                                                    value="1" class="qty">
+                                                                <input type="button" value="+" class="qtyplus"
+                                                                    field="quantity">
+                                                            </div>
+                                                        </td>
+                                                    @endforeach
+                                                </tr>
+                                                <tr>
+                                                    <td>Add to Cart</td>
+                                                    @foreach ($product->variants as $index => $variant)
+                                                        <td>
+                                                            @php
+                                                                $isCart = App\Models\Cart::where(
+                                                                    'user_id',
+                                                                    Auth::user()->id,
+                                                                )
+                                                                    ->where('product_id', $variant['productID'])
+                                                                    ->get();
+                                                                $currentcartcount = App\Models\Cart::where(
+                                                                    'product_id',
+                                                                    $variant['productID'],
+                                                                )
+                                                                    ->where('user_id', Auth::user()->id)
+                                                                    ->value('qty');
+                                                            @endphp
+                                                            <div class="shop-page-add-to-cart-btn mt-3">
+                                                                @if (count($isCart))
+                                                                    <button
+                                                                        onclick="addtocart({{ $variant['productID'] }})"
+                                                                        class="btn added-to-cart-btn mr-2 spinner-button"
+                                                                        data_id="card_id_{{ $variant['productID'] }}">
+                                                                        <span class="submit-text">ADDED
+                                                                            TO CART</span>
+                                                                        <span class="d-none spinner">
+                                                                            <span class="spinner-grow spinner-grow-sm"
+                                                                                aria-hidden="true"></span>
+                                                                            <span role="status">Adding...</span>
+                                                                        </span>
+                                                                        <span
+                                                                            id="applycurrentcartcount{{ $variant['productID'] }}"
+                                                                            class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
+                                                                    </button>
+                                                                @else
+                                                                    <button
+                                                                        onclick="addtocart({{ $variant['productID'] }})"
+                                                                        class="btn add-to-cart-btn mr-2 spinner-button"
+                                                                        data_id="card_id_{{ $variant['productID'] }}">
+                                                                        <span class="submit-text">ADD
+                                                                            TO CART</span>
+
+                                                                        <span class="d-none spinner">
+                                                                            <span class="spinner-grow spinner-grow-sm"
+                                                                                aria-hidden="true"></span>
+                                                                            <span role="status">Adding...</span>
+                                                                        </span>
+                                                                        <span class="added-to-cart-badge"></span>
+                                                                    </button>
+                                                                @endif
+                                                            </div>
+                                                        </td>
+                                                    @endforeach
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    @endif
+                                </div>
+                            </div>
+                        @else
+                            <div>
+                                @if ($product->qty > 0)
+                                    <div class="d-none d-md-block mt-3">
+                                        <div class="text-success">
+                                            Product Stock - <span class="fw-semibold">{{ $product->qty }}</span>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <div class="py-4 mt-4 d-flex gap-5 flex-row flex-wrap align-items-center"
+                                    style=" border-top: 1px solid #bcbcbc;">
+
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <div class="fs-6" style=" color: #717171; ">Quantity</div>
+                                        <div
+                                            class="input-group quantity-input-group quantity-container align-items-center">
+                                            <input type="hidden" name="qty" id="qty"
+                                                value="{{ $product->qty }}">
+                                            <input type="hidden" name="box" id="box"
+                                                value="{{ $product->style }}">
+                                            <input type="hidden" name="size" id="size"
+                                                value="{{ $product->size }}">
+                                            <input type="hidden" name="weight" id="weight"
+                                                value="{{ $product->weight }}">
+                                            <input type='button' value='-' class='qtyminus'
+                                                field='quantity' />
+                                            <input type='text' id="quantity" name='quantity'
+                                                value="{{ $currentcartcount ?? 1 }}" class='qty' />
+                                            <input type='button' value='+' class='qtyplus' field='quantity' />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        @php
+                                            $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
+                                                ->where('product_id', $product->id)
+                                                ->get();
+
+                                        @endphp
+                                        <div class="position-relative">
+                                            <button onclick="addtocart({{ $product->id }})"
+                                                class="btn product-add-to_cart-btn px-5 spinner-button"
+                                                data_id="card_id_{{ $product->id }}">
+                                                <span
+                                                    class="submit-text">{{ count($isCart) ? 'ADDED TO CART' : 'ADD TO CART' }}</span>
+                                                <span class="d-none spinner">
+                                                    <span class="spinner-grow spinner-grow-sm"
+                                                        aria-hidden="true"></span>
+                                                    <span role="status">Adding...</span>
+                                                </span>
+                                            </button>
+
+
+                                            @if (count($isCart))
+                                                <div class="product-page-addtocart-badge">
+                                                    {{ $currentcartcount }}
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
-                            @else
-                                <div>
-                                    @if ($product->qty > 0)
-                                        <div class="d-none d-md-block mt-3">
-                                            <div class="text-success">
-                                                Product Stock - <span class="fw-semibold">{{ $product->qty }}</span>
-                                            </div>
+
+                                <div id="accordion mt-4">
+                                    <div class="accordion product-specs-accordian py-3">
+                                        <div class="accordion-header" role="button" data-bs-toggle="collapse"
+                                            data-bs-target="#panel-body-1" aria-expanded="true">
+                                            <h5>
+                                                Product Specs <span class="accordion-icon"><i
+                                                        class="fas fa-angle-up"></i></span>
+                                            </h5>
                                         </div>
-                                    @endif
-
-                                    <div class="py-4 mt-4 d-flex gap-5 flex-row flex-wrap align-items-center"
-                                        style=" border-top: 1px solid #bcbcbc;">
-
-                                        <div class="d-flex gap-2 align-items-center">
-                                            <div class="fs-6" style=" color: #717171; ">Quantity</div>
-                                            <div
-                                                class="input-group quantity-input-group quantity-container align-items-center">
-                                                <input type="hidden" name="moq" id="moq" value="1">
-                                                <input type="hidden" name="qty" id="qty"
-                                                    value="{{ $product->qty }}">
-                                                <input type="hidden" name="box" id="box"
-                                                    value="{{ $product->style }}">
-                                                <input type='button' value='-' class='qtyminus'
-                                                    field='quantity' />
-                                                <input type='text' id="quantity" name='quantity'
-                                                    value="{{ $currentcartcount ?? 1 }}" class='qty' />
-                                                <input type='button' value='+' class='qtyplus'
-                                                    field='quantity' />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            @php
-                                                $isCart = App\Models\Cart::where('user_id', Auth::user()->id)
-                                                    ->where('product_id', $product->id)
-                                                    ->get();
-
-                                            @endphp
-                                            <div class="position-relative">
-                                                <button onclick="addtocart({{ $product->id }})"
-                                                    class="btn product-add-to_cart-btn px-5 spinner-button"
-                                                    data_id="card_id_{{ $product->id }}">
-                                                    <span
-                                                        class="submit-text">{{ count($isCart) ? 'ADDED TO CART' : 'ADD TO CART' }}</span>
-                                                    <span class="d-none spinner">
-                                                        <span class="spinner-grow spinner-grow-sm"
-                                                            aria-hidden="true"></span>
-                                                        <span role="status">Adding...</span>
-                                                    </span>
-                                                </button>
-
-
-                                                @if (count($isCart))
-                                                    <div class="product-page-addtocart-badge">
-                                                        {{ $currentcartcount }}
+                                        <div class="accordion-body collapse show px-0" id="panel-body-1"
+                                            data-parent="#accordion">
+                                            <div class="d-flex gap-5 flex-wrap">
+                                                @if ($product->color)
+                                                    <div>
+                                                        <div class="product-specs-item_title mb-2">COLOR</div>
+                                                        <div class="product-specs-item_text">
+                                                            {{ $product->color }}
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                                @if ($product->unit)
+                                                    <div>
+                                                        <div class="product-specs-item_title mb-2">UNIT</div>
+                                                        <div class="product-specs-item_text">
+                                                            {{ $product->unit }}
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                                @if ($product->style)
+                                                    <div>
+                                                        <div class="product-specs-item_title mb-2">STYLE</div>
+                                                        <div class="product-specs-item_text">
+                                                            {{ $product->style }}
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                                @if ($product->making)
+                                                    <div>
+                                                        <div class="product-specs-item_title mb-2">MAKING</div>
+                                                        <div class="product-specs-item_text">
+                                                            {{ $product->making }}%
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                                @if ($product->Purity)
+                                                    <div>
+                                                        <div class="product-specs-item_title mb-2">PURITY</div>
+                                                        <div class="product-specs-item_text">
+                                                            {{ $product->Purity }}
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                                @if ($product->size)
+                                                    <div>
+                                                        <div class="product-specs-item_title mb-2">SIZE</div>
+                                                        <div class="product-specs-item_text">
+                                                            {{ $product->size }}
+                                                        </div>
                                                     </div>
                                                 @endif
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div id="accordion mt-4">
-                                        <div class="accordion product-specs-accordian py-3">
-                                            <div class="accordion-header" role="button" data-bs-toggle="collapse"
-                                                data-bs-target="#panel-body-1" aria-expanded="true">
-                                                <h5>
-                                                    Product Specs <span class="accordion-icon"><i
-                                                            class="fas fa-angle-up"></i></span>
-                                                </h5>
-                                            </div>
-                                            <div class="accordion-body collapse show px-0" id="panel-body-1"
-                                                data-parent="#accordion">
-                                                <div class="d-flex gap-5 flex-wrap">
-                                                    @if ($product->color)
-                                                        <div>
-                                                            <div class="product-specs-item_title mb-2">COLOR</div>
-                                                            <div class="product-specs-item_text">
-                                                                {{ $product->color }}
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                    @if ($product->unit)
-                                                        <div>
-                                                            <div class="product-specs-item_title mb-2">UNIT</div>
-                                                            <div class="product-specs-item_text">
-                                                                {{ $product->unit }}
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                    @if ($product->style)
-                                                        <div>
-                                                            <div class="product-specs-item_title mb-2">STYLE</div>
-                                                            <div class="product-specs-item_text">
-                                                                {{ $product->style }}
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                    @if ($product->making)
-                                                        <div>
-                                                            <div class="product-specs-item_title mb-2">MAKING</div>
-                                                            <div class="product-specs-item_text">
-                                                                {{ $product->making }}%
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                    @if ($product->Purity)
-                                                        <div>
-                                                            <div class="product-specs-item_title mb-2">PURITY</div>
-                                                            <div class="product-specs-item_text">
-                                                                {{ $product->Purity }}
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                    @if ($product->size)
-                                                        <div>
-                                                            <div class="product-specs-item_title mb-2">SIZE</div>
-                                                            <div class="product-specs-item_text">
-                                                                {{ $product->size }}
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -486,20 +500,19 @@
     </script>
 
     <script>
-        $(function () {
-    // Toggle accordion
-    $('#accordion-toggle').on('click', function () {
-        var $content = $('#accordion-content');
-        $content.slideToggle(200);
+        $(function() {
+            // Toggle accordion
+            $('#accordion-toggle').on('click', function() {
+                var $content = $('#accordion-content');
+                $content.slideToggle(200);
 
-        // Optionally rotate the icon
-        $('#accordion-icon').toggleClass('rotate-180');
-    });
+                // Optionally rotate the icon
+                $('#accordion-icon').toggleClass('rotate-180');
+            });
 
-    $('#accordion-content').show();
+            $('#accordion-content').show();
 
-});
-
+        });
     </script>
 @endsection
 @endsection
