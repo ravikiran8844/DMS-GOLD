@@ -3,34 +3,46 @@ $(document).ready(function () {
     $(".quantity-container").each(function () {
         var container = $(this);
         var qtyInput = container.find(".qty");
-        var mqtyInput = container.find(".mqty");
-        var productId = container.data("id");
-        var option = container.data("option");
+        var productId = container.data("id"); // Will be undefined for single product
+        var option = container.data("option") || $("#qty").data("option"); // fallback to single product
+
         var moq = 1;
-        var qty = parseInt($("#qty").val());
-        var stock = 1;
+        // Read master qty (mqty) and default qty (qty)
+        var qty = parseInt($("#qty").val()) || moq;
+        var mqty = parseInt($("#mqty" + productId).val()) || moq;
+
+        // For single product, override mqty
+        if (!productId) {
+            mqty = qty;
+        }
 
         container.find(".qtyplus").click(function (e) {
             e.preventDefault();
-            if (conditions[option] && option === "multiple") {
-                currentVal = parseInt(mqtyInput.val());
-            }else {
-                currentVal = parseInt(qtyInput.val());
-            }
-            if (!isNaN(currentVal)) {
+            let currentVal = parseInt(qtyInput.val()) || moq;
+
+            if (option === "multiple") {
                 qtyInput.val(currentVal + 1);
             } else {
-                qtyInput.val(stock === 1 ? qty : moq);
+                qtyInput.val(currentVal + 1);
             }
         });
 
         container.find(".qtyminus").click(function (e) {
             e.preventDefault();
-            var currentVal = parseInt(qtyInput.val());
-            if (!isNaN(currentVal) && currentVal > moq) {
-                qtyInput.val(currentVal - 1);
+            let currentVal = parseInt(qtyInput.val()) || moq;
+
+            if (option === "multiple") {
+                if (currentVal > mqty) {
+                    qtyInput.val(currentVal - mqty);
+                } else {
+                    qtyInput.val(mqty);
+                }
             } else {
-                qtyInput.val(moq);
+                if (currentVal > moq) {
+                    qtyInput.val(currentVal - 1);
+                } else {
+                    qtyInput.val(moq);
+                }
             }
         });
     });

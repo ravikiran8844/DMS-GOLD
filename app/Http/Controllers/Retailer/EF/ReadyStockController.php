@@ -1042,94 +1042,91 @@ class ReadyStockController extends Controller
     {
         DB::beginTransaction();
         try {
-            $existingCartlist = Cart::where('user_id', Auth::user()->id)
+            $userId = Auth::user()->id;
+
+            $existingCartlist = Cart::where('user_id', $userId)
                 ->where('product_id', $request->product_id)
                 ->first();
 
-            $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
-            if ($request->qty ?? $request->mqty > $stock) {
-                $notification = array(
-                    'message' => 'Please order within available stock limit',
-                    'alert' => 'error'
-                );
+            // Get available stock
+            $stock = ProductVariant::where('id', $request->product_id)->value('qty');
+
+            // Safely determine requested quantity
+            $requestedQty = $request->qty ?? $request->mqty ?? 0;
+
+            if ($requestedQty <= 0) {
                 return response()->json([
-                    'notification_response' => $notification
+                    'notification_response' => [
+                        'message' => 'Please specify a valid quantity',
+                        'alert' => 'error'
+                    ]
+                ]);
+            }
+
+            // Check if requested qty is within stock
+            if ($requestedQty > $stock) {
+                return response()->json([
+                    'notification_response' => [
+                        'message' => 'Please order within available stock limit',
+                        'alert' => 'error'
+                    ]
                 ]);
             }
 
             if ($existingCartlist) {
-                if ($existingCartlist->qty >= $stock) {
-                    $notification = array(
-                        'message' => 'Please order within available stock limit',
-                        'alert' => 'error'
-                    );
+                if (($existingCartlist->qty + $requestedQty) > $stock) {
                     return response()->json([
-                        'notification_response' => $notification
+                        'notification_response' => [
+                            'message' => 'Please order within available stock limit',
+                            'alert' => 'error'
+                        ]
                     ]);
-                } else {
-                    $existingCartlist->update([
-                        'qty' => $existingCartlist->qty + $request->qty,
-                        'is_ready_stock' => $request->readyStock
-                    ]);
-                    $cartcount = Cart::where('user_id', Auth::user()->id)->count();
-                    $cartqtycount = Cart::where('user_id', Auth::user()->id)->sum('qty');
-                    $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * products.weight) as totalWeight'))
-                        ->join('product_variants', 'product_variants.id', '=', 'carts.product_id')
-                        ->where('carts.user_id', Auth::user()->id)
-                        ->value('totalWeight');
-
-                    $count = array(
-                        'count' => $cartcount
-                    );
-                    $notification = array(
-                        'message' => 'Added to cart',
-                        'alert' => 'success'
-                    );
                 }
+
+                $existingCartlist->update([
+                    'qty' => $existingCartlist->qty + $requestedQty,
+                    'is_ready_stock' => $request->readyStock ?? 0
+                ]);
             } else {
                 Cart::create([
-                    'user_id' => Auth::user()->id,
+                    'user_id' => $userId,
                     'product_id' => $request->product_id,
-                    'qty' => $request->qty ?? $request->mqty,
+                    'qty' => $requestedQty,
                     'size' => $request->size ?? $request->msize,
                     'weight' => $request->weight ?? $request->mweight,
                     'box' => $request->box ?? $request->mbox,
                 ]);
-
-                $cartcount = Cart::where('user_id', Auth::user()->id)->count();
-                $cartqtycount = Cart::where('user_id', Auth::user()->id)->sum('qty');
-                $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * products.weight) as totalWeight'))
-                    ->join('product_variants', 'product_variants.id', '=', 'carts.product_id')
-                    ->where('carts.user_id', Auth::user()->id)
-                    ->value('totalWeight');
-
-                $count = array(
-                    'count' => $cartcount
-                );
-                $notification = array(
-                    'message' => 'Added to cart',
-                    'alert' => 'success'
-                );
             }
 
-            DB::commit(); // Move this above the return statement
+            // Totals
+            $cartcount = Cart::where('user_id', $userId)->count();
+            $cartqtycount = Cart::where('user_id', $userId)->sum('qty');
+            $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * product_variants.weight) as totalWeight'))
+                ->join('product_variants', 'product_variants.id', '=', 'carts.product_id')
+                ->where('carts.user_id', $userId)
+                ->value('totalWeight');
+
+            DB::commit();
 
             return response()->json([
-                'count_response' => $count,
+                'count_response' => ['count' => $cartcount],
                 'count_qty' => $cartqtycount,
                 'count_weight' => $cartweightcount,
-                'notification_response' => $notification
+                'notification_response' => [
+                    'message' => 'Added to cart',
+                    'alert' => 'success'
+                ]
             ]);
         } catch (Exception $e) {
             DB::rollBack();
             $this->Log(__FUNCTION__, "POST", $e->getMessage(), Auth::user()->id, request()->ip(), gethostname());
-            $notification = array(
+            return redirect()->back()->with([
                 'message' => 'Something Went Wrong!',
                 'alert-type' => 'error'
-            );
-            return redirect()->back()->with($notification);
+            ]);
         }
     }
+
 
     public function addForCart(Request $request)
     {
