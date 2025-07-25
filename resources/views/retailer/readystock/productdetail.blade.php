@@ -184,8 +184,8 @@
                                         </span>
                                     </button>
                                 </div>
-                                <div id="accordion-content" class="mt-3" style="display: none;" <div
-                                    class="overflow-x-auto">
+                                <div id="accordion-content" style="display: none;"
+                                    class="overflow-x-auto mt-3">
                                     @if ($product->variants->isNotEmpty())
                                         <table class="table table-bordered text-center align-middle">
                                             <thead class="table-dark border-0">
