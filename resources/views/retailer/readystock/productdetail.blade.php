@@ -335,7 +335,7 @@
                                         <div class="fs-6" style=" color: #717171; ">Quantity</div>
                                         <div
                                             class="input-group quantity-input-group quantity-container align-items-center">
-                                            <input type="hidden" name="qty" id="qty" class="qty"
+                                            <input type="hidden" name="qty" id="qty"
                                                 value="{{ $product->qty }}" data-option="single">
                                             <input type="hidden" name="box" id="box"
                                                 value="{{ $product->style }}">
