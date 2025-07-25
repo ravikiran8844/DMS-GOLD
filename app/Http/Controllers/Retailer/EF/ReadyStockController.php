@@ -1050,6 +1050,12 @@ class ReadyStockController extends Controller
 
             // Get available stock
             $stock = ProductVariant::where('id', $request->product_id)->value('qty');
+            if ($stock === null) {
+                $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
+                $productId = ProductVariant::where('product_id', $request->product_id)->value('id');
+            } else {
+                $productId = $request->product_id;
+            }
 
             // Safely determine requested quantity
             $requestedQty = $request->qty ?? $request->mqty ?? 0;
@@ -1084,13 +1090,12 @@ class ReadyStockController extends Controller
                 }
 
                 $existingCartlist->update([
-                    'qty' => $existingCartlist->qty + $requestedQty,
-                    'is_ready_stock' => $request->readyStock ?? 0
+                    'qty' => $existingCartlist->qty + $requestedQty
                 ]);
             } else {
                 Cart::create([
                     'user_id' => $userId,
-                    'product_id' => $request->product_id,
+                    'product_id' => $productId,
                     'qty' => $requestedQty,
                     'size' => $request->size ?? $request->msize,
                     'weight' => $request->weight ?? $request->mweight,
