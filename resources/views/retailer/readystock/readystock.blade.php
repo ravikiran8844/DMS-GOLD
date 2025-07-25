@@ -275,15 +275,20 @@
                                         {{-- Multiple Variants View (Second Image Layout) --}}
                                         <div class="mt-3">
                                             <div class="card-text fw-bold">Multiple Sizes Available</div>
+
+                                            @php
+                                                $safeDesignNo = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($main->DesignNo)), '-');
+                                            @endphp
+
                                             <!-- Trigger Button -->
                                             <button class="btn btn-warning mt-2" data-bs-toggle="modal"
-                                                data-bs-target="#productModal-{{ $main->DesignNo }}">
+                                                data-bs-target="#productModal-{{ $safeDesignNo }}">
                                                 View All Options
                                             </button>
 
                                             <!-- Modal -->
                                             <div class="modal fade product-variants-modal"
-                                                id="productModal-{{ $main->DesignNo }}" tabindex="-1"
+                                                id="productModal-{{ $safeDesignNo }}" tabindex="-1"
                                                 aria-labelledby="productModalLabel123" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered modal-xl">
                                                     <div class="modal-content rounded-4 overflow-hidden">
