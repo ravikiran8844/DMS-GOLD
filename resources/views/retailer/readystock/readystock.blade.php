@@ -412,7 +412,7 @@
                                                                                                 ->value('qty');
                                                                                         @endphp
                                                                                         <div
-                                                                                            class="shop-page-add-to-cart-btn mt-3">
+                                                                                            class="shop-page-add-to-cart-btn">
                                                                                             @if (count($isCart))
                                                                                                 <button
                                                                                                     onclick="addforcart({{ $main->id }})"
@@ -547,7 +547,7 @@
                                                 <div class="input-group quantity-input-group quantity-container">
                                                     <input type="button" value="-" class="qtyminus"
                                                         field="quantity">
-                                                    <input type="text" name="quantity"
+                                                    <input type="text" name="quantity" data-stock="{{ $main->qty }}"
                                                         id="quantity{{ $main->id }}" value="1"
                                                         class="qty">
                                                     <input type="button" value="+" class="qtyplus"

@@ -18,18 +18,22 @@ function qtyplusminus() {
         var productId = container.data("product-id");
         var moq = parseInt($("#moq" + productId).val()) || 1;
         var qty = $("#qty" + productId).val();
-        var stock = $("#stockqty").val();
+        // var stock = $("#stockqty").val();
+
+        var stock = parseInt(qtyInput.data("stock")) || 1;
+
+
 
         container.find(".qtyplus").click(function (e) {
             e.preventDefault();
             var currentVal = parseInt(qtyInput.val());
             if (!isNaN(currentVal)) {
-                if (stock == 1 && currentVal >= qty) {
-                    qtyInput.val(qty);
-                    container.find(".qtyplus").css("color", "red");
-                } else {
+                if (currentVal < stock) {
                     qtyInput.val(currentVal + 1);
-                    container.find(".qtyminus").css("color", "black");
+                    container.find(".qtyplus").css("color", "black");
+                } else {
+                    qtyInput.val(stock); // Clamp to stock limit
+                    container.find(".qtyplus").css("color", "red");
                 }
             } else {
                 qtyInput.val(moq);
