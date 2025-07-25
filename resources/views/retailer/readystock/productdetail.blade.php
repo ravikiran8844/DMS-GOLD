@@ -345,7 +345,7 @@
                                                 value="{{ $product->weight }}">
                                             <input type='button' value='-' class='qtyminus'
                                                 field='quantity' />
-                                            <input type='text' id="quantity" name='quantity'
+                                            <input type='text' id="quantity" name='quantity'  data-stock="{{ $product->qty }}"
                                                 value="{{ $currentcartcount ?? 1 }}" class='qty' />
                                             <input type='button' value='+' class='qtyplus' field='quantity' />
                                         </div>

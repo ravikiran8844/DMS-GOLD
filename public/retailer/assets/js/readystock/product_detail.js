@@ -10,6 +10,9 @@ $(document).ready(function () {
         var qty = parseInt($("#qty").val()) || moq;
         var mqty = parseInt($("#mqty" + productId).val()) || moq;
 
+        var stock = parseInt(qtyInput.data("stock")) || 1;
+
+
         // For single product, override mqty with initial qty
         if (!productId) {
             mqty = qty;
@@ -17,16 +20,22 @@ $(document).ready(function () {
 
         container.find(".qtyplus").click(function (e) {
             e.preventDefault();
-            let currentVal = parseInt(qtyInput.val()) || moq;
+            
 
             if (option === "multiple") {
+                let currentVal = parseInt(qtyInput.val()) || moq;
                 if (currentVal < mqty) {
                     qtyInput.val(currentVal + 1);
                 } else {
                     qtyInput.val(mqty); // Do not exceed max qty
                 }
             } else {
-                qtyInput.val(currentVal + 1);
+                var currentVal = parseInt(qtyInput.val());
+                if (currentVal < stock) {
+                    qtyInput.val(currentVal + 1);
+                } else {
+                    qtyInput.val(stock); 
+                }
             }
         });
 
