@@ -3,15 +3,14 @@ $(document).ready(function () {
     $(".quantity-container").each(function () {
         var container = $(this);
         var qtyInput = container.find(".qty");
-        var productId = container.data("id"); // Will be undefined for single product
-        var option = container.data("option") || $("#qty").data("option"); // fallback to single product
+        var productId = container.data("id"); // undefined for single product
+        var option = container.data("option") || $("#qty").data("option");
 
         var moq = 1;
-        // Read master qty (mqty) and default qty (qty)
         var qty = parseInt($("#qty").val()) || moq;
         var mqty = parseInt($("#mqty" + productId).val()) || moq;
 
-        // For single product, override mqty
+        // For single product, override mqty with initial qty
         if (!productId) {
             mqty = qty;
         }
@@ -21,7 +20,11 @@ $(document).ready(function () {
             let currentVal = parseInt(qtyInput.val()) || moq;
 
             if (option === "multiple") {
-                qtyInput.val(currentVal + 1);
+                if (currentVal < mqty) {
+                    qtyInput.val(currentVal + 1);
+                } else {
+                    qtyInput.val(mqty); // Do not exceed max qty
+                }
             } else {
                 qtyInput.val(currentVal + 1);
             }
@@ -31,18 +34,10 @@ $(document).ready(function () {
             e.preventDefault();
             let currentVal = parseInt(qtyInput.val()) || moq;
 
-            if (option === "multiple") {
-                if (currentVal > mqty) {
-                    qtyInput.val(currentVal - mqty);
-                } else {
-                    qtyInput.val(mqty);
-                }
+            if (currentVal > moq) {
+                qtyInput.val(currentVal - 1);
             } else {
-                if (currentVal > moq) {
-                    qtyInput.val(currentVal - 1);
-                } else {
-                    qtyInput.val(moq);
-                }
+                qtyInput.val(moq); // Minimum 1
             }
         });
     });
