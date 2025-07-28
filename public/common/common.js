@@ -273,6 +273,11 @@ function addforcart(id) {
     var size = $("#size" + id).val();
     var weight = $("#weight" + id).val();
     var box = $("#box" + id).val();
+    var mqty = $("#mquantity" + id).val();
+    var msize = $("#msize" + id).val();
+    var mweight = $("#mweight" + id).val();
+    var mbox = $("#mbox" + id).val();
+    console.log(qty, size, weight, box, mqty, msize, mweight, mbox);
 
     $.ajax({
         type: "POST",
@@ -284,6 +289,10 @@ function addforcart(id) {
             box: box,
             size: size,
             weight: weight,
+            mqty: mqty,
+            mbox: mbox,
+            msize: msize,
+            mweight: mweight,
         },
         dataType: "json",
         success: function (data, textStatus, xhr) {
@@ -367,93 +376,6 @@ function showSpinner(button) {
         // Reset the height of the button to its initial value
         button.style.height = "";
     }, 2000); // Adjust the timeout value to match your desired disabled duration
-}
-
-function addAllToCart() {
-    // Assuming you are using jQuery
-    var checkedIds = $(".card-checkbox:checked")
-        .map(function () {
-            return $(this).data("id");
-        })
-        .get();
-    var size = [];
-    var weight = [];
-    var qty = [];
-    var box = [];
-
-    checkedIds.forEach(function (id) {
-        size.push($("#size" + id).val());
-        weight.push($("#weight" + id).val());
-        qty.push($("#quantity" + id).val());
-        box.push($("#box" + id).val());
-    });
-    $.ajax({
-        type: "POST",
-        url: "/retailer/addalltocart",
-        data: {
-            _token: $('meta[name="csrf-token"]').attr("content"),
-            product_id: checkedIds,
-            size: size,
-            weight: weight,
-            qty: qty,
-            box: box,
-        },
-        dataType: "json",
-        success: function (data, textStatus, xhr) {
-            if (data.count_response) {
-                $('span[id="cartCount"]').text(data.count_response.count);
-                $("#navqty").text(data.count_qty + " Pcs");
-                $("#navweight").text(data.count_weight + "gms");
-                $("#navqty-mob").text(data.count_qty + " Pcs");
-                $("#navweight-mob").text(data.count_weight + "gms");
-            }
-            if (data.notification_response.message) {
-                var type = data.notification_response.alert;
-                var message = data.notification_response.message;
-                switch (type) {
-                    case "success":
-                        Swal.fire({
-                            icon: "success",
-                            title: "Success",
-                            text: message,
-                            timer: 3500,
-                            showConfirmButton: false,
-                        });
-                        break;
-                    case "error":
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text: message,
-                            timer: 3500,
-                            showConfirmButton: false,
-                        });
-                        break;
-                }
-                checkedIds.forEach(function (id) {
-                    if (
-                        document.querySelector(
-                            `button[data_id='card_id_` + id + `']`
-                        )
-                    ) {
-                        const button = document.querySelector(
-                            `button[data_id='card_id_${id}']`
-                        );
-                        const badge = button.querySelector(
-                            ".added-to-cart-badge"
-                        );
-
-                        const submitText = button.querySelector("span");
-                        submitText.innerText = "Added to cart";
-                        badge.innerText = $(`#quantity${id}`).val();
-                        button.classList.add("added-to-cart-btn");
-                    }
-                });
-            }
-            $('input[type="checkbox"]').prop("checked", false);
-            $("#addalltocart").attr("disabled", true);
-        },
-    });
 }
 
 function repeatOrder() {

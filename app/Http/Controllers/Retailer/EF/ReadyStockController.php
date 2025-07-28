@@ -1132,212 +1132,109 @@ class ReadyStockController extends Controller
         }
     }
 
-
     public function addForCart(Request $request)
     {
         DB::beginTransaction();
         try {
+            $userId = Auth::user()->id;
 
-            $existingCartlist = Cart::where('user_id', Auth::user()->id)
+            $existingCartlist = Cart::where('user_id', $userId)
                 ->where('product_id', $request->product_id)
                 ->first();
-            $actualcartcount = Cart::where('product_id', $request->product_id)
-                ->where('user_id', Auth::user()->id)
-                ->value('qty');
-            $stock = Product::where('id', $request->product_id)->value('qty');
 
-            if ($request->qty > $stock) {
-                $notification = array(
-                    'message' => 'Please order within available stock limit',
-                    'alert' => 'error',
-                    'actualcartcount' => $actualcartcount
-                );
+            // Get available stock
+            $stock = ProductVariant::where('id', $request->product_id)->value('qty');
+            if ($stock === null) {
+                $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
+                $productId = ProductVariant::where('product_id', $request->product_id)->value('id');
+            } else {
+                $productId = $request->product_id;
+            }
+
+            $requestedQty = $request->qty ?? $request->mqty ?? 0;
+            if ($requestedQty <= 0) {
                 return response()->json([
-                    'notification_response' => $notification
+                    'notification_response' => [
+                        'message' => 'Please specify a valid quantity',
+                        'alert' => 'error'
+                    ]
                 ]);
             }
-            if ($existingCartlist) {
-                if ($existingCartlist->qty + $request->qty >= $stock) {
-                    $notification = array(
+
+            if ($requestedQty > $stock) {
+                $actualcartcount = Cart::where('product_id', $request->product_id)
+                    ->where('user_id', $userId)
+                    ->value('qty');
+
+                return response()->json([
+                    'notification_response' => [
                         'message' => 'Please order within available stock limit',
                         'alert' => 'error',
                         'actualcartcount' => $actualcartcount
-                    );
-                    return response()->json([
-                        'notification_response' => $notification
-                    ]);
-                } else {
-                    $existingCartlist->update([
-                        'qty' => $existingCartlist->qty + $request->qty
-                    ]);
-                    $cartcount = Cart::where('user_id', Auth::user()->id)->count();
-                    $cartqtycount = Cart::where('user_id', Auth::user()->id)->sum('qty');
-                    $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * products.weight) as totalWeight'))
-                        ->join('products', 'products.id', '=', 'carts.product_id')
-                        ->where('carts.user_id', Auth::user()->id)
-                        ->value('totalWeight');
+                    ]
+                ]);
+            }
 
-                    $count = array(
-                        'count' => $cartcount
-                    );
-                    $notification = array(
-                        'message' => 'Added to cart',
-                        'alert' => 'success'
-                    );
+            if ($existingCartlist) {
+                if (($existingCartlist->qty + $requestedQty) > $stock) {
+                    $actualcartcount = $existingCartlist->qty;
+
+                    return response()->json([
+                        'notification_response' => [
+                            'message' => 'Please order within available stock limit',
+                            'alert' => 'error',
+                            'actualcartcount' => $actualcartcount
+                        ]
+                    ]);
                 }
+
+                $existingCartlist->update([
+                    'qty' => $existingCartlist->qty + $requestedQty
+                ]);
             } else {
                 Cart::create([
-                    'user_id' => Auth::user()->id,
-                    'product_id' => $request->product_id,
-                    'qty' => $request->qty,
-                    'weight' => $request->weight,
-                    'size' => $request->size,
-                    'box' => $request->box
+                    'user_id' => $userId,
+                    'product_id' => $productId,
+                    'qty' => $requestedQty,
+                    'size' => $request->size ?? $request->msize,
+                    'weight' => $request->weight ?? $request->mweight,
+                    'box' => $request->box ?? $request->mbox,
                 ]);
-
-                $cartcount = Cart::where('user_id', Auth::user()->id)->count();
-                $cartqtycount = Cart::where('user_id', Auth::user()->id)->sum('qty');
-                $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * products.weight) as totalWeight'))
-                    ->join('products', 'products.id', '=', 'carts.product_id')
-                    ->where('carts.user_id', Auth::user()->id)
-                    ->value('totalWeight');
-
-                $count = array(
-                    'count' => $cartcount
-                );
-                $notification = array(
-                    'message' => 'Added to cart',
-                    'alert' => 'success'
-                );
             }
 
-            DB::commit(); // Move this outside of the else block
-            $currentcartcount = Cart::where('product_id', $request->product_id)
-                ->where('user_id', Auth::user()->id)
-                ->value('qty');
-            return response()->json([
-                'count_response' => $count,
-                'currentcartcount' => $currentcartcount,
-                'actualcartcount' => $actualcartcount,
-                'count_qty' => $cartqtycount,
-                'count_weight' => $cartweightcount,
-                'notification_response' => $notification
-            ]);
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->Log(__FUNCTION__, "POST", $e->getMessage(), Auth::user()->id, request()->ip(), gethostname());
-            $notification = array(
-                'message' => 'Something Went Wrong!',
-                'alert-type' => 'error'
-            );
-            return redirect()->back()->with($notification);
-        }
-    }
-
-    public function addAllToCart(Request $request)
-    {
-        try {
-            DB::beginTransaction();
-
-            $checkedIds = $request->product_id;
-            $size = $request->size;
-            $weight = $request->weight;
-            $qty = $request->qty;
-            $box = $request->box;
-
-            foreach ($checkedIds as $key => $productId) {
-                // Check if the product is already in the cart
-                $existingCartlist = Cart::where('user_id', Auth::user()->id)
-                    ->where('product_id', $productId)
-                    ->first();
-                $stock = Product::where('id', $productId)->value('qty');
-                if ($request->qty[$key] > $stock) {
-                    $notification = array(
-                        'message' => 'Please order within available stock limit',
-                        'alert' => 'error'
-                    );
-                    return response()->json([
-                        'notification_response' => $notification
-                    ]);
-                }
-
-                if ($existingCartlist) {
-                    if ($existingCartlist->qty >= $stock) {
-                        $notification = array(
-                            'message' => 'Please order within available stock limit',
-                            'alert' => 'error'
-                        );
-                        return response()->json([
-                            'notification_response' => $notification
-                        ]);
-                    } else {
-                        $existingCartlist->update([
-                            'qty' => $existingCartlist->qty + $qty[$key],
-                        ]);
-                        $cartcount = Cart::where('user_id', Auth::user()->id)->count();
-                        $cartqtycount = Cart::where('user_id', Auth::user()->id)->sum('qty');
-                        $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * products.weight) as totalWeight'))
-                            ->join('products', 'products.id', '=', 'carts.product_id')
-                            ->where('carts.user_id', Auth::user()->id)
-                            ->value('totalWeight');
-
-                        $count = array(
-                            'count' => $cartcount
-                        );
-                        $notification = array(
-                            'message' => 'Added to cart',
-                            'alert' => 'success'
-                        );
-                    }
-                } else {
-                    // Add the product to the cart
-                    Cart::create([
-                        'user_id' => Auth::user()->id,
-                        'product_id' => $productId,
-                        'qty' => $qty[$key],
-                        'size' => $size[$key],
-                        'box' => $box[$key],
-                        'weight' => $weight[$key],
-                    ]);
-                }
-            }
-
-            // Commit the transaction
-            DB::commit();
-
-            // Get the updated cart count
-            $cartCount = Cart::where('user_id', Auth::user()->id)->count();
-            $cartqtycount = Cart::where('user_id', Auth::user()->id)->sum('qty');
-            $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * products.weight) as totalWeight'))
-                ->join('products', 'products.id', '=', 'carts.product_id')
-                ->where('carts.user_id', Auth::user()->id)
+            // Totals
+            $cartcount = Cart::where('user_id', $userId)->count();
+            $cartqtycount = Cart::where('user_id', $userId)->sum('qty');
+            $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * product_variants.weight) as totalWeight'))
+                ->join('product_variants', 'product_variants.id', '=', 'carts.product_id')
+                ->where('carts.user_id', $userId)
                 ->value('totalWeight');
 
-            // Prepare the response
-            $count = [
-                'count' => $cartCount,
-            ];
+            $currentcartcount = Cart::where('product_id', $productId)
+                ->where('user_id', $userId)
+                ->value('qty');
 
-            $notification = [
-                'message' => 'All products added to your cart',
-                'alert' => 'success',
-            ];
+            DB::commit();
 
             return response()->json([
-                'count_response' => $count,
+                'count_response' => ['count' => $cartcount],
+                'currentcartcount' => $currentcartcount,
+                'actualcartcount' => $currentcartcount,
                 'count_qty' => $cartqtycount,
                 'count_weight' => $cartweightcount,
-                'notification_response' => $notification,
+                'notification_response' => [
+                    'message' => 'Added to cart',
+                    'alert' => 'success'
+                ]
             ]);
         } catch (Exception $e) {
-            // Rollback the transaction on exception
             DB::rollBack();
             $this->Log(__FUNCTION__, "POST", $e->getMessage(), Auth::user()->id, request()->ip(), gethostname());
-            $notification = array(
+
+            return redirect()->back()->with([
                 'message' => 'Something Went Wrong!',
                 'alert-type' => 'error'
-            );
-            return redirect()->back()->with($notification);
+            ]);
         }
     }
 

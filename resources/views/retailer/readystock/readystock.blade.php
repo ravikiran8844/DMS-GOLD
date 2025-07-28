@@ -367,6 +367,18 @@
                                                                             <tr>
                                                                                 <td>Qty</td>
                                                                                 @foreach ($main->variants as $index => $variant)
+                                                                                    <input type="hidden"
+                                                                                        name="mweight{{ $variant['productID'] }}"
+                                                                                        id="mweight{{ $variant['productID'] }}"
+                                                                                        value="{{ $variant['weight'] }}">
+                                                                                    <input type="hidden"
+                                                                                        name="msize{{ $variant['productID'] }}"
+                                                                                        id="msize{{ $variant['productID'] }}"
+                                                                                        value="{{ $variant['size'] }}">
+                                                                                    <input type="hidden"
+                                                                                        name="mbox{{ $variant['productID'] }}"
+                                                                                        id="mbox{{ $variant['productID'] }}"
+                                                                                        value="{{ $variant['style'] }}">
                                                                                     <td>
                                                                                         <div
                                                                                             class="input-group quantity-input-group quantity-container">
@@ -375,8 +387,8 @@
                                                                                                 class="qtyminus"
                                                                                                 field="quantity">
                                                                                             <input type="text"
-                                                                                                name="quantity{{ $variant['productID'] }}"
-                                                                                                id="quantity{{ $variant['productID'] }}"
+                                                                                                name="mquantity{{ $variant['productID'] }}"
+                                                                                                id="mquantity{{ $variant['productID'] }}"
                                                                                                 value="1"
                                                                                                 class="qty">
                                                                                             <input type="button"
@@ -398,12 +410,12 @@
                                                                                             )
                                                                                                 ->where(
                                                                                                     'product_id',
-                                                                                                    $main->id,
+                                                                                                    $variant['productID'],
                                                                                                 )
                                                                                                 ->get();
                                                                                             $currentcartcount = App\Models\Cart::where(
                                                                                                 'product_id',
-                                                                                                $main->id,
+                                                                                                $variant['productID'],
                                                                                             )
                                                                                                 ->where(
                                                                                                     'user_id',
@@ -415,9 +427,9 @@
                                                                                             class="shop-page-add-to-cart-btn">
                                                                                             @if (count($isCart))
                                                                                                 <button
-                                                                                                    onclick="addforcart({{ $main->id }})"
+                                                                                                    onclick="addforcart({{ $variant['productID'] }})"
                                                                                                     class="btn added-to-cart-btn mr-2 spinner-button"
-                                                                                                    data_id="card_id_{{ $main->id }}">
+                                                                                                    data_id="card_id_{{ $variant['productID'] }}">
                                                                                                     <span
                                                                                                         class="submit-text">ADDED
                                                                                                         TO CART</span>
@@ -430,14 +442,14 @@
                                                                                                             role="status">Adding...</span>
                                                                                                     </span>
                                                                                                     <span
-                                                                                                        id="applycurrentcartcount{{ $main->id }}"
+                                                                                                        id="applycurrentcartcount{{ $variant['productID'] }}"
                                                                                                         class="added-to-cart-badge ms-2">{{ $currentcartcount }}</span>
                                                                                                 </button>
                                                                                             @else
                                                                                                 <button
-                                                                                                    onclick="addforcart({{ $main->id }})"
+                                                                                                    onclick="addforcart({{ $variant['productID'] }})"
                                                                                                     class="btn add-to-cart-btn mr-2 spinner-button"
-                                                                                                    data_id="card_id_{{ $main->id }}">
+                                                                                                    data_id="card_id_{{ $variant['productID'] }}">
                                                                                                     <span
                                                                                                         class="submit-text">ADD
                                                                                                         TO CART</span>
@@ -547,7 +559,8 @@
                                                 <div class="input-group quantity-input-group quantity-container">
                                                     <input type="button" value="-" class="qtyminus"
                                                         field="quantity">
-                                                    <input type="text" name="quantity" data-stock="{{ $main->qty }}"
+                                                    <input type="text" name="quantity"
+                                                        data-stock="{{ $main->qty }}"
                                                         id="quantity{{ $main->id }}" value="1"
                                                         class="qty">
                                                     <input type="button" value="+" class="qtyplus"
