@@ -72,7 +72,7 @@ function decrementQuantity(button) {
 
                 if (productData) {
                     const productWeightedPrice =
-                        productData.qty * productData.weight;
+                        (productData.qty * productData.weight).toFixed(2);
 
                     $("#totalweight" + dataId).text(
                         productWeightedPrice + "gms"
@@ -164,7 +164,7 @@ function incrementQuantity(button) {
 
                 if (productData) {
                     const productWeightedPrice =
-                        productData.qty * productData.weight;
+                        (productData.qty * productData.weight).toFixed(2);
 
                     $("#totalweight" + dataId).text(
                         productWeightedPrice + "gms"
@@ -194,6 +194,8 @@ function populateCart() {
         url: "getcartproducts", // Change this URL to the actual endpoint
         dataType: "json",
         success: function (response) {
+            console.log(response);
+
             if (window.matchMedia("(max-width: 768px)").matches) {
                 // If mobile view (max-width: 768px)
                 var route = "category";
@@ -267,7 +269,7 @@ function populateCart() {
                         <td class="text-center">${item.weight}gms</td>
                         <td class="text-center" id="totalweight${
                             item.product_id
-                        }">${item.weight * item.qty}gms</td>
+                        }">${(item.weight * item.qty).toFixed(2)}gms</td>
                     <td class="text-center">${item.size ?? "-"}</td>
                         <td class="text-center">
                             <button type='button' class="border-0 bg-transparent" onclick="removeItem(this,${
@@ -282,10 +284,9 @@ function populateCart() {
                             </button>
                         </td>`;
                     cartItemsContainer.appendChild(row);
-
-                    // ✅ Call image loader AFTER DOM is updated
-                    loadSecureImages();
                 });
+                // ✅ Call image loader AFTER DOM is updated
+                loadSecureImages();
             }
         },
         error: function (error) {
@@ -379,9 +380,6 @@ function displayItems() {
                     </div>                  
                 `;
                     itemsContainer.appendChild(itemDiv);
-
-                    // ✅ Call image loader AFTER DOM is updated
-                    loadSecureImages();
                 });
             }
         },

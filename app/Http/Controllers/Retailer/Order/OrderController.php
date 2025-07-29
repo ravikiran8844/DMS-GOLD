@@ -18,6 +18,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderSetting;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Status as ModelsStatus;
 use App\Models\User;
 use App\Traits\Common;
@@ -66,7 +67,7 @@ class OrderController extends Controller
             $insufficientProducts = [];
 
             foreach ($cartItems as $cart) {
-                $product = Product::where('id', $cart->product_id)->first();
+                $product = ProductVariant::where('id', $cart->product_id)->first();
                 if ($cart->qty > $product->qty) {
                     $insufficientProducts[] = $product->DesignNo;
                 }
@@ -119,8 +120,8 @@ class OrderController extends Controller
                 ]);
 
                 // Decrement product stock if user is CRM
-                $product = Product::where('id', $cart->product_id)->first();
-                Product::where('id', $cart->product_id)->update([
+                $product = ProductVariant::where('id', $cart->product_id)->first();
+                ProductVariant::where('id', $cart->product_id)->update([
                     'qty' => $product->qty - $cart->qty,
                 ]);
             }

@@ -50,10 +50,11 @@ class ProcessOrder implements ShouldQueue
         $excelFileNames = $order->order_no . '.xlsx';
         $excelFilePaths = 'invoices/no-img/' . $excelFileNames;
 
-        $datas = OrderDetail::select('order_details.*', 'products.Purity', 'products.DesignNo', 'products.Project', 'products.size', 'products.style', 'orders.totalweight', 'orders.order_no', 'users.name', 'users.email', 'users.mobile')
+        $datas = OrderDetail::select('order_details.*', 'product_variants.Purity', 'products.DesignNo', 'products.Project', 'product_variants.size', 'product_variants.style', 'orders.totalweight', 'orders.order_no', 'users.name', 'users.email', 'users.mobile')
             ->join('orders', 'orders.id', 'order_details.order_id')
             ->join('users', 'users.id', 'orders.user_id')
-            ->join('products', 'products.id', 'order_details.product_id')
+            ->join('product_variants', 'product_variants.id', 'order_details.product_id')
+            ->join('products', 'products.id', 'product_variants.product_id')
             ->where('orders.user_id', $order->user_id)
             ->where('order_details.order_id', $order->id)
             ->get();

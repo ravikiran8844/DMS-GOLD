@@ -22,15 +22,20 @@ class CartController extends Controller
 
     function cart()
     {
-        $cart = Cart::select('carts.*', 'products.qty', 'products.product_image')
-            ->join('products', 'products.id', 'carts.product_id')
-            ->where('carts.user_id', Auth::user()->id)
+        $cart = Cart::select(
+            'carts.*',
+            'product_variants.qty',
+            'products.product_image'
+        )
+            ->join('product_variants', 'product_variants.id', '=', 'carts.product_id')
+            ->join('products', 'products.id', '=', 'product_variants.product_id')
+            ->where('carts.user_id', Auth::id())
             ->get();
-
+        
         $dealer = User::where('role_id', Roles::Dealer)->where('is_active', 1)->orderby('name', 'ASC')->get();
         $cartQty = Cart::where('user_id', Auth::user()->id)->sum('qty');
-        $cartWeight = Cart::select(DB::raw('SUM(carts.qty * products.weight) as totalWeight'))
-            ->join('products', 'products.id', '=', 'carts.product_id')
+        $cartWeight = Cart::select(DB::raw('SUM(carts.qty * product_variants.weight) as totalWeight'))
+            ->join('product_variants', 'product_variants.id', '=', 'carts.product_id')
             ->where('carts.user_id', Auth::user()->id)
             ->value('totalWeight');
         $previousUrl = url()->previous();
@@ -60,18 +65,19 @@ class CartController extends Controller
     function getCartProducts()
     {
         $secret = 'EmeraldAdmin';
-        $carts = Cart::join('products', 'products.id', 'carts.product_id')
+        $carts = Cart::join('product_variants', 'product_variants.id', 'carts.product_id')
+            ->join('products', 'products.id', 'product_variants.product_id')
             ->where('carts.user_id', Auth::user()->id)
-            ->select('carts.*', 'products.qty as stock', 'products.product_image', 'products.DesignNo', 'products.weight')
+            ->select('carts.*', 'product_variants.qty as stock', 'products.product_image', 'products.DesignNo', 'product_variants.weight')
             ->get()
             ->map(function ($product) use ($secret) {
                 $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
                 return $product;
             });
 
-        $cartQty = Cart::join('products', 'products.id', 'carts.product_id')
+        $cartQty = Cart::join('product_variants', 'product_variants.id', 'carts.product_id')
             ->where('carts.user_id', Auth::user()->id)
-            ->select('carts.*', 'products.qty as stock')
+            ->select('carts.*', 'product_variants.qty as stock')
             ->count('carts.id');
         return response()->json(array(
             'carts' => $carts,
@@ -83,13 +89,13 @@ class CartController extends Controller
     {
         $Cart = Cart::findOrFail($id);
         $Cart->delete();
-        $cartQty = Cart::join('products', 'products.id', 'carts.product_id')
+        $cartQty = Cart::join('product_variants', 'product_variants.id', 'carts.product_id')
             ->where('carts.user_id', Auth::user()->id)
-            ->select('carts.*', 'products.qty as stock')
+            ->select('carts.*', 'product_variants.qty as stock')
             ->count('carts.id');
         $cartqtycount = Cart::where('user_id', Auth::user()->id)->sum('qty');
-        $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * products.weight) as totalWeight'))
-            ->join('products', 'products.id', '=', 'carts.product_id')
+        $cartweightcount = Cart::select(DB::raw('SUM(carts.qty * product_variants.weight) as totalWeight'))
+            ->join('product_variants', 'product_variants.id', '=', 'carts.product_id')
             ->where('carts.user_id', Auth::user()->id)
             ->value('totalWeight');
         $notification = [
@@ -126,8 +132,8 @@ class CartController extends Controller
                 'qty' => $request->qty,
             ]);
 
-            $totalQty = Cart::select('carts.*', 'products.weight')
-                ->join('products', 'products.id', 'carts.product_id')
+            $totalQty = Cart::select('carts.*', 'product_variants.weight')
+                ->join('product_variants', 'product_variants.id', 'carts.product_id')
                 ->where('carts.user_id', Auth::user()->id)
                 ->get();
             return response()->json([
