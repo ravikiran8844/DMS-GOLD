@@ -1576,13 +1576,15 @@ class ReadyStockController extends Controller
         // Procategory JSONs
         $procategoryIds = $itemwiseproduct->pluck('Procatgory')->filter()->unique()->toArray();
 
-        $procategoryData = Product::whereIn('Procatgory', $procategoryIds)
-            ->whereNotNull('Procatgory')
-            ->where('qty', '>', 0)
-            ->where('Procatgory', '!=', '')
-            ->select('Procatgory', DB::raw('MIN(id) as id'))
-            ->groupBy('Procatgory')
+        $procategoryData = Product::join('product_variants', 'product_variants.product_id', '=', 'products.id')
+            ->whereIn('products.Procatgory', $procategoryIds)
+            ->whereNotNull('products.Procatgory')
+            ->where('product_variants.qty', '>', 0)
+            ->where('products.Procatgory', '!=', '')
+            ->select('products.Procatgory', DB::raw('MIN(products.id) as id'))
+            ->groupBy('products.Procatgory')
             ->get();
+
         $procategoryjson = $procategoryData->toJson();
 
         $procategoryDefaultData = Product::where('qty', '>', 0)
