@@ -206,211 +206,170 @@ function getWeightRange(id, page = 1) {
                 $("#checkboxhidden").removeAttr("hidden", "");
                 $("#addtocarthidden").removeAttr("hidden", "");
                 $("#product_page").removeAttr("hidden", "");
-                $.each(result.weightrange.data, function (key, value) {
-                    $("#notfound").empty();
-                    moqAvailabilityHTML = ` <div class="card-multiple-sizes-wrapper">
-
-                                            <div class="d-flex mt-3">
-                                                <div class="product-cart-qty-text">In Stock:
-                                                    <span> ${
-                                                        value.qty ?? "-"
-                                                    } Pcs</span>
-                                                </div>
-                                            </div>
-                                            </div>`;
-
-                    var eid = $("#encrypt" + value.id).val();
-                    var productDetailUrl =
-                        "/retailer/productdetail/productId".replace(
-                            "productId",
-                            eid
-                        );
-                    var productHTML = `
-                    <input type="hidden" name="weight${value.id}" id="weight${
-                        value.id
-                    }" value="${value.weight}">
-                    <input type="hidden" name="size${value.id}" id="size${
-                        value.id
-                    }" value="${value.size}">
-                    <input type="hidden" name="color${value.id}" id="color${
-                        value.id
-                    }" value="${value.color}">
-                            <input type="hidden" name="box${value.id}" id="box${
-                        value.id
-                    }" value="${value.style}">
+                $.each(result.weightrange.data,function (key, value) {
+                    $("#notfound").empty(); // Clear 'no results' notice if any
+                    let encryptedId = $("#encrypt" + value.id).val();
+                    let productDetailUrl = "/retailer/productdetail/" + encryptedId;
+                    let secureImg = value.secureFilename;
+                    let variantCount = value.variant_count ?? 1;
+                    let variants = value.variants ?? [];
+                
+                    let safeDesignNo = value.DesignNo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                    let productHTML = `
                     <div class="card shop-page_product-card">
-                        <div class="card-checkbox_wrapper">
-                            <input class="card-checkbox" type="checkbox" name="product${
-                                value.id
-                            }"
-                                id="product${value.id}" data-id="${value.id}">
-                        </div>
                         <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
                             <a href="${productDetailUrl}">
-                                <img class="img-fluid prouduct_card-image load-secure-image" width="255"
-                                            height="255" src="http://imageurl.ejindia.com/api/image/secure"
-                                            data-secure="${
-                                                value.secureFilename
-                                            }" alt>
+                                <img class="img-fluid prouduct_card-image load-secure-image" src="${baseurl}/load-loading.gif" data-secure="${secureImg}" width="255" height="255" alt="">
                             </a>
-                             <div class="position-absolute card-purity purity-list">
-                                Purity: ${value.Purity}
-                            </div>
+                            <div class="position-absolute card-purity purity-list">Purity: ${value.variant_purity ?? 'N/A'}</div>
                         </div>
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <div
-                                class="d-flex justify-content-between  align-items-center flex-wrap card-title_wrapper">
-                              <div class="card-title"><a href="${productDetailUrl}">${
-                        value.DesignNo
-                    }</a> </div>
-                                 
-                                    <button class="ml-2 custom-icon-btn wishlist-svg ${
-                                        value.is_favourite === 1 ? "active" : ""
-                                    }"
-                                    onclick="addtowishlist(${value.id})">
-                                        <svg width="26" height="23" viewBox="0 0 26 23"
-                                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                stroke="inherit" stroke-width="1.5"
-                                                stroke-linejoin="round" />
-                                        </svg>
-                                    </button>
-                            </div>
-                                <input type="hidden" name="qty${value.id}"
-                          id="qty${value.id}" value="${value.qty}">
-        <div>
-
-       <div class="mt-3 grid cols-3 card-content_wrapper">
-                                            ${
-                                                value.color
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Colour</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    ${value.color ?? "-"}</div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                             ${
-                                                 value.unit
-                                                     ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Unit</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    ${value.unit ?? "-"}</div>
-                                            </div>`
-                                                     : ""
-                                             }
-                                            ${
-                                                value.style
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Style</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    ${value.style ?? "-"}</div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                            ${
-                                                value.making
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Making %</div>
-                                                <div class="product-card-badge">${
-                                                    value.making ?? "-"
-                                                }
-                                                </div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                            ${
-                                                value.size
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">
-                                                    Size
-                                                </div>
-                                                <div class="product-card-badge">${
-                                                    value.size ?? "-"
-                                                }
-                                                </div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                            ${
-                                                value.weight
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">
-                                                    Weight
-                                                </div>
-                                                <div class="product-card-badge">
-                                                    ${
-                                                        value.weight ?? "-"
-                                                    }g</div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                        </div>
-             </div>
-              <div class="d-flex flex-wrap gap-2 align-items-center">
-                  ${moqAvailabilityHTML}
-                  <div class="d-flex gap-2 align-items-center purity-inside-card">
-                      <div class="card-text text-dark">
-                          Purity
-                      </div>
-                      <div class="product-card-badge">${value.Purity}</div>
-                  </div>
-              </div>
-                            <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">
-                                <div class="d-flex align-items-center">
-                                    <label class="me-2">Qty</label>
-                                    <div class="input-group quantity-input-group quantity-container"
-                                        data-product-id=${value.id}>
-                                        <input type="button" value="-" class="qtyminus"
-                                            field="quantity"
-                                           >
-                                        <input type="text" name="quantity"
-                                            id="quantity${value.id}" value="1"
-                                            class="qty">
-                                        <input type="button" value="+" class="qtyplus"
-                                            field="quantity">
-                                    </div>
+                
+                        <div class="card-body d-flex flex-column">
+                            <div class="card-title">
+                                <a href="${productDetailUrl}" class="text-decoration-none">${value.DesignNo}</a>
+                            </div>`;
+                
+                    // MULTIPLE VARIANTS
+                    if (variantCount > 1 && variants.length > 1) {
+                        productHTML += `
+                        <div class="mt-3">
+                            <div class="card-text fw-bold">Multiple Sizes Available</div>
+                            <button class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#productModal-${safeDesignNo}">
+                                View All Options
+                            </button>
+                
+                            <!-- Modal -->
+                            <div class="modal fade product-variants-modal" id="productModal-${safeDesignNo}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-xl">
+                                    <div class="modal-content rounded-4 overflow-hidden">
+                                        <div class="modal-body p-4 d-flex flex-column flex-lg-row gap-4">
+                                            <div class="modal-image text-center flex-shrink-0" style="flex: 0 0 200px;">
+                                                <img class="img-fluid load-secure-image" src="${baseurl}/load-loading.gif" data-secure="${secureImg}" width="200" height="200" alt="${value.DesignNo}">
+                                            </div>
+                                            <div class="modal-details flex-grow-1 overflow-auto">
+                                                <h6 class="mb-2 fs-5" style="color:#7E7E7E;">Design Code: <span class="font-semibold text-dark">${value.DesignNo}</span></h6>
+                                                <p class="fw-medium fs-6 mb-4" style="color:#F78D1E;">Multiple Sizes Available</p>
+                                                <div class="overflow-auto">
+                                                    <table class="table table-bordered text-center align-middle">
+                                                        <thead class="table-dark border-0"><tr><th></th>`;
+                
+                        variants.forEach((_, i) => {
+                            productHTML += `<th>Variant #${i + 1}</th>`;
+                        });
+                
+                        productHTML += `</tr></thead><tbody>`;
+                
+                        // Dynamic rows for variant attributes
+                        const attrs = ['Purity', 'color', 'unit', 'style', 'making', 'size', 'weight', 'qty'];
+                        const labels = ['Purity', 'Color', 'Unit', 'Style', 'Making %', 'Size', 'Weight', 'In Stock'];
+                        
+                        attrs.forEach((attr, i) => {
+                            productHTML += `<tr><td>${labels[i]}</td>`;
+                            variants.forEach(variant => {
+                                let val = variant[attr] ?? '-';
+                                if (attr === 'Weight' && val !== '-') val += 'g';
+                                if (attr === 'Qty' && val !== '-') val += ' Pcs';
+                                productHTML += `<td>${val}</td>`;
+                            });
+                            productHTML += `</tr>`;
+                        });
+                
+                        // Quantity input row
+                        productHTML += `<tr><td>Qty</td>`;
+                        variants.forEach(variant => {
+                            productHTML += `<td>
+                                <div class="input-group quantity-input-group quantity-container">
+                                    <input type="button" value="-" class="qtyminus" field="quantity">
+                                    <input type="text" name="mquantity${variant.productID}" id="mquantity${variant.productID}" value="1" class="qty">
+                                    <input type="button" value="+" class="qtyplus" field="quantity">
                                 </div>
-                                <div class="shop-page-add-to-cart-btn">
-                                <button onclick="addforcart(${
-                                    value.id
-                                })" data_id="card_id_${value.id}"
-                                  class="btn ${
-                                      result.cart[key] &&
-                                      Array.isArray(result.cart[key]) &&
-                                      result.cart[key].length
-                                          ? "added-to-cart-btn"
-                                          : "add-to-cart-btn"
-                                  } mr-2 spinner-button">                                                            
-                                  <span class="submit-text">${
-                                      result.cart[key] &&
-                                      Array.isArray(result.cart[key]) &&
-                                      result.cart[key].length
-                                          ? "Added To Cart"
-                                          : "ADD TO CART"
-                                  }</span>
-                          <span class="d-none spinner">
-                              <span class="spinner-grow spinner-grow-sm"
-                                  aria-hidden="true"></span>
-                              <span role="status">Adding...</span>
-                          </span>
-                          <span class="added-to-cart-badge ms-2">${
-                              result.cartcount[key]
-                          }</span>
-                          </button>
-                            </div>
-                            </div>
-                            </div>
+                            </td>`;
+                        });
+                        productHTML += `</tr>`;
+                
+                        // Add to cart row
+                        productHTML += `<tr><td>Add to Cart</td>`;
+                        variants.forEach(variant => {
+                            let inCart = result.cart[variant.productID]?.length > 0;
+                            let cartQty = result.cartcount[variant.productID] ?? 0;
+                            productHTML += `<td>
+                                <button onclick="addforcart(${variant.productID})" class="btn ${inCart ? 'added-to-cart-btn' : 'add-to-cart-btn'} spinner-button" data_id="card_id_${variant.productID}">
+                                    <span class="submit-text">${inCart ? 'ADDED TO CART' : 'ADD TO CART'}</span>
+                                    <span class="d-none spinner">
+                                        <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                                        <span role="status">Adding...</span>
+                                    </span>
+                                    <span id="applycurrentcartcount${variant.productID}" class="added-to-cart-badge ms-2">${cartQty}</span>
+                                </button>
+                            </td>`;
+                        });
+                
+                        productHTML += `
+                            </tr></tbody></table>
+                        </div></div></div>
+                            <button type="button" class="btn btn-link close-btn" data-bs-dismiss="modal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25"
+                                                                height="25" viewBox="0 0 25 25" fill="none">
+                                                                <path
+                                                                    d="M12.375 23.75C10.8812 23.75 9.40205 23.4558 8.02198 22.8841C6.6419 22.3125 5.38793 21.4746 4.33166 20.4183C3.27539 19.3621 2.43752 18.1081 1.86587 16.728C1.29422 15.3479 1 13.8688 1 12.375C1 10.8812 1.29422 9.40205 1.86587 8.02197C2.43752 6.6419 3.27539 5.38793 4.33166 4.33166C5.38793 3.27539 6.6419 2.43752 8.02198 1.86587C9.40206 1.29422 10.8812 1 12.375 1C13.8688 1 15.3479 1.29422 16.728 1.86587C18.1081 2.43752 19.3621 3.2754 20.4183 4.33166C21.4746 5.38793 22.3125 6.6419 22.8841 8.02198C23.4558 9.40206 23.75 10.8812 23.75 12.375C23.75 13.8688 23.4558 15.3479 22.8841 16.728C22.3125 18.1081 21.4746 19.3621 20.4183 20.4183C19.3621 21.4746 18.1081 22.3125 16.728 22.8841C15.3479 23.4558 13.8688 23.75 12.375 23.75L12.375 23.75Z"
+                                                                    stroke="#535353" stroke-width="1.47967"
+                                                                    stroke-linecap="round" />
+                                                                <path d="M8.58203 8.58398L16.1654 16.1673"
+                                                                    stroke="#535353" stroke-width="1.47967"
+                                                                    stroke-linecap="round" />
+                                                                <path d="M16.168 8.58398L8.58464 16.1673"
+                                                                    stroke="#535353" stroke-width="1.47967"
+                                                                    stroke-linecap="round" />
+                                                            </svg></button>
                         </div>
                     </div>
-      `;
+                </div>`;
+                    } else {
+                        // SINGLE VARIANT
+                        productHTML += `<div class="mt-3 grid cols-3 card-content_wrapper">`;
+                
+                        const singleAttrs = [
+                            { key: 'variant_unit', label: 'Unit' },
+                            { key: 'variant_style', label: 'Style' },
+                            { key: 'variant_making', label: 'Making %' },
+                            { key: 'variant_color', label: 'Color' },
+                            { key: 'variant_size', label: 'Size' },
+                            { key: 'variant_weight', label: 'Weight', suffix: 'g' }
+                        ];
+                
+                        singleAttrs.forEach(attr => {
+                            if (value[attr.key]) {
+                                productHTML += `
+                                <div class="d-flex flex-column gap-1">
+                                    <div class="card-text text-dark">${attr.label}</div>
+                                    <div class="product-card-badge">${value[attr.key]}${attr.suffix || ''}</div>
+                                </div>`;
+                            }
+                        });
+                
+                        productHTML += `</div>
+                            <div class="product-cart-qty-text mt-2">In Stock: <span>${value.variant_qty ?? '-'}</span> Pcs</div>
+                            <div class="shop-page-add-to-cart-btn mt-3">
+                                <div class="d-flex align-items-center">
+                                    <label class="me-2">Qty</label>
+                                    <div class="input-group quantity-input-group quantity-container">
+                                        <input type="button" value="-" class="qtyminus" field="quantity">
+                                        <input type="text" name="quantity" id="quantity${value.id}" value="1" class="qty">
+                                        <input type="button" value="+" class="qtyplus" field="quantity">
+                                    </div>
+                                </div>
+                                <button onclick="addforcart(${value.id})" class="btn mt-3 ${result.cart[value.id]?.length ? 'added-to-cart-btn' : 'add-to-cart-btn'} spinner-button" data_id="card_id_${value.id}">
+                                    <span class="submit-text">${result.cart[value.id]?.length ? 'ADDED TO CART' : 'ADD TO CART'}</span>
+                                    <span class="d-none spinner">
+                                        <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                                        <span role="status">Adding...</span>
+                                    </span>
+                                    <span class="added-to-cart-badge ms-2">${result.cartcount[value.id] ?? ''}</span>
+                                </button>
+                            </div>`;
+                    }
+                
+                    productHTML += `</div></div>`; // Close .card-body and .card
                     $("#product_page").append(productHTML);
                 });
                 $(".loader").fadeOut();
@@ -575,6 +534,7 @@ function getProduct(id, page = 1) {
                     JSON.stringify(result.procategoryDefaultjson)
                 );
             }
+            console.log(result, "result");
             if (result.itemwiseproduct.data.length == 0) {
                 $("#checkboxhidden").attr("hidden", "");
                 $("#addtocarthidden").attr("hidden", "");
@@ -590,212 +550,172 @@ function getProduct(id, page = 1) {
                 $("#addtocarthidden").removeAttr("hidden", "");
                 $("#product_page").removeAttr("hidden", "");
                 $.each(result.itemwiseproduct.data, function (key, value) {
-                    $("#notfound").empty();
-                    moqAvailabilityHTML = ` <div class="card-multiple-sizes-wrapper">
-
-                                            <div class="d-flex mt-3">
-                                                <div class="product-cart-qty-text">In Stock:
-                                                    <span> ${
-                                                        value.variant_qty ?? "-"
-                                                    } Pcs</span>
-                                                </div>
-                                            </div>
-                                            </div>`;
-
-                    var eid = $("#encrypt" + value.id).val();
-                    var productDetailUrl =
-                        "/retailer/productdetail/productId".replace(
-                            "productId",
-                            eid
-                        );
-                    var productHTML = `
-                    <input type="hidden" name="weight${value.id}" id="weight${
-                        value.id
-                    }" value="${value.variant_weight}">
-                    <input type="hidden" name="size${value.id}" id="size${
-                        value.id
-                    }" value="${value.variant_size}">
-                    <input type="hidden" name="color${value.id}" id="color${
-                        value.id
-                    }" value="${value.variant_color}">
-                            <input type="hidden" name="box${value.id}" id="box${
-                        value.id
-                    }" value="${value.variant_style}">
+                    $("#notfound").empty(); // Clear 'no results' notice if any
+                    let encryptedId = $("#encrypt" + value.id).val();
+                    let productDetailUrl = "/retailer/productdetail/" + encryptedId;
+                    let secureImg = value.secureFilename;
+                    let variantCount = value.variant_count ?? 1;
+                    let variants = value.variants ?? [];
+                
+                    let safeDesignNo = value.DesignNo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                    let productHTML = `
                     <div class="card shop-page_product-card">
-                        <div class="card-checkbox_wrapper">
-                            <input class="card-checkbox" type="checkbox" name="product${
-                                value.id
-                            }"
-                                id="product${value.id}" data-id="${value.id}">
-                        </div>
                         <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
                             <a href="${productDetailUrl}">
-                                <img class="img-fluid prouduct_card-image load-secure-image" width="255"
-                                            height="255" src="http://imageurl.ejindia.com/api/image/secure"
-                                            data-secure="${
-                                                value.secureFilename
-                                            }" alt>
+                                <img class="img-fluid prouduct_card-image load-secure-image" src="${baseurl}/load-loading.gif" data-secure="${secureImg}" width="255" height="255" alt="">
                             </a>
-                             <div class="position-absolute card-purity purity-list">
-                                Purity: ${value.variant_purity}
-                            </div>
+                            <div class="position-absolute card-purity purity-list">Purity: ${value.variant_purity ?? 'N/A'}</div>
                         </div>
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <div
-                                class="d-flex justify-content-between  align-items-center flex-wrap card-title_wrapper">
-                              <div class="card-title"><a href="${productDetailUrl}">${
-                        value.DesignNo
-                    }</a> </div>
-                                 
-                                    <button class="ml-2 custom-icon-btn wishlist-svg ${
-                                        value.is_favourite === 1 ? "active" : ""
-                                    }"
-                                    onclick="addtowishlist(${value.id})">
-                                        <svg width="26" height="23" viewBox="0 0 26 23"
-                                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                stroke="inherit" stroke-width="1.5"
-                                                stroke-linejoin="round" />
-                                        </svg>
-                                    </button>
-                            </div>
-                                <input type="hidden" name="qty${value.id}"
-                          id="qty${value.id}" value="${value.variant_ty}">
-        <div>
-
-       <div class="mt-3 grid cols-3 card-content_wrapper">
-                                            ${
-                                                value.variant_color
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Colour</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    ${value.variant_color ?? "-"}</div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                             ${
-                                                 value.variant_unit
-                                                     ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Unit</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    ${value.variant_unit ?? "-"}</div>
-                                            </div>`
-                                                     : ""
-                                             }
-                                            ${
-                                                value.variant_style
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Style</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    ${value.variant_style ?? "-"}</div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                            ${
-                                                value.variant_making
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Making %</div>
-                                                <div class="product-card-badge">${
-                                                    value.variant_making ?? "-"
-                                                }
-                                                </div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                            ${
-                                                value.variant_size
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">
-                                                    Size
-                                                </div>
-                                                <div class="product-card-badge">${
-                                                    value.variant_size ?? "-"
-                                                }
-                                                </div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                            ${
-                                                value.variant_weight
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">
-                                                    Weight
-                                                </div>
-                                                <div class="product-card-badge">
-                                                    ${
-                                                        value.variant_weight ?? "-"
-                                                    }g</div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                        </div>
-             </div>
-              <div class="d-flex flex-wrap gap-2 align-items-center">
-                  ${moqAvailabilityHTML}
-                  <div class="d-flex gap-2 align-items-center purity-inside-card">
-                      <div class="card-text text-dark">
-                          Purity
-                      </div>
-                      <div class="product-card-badge">${value.variant_purity}</div>
-                  </div>
-              </div>
-                            <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">
-                                <div class="d-flex align-items-center">
-                                    <label class="me-2">Qty</label>
-                                    <div class="input-group quantity-input-group quantity-container"
-                                        data-product-id=${value.id}>
-                                        <input type="button" value="-" class="qtyminus"
-                                            field="quantity"
-                                           >
-                                        <input type="text" name="quantity"
-                                            id="quantity${value.id}" value="1"
-                                            class="qty">
-                                        <input type="button" value="+" class="qtyplus"
-                                            field="quantity">
-                                    </div>
+                
+                        <div class="card-body d-flex flex-column">
+                            <div class="card-title">
+                                <a href="${productDetailUrl}" class="text-decoration-none">${value.DesignNo}</a>
+                            </div>`;
+                
+                    // MULTIPLE VARIANTS
+                    if (variantCount > 1 && variants.length > 1) {
+                        productHTML += `
+                        <div class="mt-3">
+                            <div class="card-text fw-bold">Multiple Sizes Available</div>
+                            <button class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#productModal-${safeDesignNo}">
+                                View All Options
+                            </button>
+                
+                            <!-- Modal -->
+                            <div class="modal fade product-variants-modal" id="productModal-${safeDesignNo}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-xl">
+                                    <div class="modal-content rounded-4 overflow-hidden">
+                                        <div class="modal-body p-4 d-flex flex-column flex-lg-row gap-4">
+                                            <div class="modal-image text-center flex-shrink-0" style="flex: 0 0 200px;">
+                                                <img class="img-fluid load-secure-image" src="${baseurl}/load-loading.gif" data-secure="${secureImg}" width="200" height="200" alt="${value.DesignNo}">
+                                            </div>
+                                            <div class="modal-details flex-grow-1 overflow-auto">
+                                                <h6 class="mb-2 fs-5" style="color:#7E7E7E;">Design Code: <span class="font-semibold text-dark">${value.DesignNo}</span></h6>
+                                                <p class="fw-medium fs-6 mb-4" style="color:#F78D1E;">Multiple Sizes Available</p>
+                                                <div class="overflow-auto">
+                                                    <table class="table table-bordered text-center align-middle">
+                                                        <thead class="table-dark border-0"><tr><th></th>`;
+                
+                        variants.forEach((_, i) => {
+                            productHTML += `<th>Variant #${i + 1}</th>`;
+                        });
+                
+                        productHTML += `</tr></thead><tbody>`;
+                
+                        // Dynamic rows for variant attributes
+                        const attrs = ['Purity', 'color', 'unit', 'style', 'making', 'size', 'weight', 'qty'];
+                        const labels = ['Purity', 'Color', 'Unit', 'Style', 'Making %', 'Size', 'Weight', 'In Stock'];
+                        
+                        attrs.forEach((attr, i) => {
+                            productHTML += `<tr><td>${labels[i]}</td>`;
+                            variants.forEach(variant => {
+                                let val = variant[attr] ?? '-';
+                                if (attr === 'Weight' && val !== '-') val += 'g';
+                                if (attr === 'Qty' && val !== '-') val += ' Pcs';
+                                productHTML += `<td>${val}</td>`;
+                            });
+                            productHTML += `</tr>`;
+                        });
+                
+                        // Quantity input row
+                        productHTML += `<tr><td>Qty</td>`;
+                        variants.forEach(variant => {
+                            productHTML += `<td>
+                                <div class="input-group quantity-input-group quantity-container">
+                                    <input type="button" value="-" class="qtyminus" field="quantity">
+                                    <input type="text" name="mquantity${variant.productID}" id="mquantity${variant.productID}" value="1" class="qty">
+                                    <input type="button" value="+" class="qtyplus" field="quantity">
                                 </div>
-                                <div class="shop-page-add-to-cart-btn">
-                                <button onclick="addforcart(${
-                                    value.id
-                                })" data_id="card_id_${value.id}"
-                                  class="btn ${
-                                      result.cart[key] &&
-                                      Array.isArray(result.cart[key]) &&
-                                      result.cart[key].length
-                                          ? "added-to-cart-btn"
-                                          : "add-to-cart-btn"
-                                  } mr-2 spinner-button">                                                            
-                                  <span class="submit-text">${
-                                      result.cart[key] &&
-                                      Array.isArray(result.cart[key]) &&
-                                      result.cart[key].length
-                                          ? "Added To Cart"
-                                          : "ADD TO CART"
-                                  }</span>
-                          <span class="d-none spinner">
-                              <span class="spinner-grow spinner-grow-sm"
-                                  aria-hidden="true"></span>
-                              <span role="status">Adding...</span>
-                          </span>
-                          <span class="added-to-cart-badge ms-2">${
-                              result.cartcount[key]
-                          }</span>
-                          </button>
-                            </div>
-                            </div>
-                            </div>
+                            </td>`;
+                        });
+                        productHTML += `</tr>`;
+                
+                        // Add to cart row
+                        productHTML += `<tr><td>Add to Cart</td>`;
+                        variants.forEach(variant => {
+                            let inCart = result.cart[variant.productID]?.length > 0;
+                            let cartQty = result.cartcount[variant.productID] ?? 0;
+                            productHTML += `<td>
+                                <button onclick="addforcart(${variant.productID})" class="btn ${inCart ? 'added-to-cart-btn' : 'add-to-cart-btn'} spinner-button" data_id="card_id_${variant.productID}">
+                                    <span class="submit-text">${inCart ? 'ADDED TO CART' : 'ADD TO CART'}</span>
+                                    <span class="d-none spinner">
+                                        <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                                        <span role="status">Adding...</span>
+                                    </span>
+                                    <span id="applycurrentcartcount${variant.productID}" class="added-to-cart-badge ms-2">${cartQty}</span>
+                                </button>
+                            </td>`;
+                        });
+                
+                        productHTML += `
+                            </tr></tbody></table>
+                        </div></div></div>
+                            <button type="button" class="btn btn-link close-btn" data-bs-dismiss="modal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25"
+                                                                height="25" viewBox="0 0 25 25" fill="none">
+                                                                <path
+                                                                    d="M12.375 23.75C10.8812 23.75 9.40205 23.4558 8.02198 22.8841C6.6419 22.3125 5.38793 21.4746 4.33166 20.4183C3.27539 19.3621 2.43752 18.1081 1.86587 16.728C1.29422 15.3479 1 13.8688 1 12.375C1 10.8812 1.29422 9.40205 1.86587 8.02197C2.43752 6.6419 3.27539 5.38793 4.33166 4.33166C5.38793 3.27539 6.6419 2.43752 8.02198 1.86587C9.40206 1.29422 10.8812 1 12.375 1C13.8688 1 15.3479 1.29422 16.728 1.86587C18.1081 2.43752 19.3621 3.2754 20.4183 4.33166C21.4746 5.38793 22.3125 6.6419 22.8841 8.02198C23.4558 9.40206 23.75 10.8812 23.75 12.375C23.75 13.8688 23.4558 15.3479 22.8841 16.728C22.3125 18.1081 21.4746 19.3621 20.4183 20.4183C19.3621 21.4746 18.1081 22.3125 16.728 22.8841C15.3479 23.4558 13.8688 23.75 12.375 23.75L12.375 23.75Z"
+                                                                    stroke="#535353" stroke-width="1.47967"
+                                                                    stroke-linecap="round" />
+                                                                <path d="M8.58203 8.58398L16.1654 16.1673"
+                                                                    stroke="#535353" stroke-width="1.47967"
+                                                                    stroke-linecap="round" />
+                                                                <path d="M16.168 8.58398L8.58464 16.1673"
+                                                                    stroke="#535353" stroke-width="1.47967"
+                                                                    stroke-linecap="round" />
+                                                            </svg></button>
                         </div>
                     </div>
-      `;
+                </div>`;
+                    } else {
+                        // SINGLE VARIANT
+                        productHTML += `<div class="mt-3 grid cols-3 card-content_wrapper">`;
+                
+                        const singleAttrs = [
+                            { key: 'variant_unit', label: 'Unit' },
+                            { key: 'variant_style', label: 'Style' },
+                            { key: 'variant_making', label: 'Making %' },
+                            { key: 'variant_color', label: 'Color' },
+                            { key: 'variant_size', label: 'Size' },
+                            { key: 'variant_weight', label: 'Weight', suffix: 'g' }
+                        ];
+                
+                        singleAttrs.forEach(attr => {
+                            if (value[attr.key]) {
+                                productHTML += `
+                                <div class="d-flex flex-column gap-1">
+                                    <div class="card-text text-dark">${attr.label}</div>
+                                    <div class="product-card-badge">${value[attr.key]}${attr.suffix || ''}</div>
+                                </div>`;
+                            }
+                        });
+                
+                        productHTML += `</div>
+                            <div class="product-cart-qty-text mt-2">In Stock: <span>${value.variant_qty ?? '-'}</span> Pcs</div>
+                            <div class="shop-page-add-to-cart-btn mt-3">
+                                <div class="d-flex align-items-center">
+                                    <label class="me-2">Qty</label>
+                                    <div class="input-group quantity-input-group quantity-container">
+                                        <input type="button" value="-" class="qtyminus" field="quantity">
+                                        <input type="text" name="quantity" id="quantity${value.id}" value="1" class="qty">
+                                        <input type="button" value="+" class="qtyplus" field="quantity">
+                                    </div>
+                                </div>
+                                <button onclick="addforcart(${value.id})" class="btn mt-3 ${result.cart[value.id]?.length ? 'added-to-cart-btn' : 'add-to-cart-btn'} spinner-button" data_id="card_id_${value.id}">
+                                    <span class="submit-text">${result.cart[value.id]?.length ? 'ADDED TO CART' : 'ADD TO CART'}</span>
+                                    <span class="d-none spinner">
+                                        <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                                        <span role="status">Adding...</span>
+                                    </span>
+                                    <span class="added-to-cart-badge ms-2">${result.cartcount[value.id] ?? ''}</span>
+                                </button>
+                            </div>`;
+                    }
+                
+                    productHTML += `</div></div>`; // Close .card-body and .card
                     $("#product_page").append(productHTML);
                 });
+                
                 $(".loader").fadeOut();
                 if (windowWidth > 300) {
                     $("#pageloader").fadeOut();
@@ -970,216 +890,173 @@ function getProCategory(id, page = 1) {
                 $("#checkboxhidden").removeAttr("hidden", "");
                 $("#addtocarthidden").removeAttr("hidden", "");
                 $("#product_page").removeAttr("hidden", "");
-                $.each(
-                    result.procategorywiseproduct.data,
-                    function (key, value) {
-                        $("#notfound").empty();
-                        moqAvailabilityHTML = ` <div class="card-multiple-sizes-wrapper">
-
-                                            <div class="d-flex mt-3">
-                                                <div class="product-cart-qty-text">In Stock:
-                                                    <span> ${
-                                                        value.qty ?? "-"
-                                                    } Pcs</span>
-                                                </div>
-                                            </div>
-                                            </div>`;
-
-                        var eid = $("#encrypt" + value.id).val();
-                        var productDetailUrl =
-                            "/retailer/productdetail/productId".replace(
-                                "productId",
-                                eid
-                            );
-                        var productHTML = `
-                    <input type="hidden" name="weight${value.id}" id="weight${
-                            value.id
-                        }" value="${value.weight}">
-                    <input type="hidden" name="size${value.id}" id="size${
-                            value.id
-                        }" value="${value.size}">
-                    <input type="hidden" name="color${value.id}" id="color${
-                            value.id
-                        }" value="${value.color}">
-                            <input type="hidden" name="box${value.id}" id="box${
-                            value.id
-                        }" value="${value.style}">
+                $.each(result.procategorywiseproduct.data, function (key, value) {
+                    $("#notfound").empty(); // Clear 'no results' notice if any
+                    let encryptedId = $("#encrypt" + value.id).val();
+                    let productDetailUrl = "/retailer/productdetail/" + encryptedId;
+                    let secureImg = value.secureFilename;
+                    let variantCount = value.variant_count ?? 1;
+                    let variants = value.variants ?? [];
+                
+                    let safeDesignNo = value.DesignNo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                    let productHTML = `
                     <div class="card shop-page_product-card">
-                        <div class="card-checkbox_wrapper">
-                            <input class="card-checkbox" type="checkbox" name="product${
-                                value.id
-                            }"
-                                id="product${value.id}" data-id="${value.id}">
-                        </div>
                         <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
                             <a href="${productDetailUrl}">
-                                <img class="img-fluid prouduct_card-image load-secure-image" width="255"
-                                            height="255" src="http://imageurl.ejindia.com/api/image/secure"
-                                            data-secure="${
-                                                value.secureFilename
-                                            }" alt>
+                                <img class="img-fluid prouduct_card-image load-secure-image" src="${baseurl}/load-loading.gif" data-secure="${secureImg}" width="255" height="255" alt="">
                             </a>
-                             <div class="position-absolute card-purity purity-list">
-                                Purity: ${value.Purity}
-                            </div>
+                            <div class="position-absolute card-purity purity-list">Purity: ${value.variant_purity ?? 'N/A'}</div>
                         </div>
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <div
-                                class="d-flex justify-content-between  align-items-center flex-wrap card-title_wrapper">
-                              <div class="card-title"><a href="${productDetailUrl}">${
-                            value.DesignNo
-                        }</a> </div>
-                                 
-                                    <button class="ml-2 custom-icon-btn wishlist-svg ${
-                                        value.is_favourite === 1 ? "active" : ""
-                                    }"
-                                    onclick="addtowishlist(${value.id})">
-                                        <svg width="26" height="23" viewBox="0 0 26 23"
-                                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M21.5109 13.0016L12.7523 21.8976L4.0016 13.0016C-3.73173 5.15359 5.0336 -3.73174 12.7603 4.11626C20.6003 -3.84641 29.3589 5.03893 21.5189 13.0123L21.5109 13.0016Z"
-                                                stroke="inherit" stroke-width="1.5"
-                                                stroke-linejoin="round" />
-                                        </svg>
-                                    </button>
-                            </div>
-                                <input type="hidden" name="qty${value.id}"
-                          id="qty${value.id}" value="${value.qty}">
-        <div>
-
-       <div class="mt-3 grid cols-3 card-content_wrapper">
-                                            ${
-                                                value.color
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Colour</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    ${value.color ?? "-"}</div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                             ${
-                                                 value.unit
-                                                     ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Unit</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    ${value.unit ?? "-"}</div>
-                                            </div>`
-                                                     : ""
-                                             }
-                                            ${
-                                                value.style
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Style</div>
-                                                <div class="product-card-badge product-card-badge-light">
-                                                    ${value.style ?? "-"}</div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                            ${
-                                                value.making
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">Making %</div>
-                                                <div class="product-card-badge">${
-                                                    value.making ?? "-"
-                                                }
-                                                </div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                            ${
-                                                value.size
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">
-                                                    Size
-                                                </div>
-                                                <div class="product-card-badge">${
-                                                    value.size ?? "-"
-                                                }
-                                                </div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                            ${
-                                                value.weight
-                                                    ? `
-                                            <div class="d-flex flex-column gap-1">
-                                                <div class="card-text text-dark">
-                                                    Weight
-                                                </div>
-                                                <div class="product-card-badge">
-                                                    ${
-                                                        value.weight ?? "-"
-                                                    }g</div>
-                                            </div>`
-                                                    : ""
-                                            }
-                                        </div>
-             </div>
-              <div class="d-flex flex-wrap gap-2 align-items-center">
-                  ${moqAvailabilityHTML}
-                  <div class="d-flex gap-2 align-items-center purity-inside-card">
-                      <div class="card-text text-dark">
-                          Purity
-                      </div>
-                      <div class="product-card-badge">${value.Purity}</div>
-                  </div>
-              </div>
-                            <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">
-                                <div class="d-flex align-items-center">
-                                    <label class="me-2">Qty</label>
-                                    <div class="input-group quantity-input-group quantity-container"
-                                        data-product-id=${value.id}>
-                                        <input type="button" value="-" class="qtyminus"
-                                            field="quantity"
-                                           >
-                                        <input type="text" name="quantity"
-                                            id="quantity${value.id}" value="1"
-                                            class="qty">
-                                        <input type="button" value="+" class="qtyplus"
-                                            field="quantity">
-                                    </div>
+                
+                        <div class="card-body d-flex flex-column">
+                            <div class="card-title">
+                                <a href="${productDetailUrl}" class="text-decoration-none">${value.DesignNo}</a>
+                            </div>`;
+                
+                    // MULTIPLE VARIANTS
+                    if (variantCount > 1 && variants.length > 1) {
+                        productHTML += `
+                        <div class="mt-3">
+                            <div class="card-text fw-bold">Multiple Sizes Available</div>
+                            <button class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#productModal-${safeDesignNo}">
+                                View All Options
+                            </button>
+                
+                            <!-- Modal -->
+                            <div class="modal fade product-variants-modal" id="productModal-${safeDesignNo}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-xl">
+                                    <div class="modal-content rounded-4 overflow-hidden">
+                                        <div class="modal-body p-4 d-flex flex-column flex-lg-row gap-4">
+                                            <div class="modal-image text-center flex-shrink-0" style="flex: 0 0 200px;">
+                                                <img class="img-fluid load-secure-image" src="${baseurl}/load-loading.gif" data-secure="${secureImg}" width="200" height="200" alt="${value.DesignNo}">
+                                            </div>
+                                            <div class="modal-details flex-grow-1 overflow-auto">
+                                                <h6 class="mb-2 fs-5" style="color:#7E7E7E;">Design Code: <span class="font-semibold text-dark">${value.DesignNo}</span></h6>
+                                                <p class="fw-medium fs-6 mb-4" style="color:#F78D1E;">Multiple Sizes Available</p>
+                                                <div class="overflow-auto">
+                                                    <table class="table table-bordered text-center align-middle">
+                                                        <thead class="table-dark border-0"><tr><th></th>`;
+                
+                        variants.forEach((_, i) => {
+                            productHTML += `<th>Variant #${i + 1}</th>`;
+                        });
+                
+                        productHTML += `</tr></thead><tbody>`;
+                
+                        // Dynamic rows for variant attributes
+                        const attrs = ['Purity', 'color', 'unit', 'style', 'making', 'size', 'weight', 'qty'];
+                        const labels = ['Purity', 'Color', 'Unit', 'Style', 'Making %', 'Size', 'Weight', 'In Stock'];
+                        
+                        attrs.forEach((attr, i) => {
+                            productHTML += `<tr><td>${labels[i]}</td>`;
+                            variants.forEach(variant => {
+                                let val = variant[attr] ?? '-';
+                                if (attr === 'Weight' && val !== '-') val += 'g';
+                                if (attr === 'Qty' && val !== '-') val += ' Pcs';
+                                productHTML += `<td>${val}</td>`;
+                            });
+                            productHTML += `</tr>`;
+                        });
+                
+                        // Quantity input row
+                        productHTML += `<tr><td>Qty</td>`;
+                        variants.forEach(variant => {
+                            productHTML += `<td>
+                                <div class="input-group quantity-input-group quantity-container">
+                                    <input type="button" value="-" class="qtyminus" field="quantity">
+                                    <input type="text" name="mquantity${variant.productID}" id="mquantity${variant.productID}" value="1" class="qty">
+                                    <input type="button" value="+" class="qtyplus" field="quantity">
                                 </div>
-                                <div class="shop-page-add-to-cart-btn">
-                                <button onclick="addforcart(${
-                                    value.id
-                                })" data_id="card_id_${value.id}"
-                                  class="btn ${
-                                      result.cart[key] &&
-                                      Array.isArray(result.cart[key]) &&
-                                      result.cart[key].length
-                                          ? "added-to-cart-btn"
-                                          : "add-to-cart-btn"
-                                  } mr-2 spinner-button">                                                            
-                                  <span class="submit-text">${
-                                      result.cart[key] &&
-                                      Array.isArray(result.cart[key]) &&
-                                      result.cart[key].length
-                                          ? "Added To Cart"
-                                          : "ADD TO CART"
-                                  }</span>
-                          <span class="d-none spinner">
-                              <span class="spinner-grow spinner-grow-sm"
-                                  aria-hidden="true"></span>
-                              <span role="status">Adding...</span>
-                          </span>
-                          <span class="added-to-cart-badge ms-2">${
-                              result.cartcount[key]
-                          }</span>
-                          </button>
-                            </div>
-                            </div>
-                            </div>
+                            </td>`;
+                        });
+                        productHTML += `</tr>`;
+                
+                        // Add to cart row
+                        productHTML += `<tr><td>Add to Cart</td>`;
+                        variants.forEach(variant => {
+                            let inCart = result.cart[variant.productID]?.length > 0;
+                            let cartQty = result.cartcount[variant.productID] ?? 0;
+                            productHTML += `<td>
+                                <button onclick="addforcart(${variant.productID})" class="btn ${inCart ? 'added-to-cart-btn' : 'add-to-cart-btn'} spinner-button" data_id="card_id_${variant.productID}">
+                                    <span class="submit-text">${inCart ? 'ADDED TO CART' : 'ADD TO CART'}</span>
+                                    <span class="d-none spinner">
+                                        <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                                        <span role="status">Adding...</span>
+                                    </span>
+                                    <span id="applycurrentcartcount${variant.productID}" class="added-to-cart-badge ms-2">${cartQty}</span>
+                                </button>
+                            </td>`;
+                        });
+                
+                        productHTML += `
+                            </tr></tbody></table>
+                        </div></div></div>
+                            <button type="button" class="btn btn-link close-btn" data-bs-dismiss="modal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25"
+                                                                height="25" viewBox="0 0 25 25" fill="none">
+                                                                <path
+                                                                    d="M12.375 23.75C10.8812 23.75 9.40205 23.4558 8.02198 22.8841C6.6419 22.3125 5.38793 21.4746 4.33166 20.4183C3.27539 19.3621 2.43752 18.1081 1.86587 16.728C1.29422 15.3479 1 13.8688 1 12.375C1 10.8812 1.29422 9.40205 1.86587 8.02197C2.43752 6.6419 3.27539 5.38793 4.33166 4.33166C5.38793 3.27539 6.6419 2.43752 8.02198 1.86587C9.40206 1.29422 10.8812 1 12.375 1C13.8688 1 15.3479 1.29422 16.728 1.86587C18.1081 2.43752 19.3621 3.2754 20.4183 4.33166C21.4746 5.38793 22.3125 6.6419 22.8841 8.02198C23.4558 9.40206 23.75 10.8812 23.75 12.375C23.75 13.8688 23.4558 15.3479 22.8841 16.728C22.3125 18.1081 21.4746 19.3621 20.4183 20.4183C19.3621 21.4746 18.1081 22.3125 16.728 22.8841C15.3479 23.4558 13.8688 23.75 12.375 23.75L12.375 23.75Z"
+                                                                    stroke="#535353" stroke-width="1.47967"
+                                                                    stroke-linecap="round" />
+                                                                <path d="M8.58203 8.58398L16.1654 16.1673"
+                                                                    stroke="#535353" stroke-width="1.47967"
+                                                                    stroke-linecap="round" />
+                                                                <path d="M16.168 8.58398L8.58464 16.1673"
+                                                                    stroke="#535353" stroke-width="1.47967"
+                                                                    stroke-linecap="round" />
+                                                            </svg></button>
                         </div>
                     </div>
-      `;
-                        $("#product_page").append(productHTML);
+                </div>`;
+                    } else {
+                        // SINGLE VARIANT
+                        productHTML += `<div class="mt-3 grid cols-3 card-content_wrapper">`;
+                
+                        const singleAttrs = [
+                            { key: 'variant_unit', label: 'Unit' },
+                            { key: 'variant_style', label: 'Style' },
+                            { key: 'variant_making', label: 'Making %' },
+                            { key: 'variant_color', label: 'Color' },
+                            { key: 'variant_size', label: 'Size' },
+                            { key: 'variant_weight', label: 'Weight', suffix: 'g' }
+                        ];
+                
+                        singleAttrs.forEach(attr => {
+                            if (value[attr.key]) {
+                                productHTML += `
+                                <div class="d-flex flex-column gap-1">
+                                    <div class="card-text text-dark">${attr.label}</div>
+                                    <div class="product-card-badge">${value[attr.key]}${attr.suffix || ''}</div>
+                                </div>`;
+                            }
+                        });
+                
+                        productHTML += `</div>
+                            <div class="product-cart-qty-text mt-2">In Stock: <span>${value.variant_qty ?? '-'}</span> Pcs</div>
+                            <div class="shop-page-add-to-cart-btn mt-3">
+                                <div class="d-flex align-items-center">
+                                    <label class="me-2">Qty</label>
+                                    <div class="input-group quantity-input-group quantity-container">
+                                        <input type="button" value="-" class="qtyminus" field="quantity">
+                                        <input type="text" name="quantity" id="quantity${value.id}" value="1" class="qty">
+                                        <input type="button" value="+" class="qtyplus" field="quantity">
+                                    </div>
+                                </div>
+                                <button onclick="addforcart(${value.id})" class="btn mt-3 ${result.cart[value.id]?.length ? 'added-to-cart-btn' : 'add-to-cart-btn'} spinner-button" data_id="card_id_${value.id}">
+                                    <span class="submit-text">${result.cart[value.id]?.length ? 'ADDED TO CART' : 'ADD TO CART'}</span>
+                                    <span class="d-none spinner">
+                                        <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                                        <span role="status">Adding...</span>
+                                    </span>
+                                    <span class="added-to-cart-badge ms-2">${result.cartcount[value.id] ?? ''}</span>
+                                </button>
+                            </div>`;
                     }
-                );
+                
+                    productHTML += `</div></div>`; // Close .card-body and .card
+                    $("#product_page").append(productHTML);
+                });
+                
                 $(".loader").fadeOut();
                 if (windowWidth > 300) {
                     $("#pageloader").fadeOut();
