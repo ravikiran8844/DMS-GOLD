@@ -596,7 +596,7 @@ function getProduct(id, page = 1) {
                                             <div class="d-flex mt-3">
                                                 <div class="product-cart-qty-text">In Stock:
                                                     <span> ${
-                                                        value.qty ?? "-"
+                                                        value.variant_qty ?? "-"
                                                     } Pcs</span>
                                                 </div>
                                             </div>
@@ -611,16 +611,16 @@ function getProduct(id, page = 1) {
                     var productHTML = `
                     <input type="hidden" name="weight${value.id}" id="weight${
                         value.id
-                    }" value="${value.weight}">
+                    }" value="${value.variant_weight}">
                     <input type="hidden" name="size${value.id}" id="size${
                         value.id
-                    }" value="${value.size}">
+                    }" value="${value.variant_size}">
                     <input type="hidden" name="color${value.id}" id="color${
                         value.id
-                    }" value="${value.color}">
+                    }" value="${value.variant_color}">
                             <input type="hidden" name="box${value.id}" id="box${
                         value.id
-                    }" value="${value.style}">
+                    }" value="${value.variant_style}">
                     <div class="card shop-page_product-card">
                         <div class="card-checkbox_wrapper">
                             <input class="card-checkbox" type="checkbox" name="product${
@@ -637,7 +637,7 @@ function getProduct(id, page = 1) {
                                             }" alt>
                             </a>
                              <div class="position-absolute card-purity purity-list">
-                                Purity: ${value.Purity}
+                                Purity: ${value.variant_purity}
                             </div>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-between">
@@ -661,68 +661,68 @@ function getProduct(id, page = 1) {
                                     </button>
                             </div>
                                 <input type="hidden" name="qty${value.id}"
-                          id="qty${value.id}" value="${value.qty}">
+                          id="qty${value.id}" value="${value.variant_ty}">
         <div>
 
        <div class="mt-3 grid cols-3 card-content_wrapper">
                                             ${
-                                                value.color
+                                                value.variant_color
                                                     ? `
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">Colour</div>
                                                 <div class="product-card-badge product-card-badge-light">
-                                                    ${value.color ?? "-"}</div>
+                                                    ${value.variant_color ?? "-"}</div>
                                             </div>`
                                                     : ""
                                             }
                                              ${
-                                                 value.unit
+                                                 value.variant_unit
                                                      ? `
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">Unit</div>
                                                 <div class="product-card-badge product-card-badge-light">
-                                                    ${value.unit ?? "-"}</div>
+                                                    ${value.variant_unit ?? "-"}</div>
                                             </div>`
                                                      : ""
                                              }
                                             ${
-                                                value.style
+                                                value.variant_style
                                                     ? `
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">Style</div>
                                                 <div class="product-card-badge product-card-badge-light">
-                                                    ${value.style ?? "-"}</div>
+                                                    ${value.variant_style ?? "-"}</div>
                                             </div>`
                                                     : ""
                                             }
                                             ${
-                                                value.making
+                                                value.variant_making
                                                     ? `
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">Making %</div>
                                                 <div class="product-card-badge">${
-                                                    value.making ?? "-"
+                                                    value.variant_making ?? "-"
                                                 }
                                                 </div>
                                             </div>`
                                                     : ""
                                             }
                                             ${
-                                                value.size
+                                                value.variant_size
                                                     ? `
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">
                                                     Size
                                                 </div>
                                                 <div class="product-card-badge">${
-                                                    value.size ?? "-"
+                                                    value.variant_size ?? "-"
                                                 }
                                                 </div>
                                             </div>`
                                                     : ""
                                             }
                                             ${
-                                                value.weight
+                                                value.variant_weight
                                                     ? `
                                             <div class="d-flex flex-column gap-1">
                                                 <div class="card-text text-dark">
@@ -730,7 +730,7 @@ function getProduct(id, page = 1) {
                                                 </div>
                                                 <div class="product-card-badge">
                                                     ${
-                                                        value.weight ?? "-"
+                                                        value.variant_weight ?? "-"
                                                     }g</div>
                                             </div>`
                                                     : ""
@@ -743,7 +743,7 @@ function getProduct(id, page = 1) {
                       <div class="card-text text-dark">
                           Purity
                       </div>
-                      <div class="product-card-badge">${value.Purity}</div>
+                      <div class="product-card-badge">${value.variant_purity}</div>
                   </div>
               </div>
                             <div class="mt-3 shop-page-qty-add-to-cart-btn_wrapper">

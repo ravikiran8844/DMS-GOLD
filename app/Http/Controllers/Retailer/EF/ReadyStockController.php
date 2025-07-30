@@ -1457,11 +1457,23 @@ class ReadyStockController extends Controller
         $procategories = (array) $request->input('procategoryArray');
         $getItem = Product::whereIn('Item', $selectedItem)->pluck('Item')->toArray();
 
-        $itemwiseproduct = $this->getproducts(Auth::user()->id);
+        $itemwiseproduct = $this->getproducts(Auth::user()->id)
+            ->join('product_variants', 'product_variants.product_id', '=', 'products.id')
+            ->select(
+                'products.*',
+                'product_variants.weight as variant_weight',
+                'product_variants.purity as variant_purity',
+                'product_variants.size as variant_size',
+                'product_variants.style as variant_style',
+                'product_variants.unit as variant_unit',
+                'product_variants.color as variant_color',
+                'product_variants.making as variant_making',
+                'product_variants.qty as variant_qty',
+            );
 
         if ($getItem) {
             $itemwiseproduct->whereIn('products.Item', $getItem)
-                ->where('products.qty', '>', 0);
+                ->where('product_variants.qty', '>', 0);
         }
 
         if (!empty($request->project_id)) {
@@ -1479,7 +1491,7 @@ class ReadyStockController extends Controller
             if (!empty($selectedWeightRangesFrom) && !empty($selectedWeightRangesTo)) {
                 $itemwiseproduct->where(function ($query) use ($selectedWeightRangesFrom, $selectedWeightRangesTo) {
                     foreach ($selectedWeightRangesFrom as $index => $from) {
-                        $query->orWhereBetween('products.weight', [$from, $selectedWeightRangesTo[$index]]);
+                        $query->orWhereBetween('product_variants.weight', [$from, $selectedWeightRangesTo[$index]]);
                     }
                 });
             }
@@ -1487,8 +1499,8 @@ class ReadyStockController extends Controller
 
         // Clone the query to calculate the min and max weight before paginating
         $weightQuery = clone $itemwiseproduct;
-        $minWeight = $weightQuery->min('products.weight');
-        $maxWeight = $weightQuery->max('products.weight');
+        $minWeight = $weightQuery->min('product_variants.weight');
+        $maxWeight = $weightQuery->max('product_variants.weight');
 
         $itemwiseproduct = $itemwiseproduct
             ->orderBy('products.DesignNo', 'ASC');
@@ -1539,11 +1551,12 @@ class ReadyStockController extends Controller
         $procategoryIds = $itemwiseproduct->pluck('Procatgory')->filter()->unique()->toArray();
 
         $procategoryData = Product::whereIn('Procatgory', $procategoryIds)
-            ->whereNotNull('Procatgory')
-            ->where('qty', '>', 0)
-            ->where('Procatgory', '!=', '')
-            ->select('Procatgory', DB::raw('MIN(id) as id'))
-            ->groupBy('Procatgory')
+            ->select('products.Procatgory', 'product_variants.qty', 'product_variants.id as productID')
+            ->join('product_variants', 'product_variants.product_id', '=', 'products.id', DB::raw('MIN(product_variants.id) as id'))
+            ->whereNotNull('products.Procatgory')
+            ->where('product_variants.qty', '>', 0)
+            ->where('products.Procatgory', '!=', '')
+            ->groupBy('products.Procatgory')
             ->get();
         $procategoryjson = $procategoryData->toJson();
 
