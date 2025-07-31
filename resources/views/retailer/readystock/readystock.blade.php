@@ -119,21 +119,25 @@
                             <div class="nav flex-column" id="mob-filters-tab" role="tablist"
                                 aria-orientation="vertical">
 
-                                <button class="nav-link" id="mobProductFilterTab" data-bs-toggle="pill"
+                                <button class="nav-link active" id="mobProductFilterTab" data-bs-toggle="pill"
                                     data-bs-target="#mobileProductFilter" type="button" role="tab"
-                                    aria-controls="mobileProductFilter" aria-selected="false">Product</button>
+                                    aria-controls="mobileProductFilter" aria-selected="true">Product</button>
+
                                 <button class="nav-link" id="mobProcategoryFilter" data-bs-toggle="pill"
                                     data-bs-target="#mobileprocategoryFilter" type="button" role="tab"
-                                    aria-controls="mobileprocategoryFilter" aria-selected="true">Pro Category</button>
+                                    aria-controls="mobileprocategoryFilter" aria-selected="false">Pro Category</button>
+
                                 <button class="nav-link" id="mobPurityFilter" data-bs-toggle="pill"
-                                    data-bs-target="#mobilepurityilter" type="button" role="tab"
-                                    aria-controls="mobilepurityilter" aria-selected="true">Purity</button>
+                                    data-bs-target="#mobilepurityFilter" type="button" role="tab"
+                                    aria-controls="mobilepurityFilter" aria-selected="false">Purity</button>
+
+
                             </div>
                         </div>
                         <div class="mobile-filters-offcanvas__body-item-filter-inputs">
                             <div class="tab-content" id="mob-filters-tabContent">
-                                <div class="tab-pane fade show active" id="mobileProductFilter" role="tabpanel"
-                                    aria-labelledby="mobileProductFilter" tabindex="0">
+                            <div class="tab-pane show active" id="mobileProductFilter" role="tabpanel"
+                                    aria-labelledby="mobProductFilterTab" tabindex="0">
                                     <div class="filter-inputs_wrapper" id="mobile-product-filters">
                                         @foreach ($products as $item)
                                             <div class="form-check d-flex justify-content-between gap-2">
@@ -150,8 +154,8 @@
                                         @endforeach
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="mobileprocategoryFilter" role="tabpanel"
-                                    aria-labelledby="mobileprocategoryFilter" tabindex="0">
+                                <div class="tab-pane" id="mobileprocategoryFilter" role="tabpanel"
+                                aria-labelledby="mobProcategoryFilter" tabindex="0">
                                     <div class="filter-inputs_wrapper" id="mobile-procategory-filters">
                                         @foreach ($procategorys as $item)
                                             <div class="form-check d-flex justify-content-between gap-2">
@@ -169,8 +173,8 @@
                                         @endforeach
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="mobilepurityilter" role="tabpanel"
-                                    aria-labelledby="mobilepurityilter" tabindex="0">
+                                <div class="tab-pane" id="mobilepurityFilter" role="tabpanel"
+                                    aria-labelledby="mobPurityFilter" tabindex="0">
                                     <div class="filter-inputs_wrapper" id="mobile-purity-filters">
                                         @foreach ($puritys as $item)
                                             <div class="form-check d-flex justify-content-between gap-2">
