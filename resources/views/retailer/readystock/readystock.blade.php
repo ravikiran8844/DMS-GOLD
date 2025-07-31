@@ -53,15 +53,6 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
 @php
-    // $usedWeights = App\Models\ProductVariant::where('qty', '>', 0)->pluck('weight')->toArray();
-
-    // $weights = App\Models\Weight::where(function ($query) use ($usedWeights) {
-    //     foreach ($usedWeights as $productWeight) {
-    //         $query->orWhere(function ($q) use ($productWeight) {
-    //             $q->where('weight_range_from', '<=', $productWeight)->where('weight_range_to', '>=', $productWeight);
-    //         });
-    //     }
-    // })->get();
     $currentProjectId = $project_id;
     $projectId = App\Models\Project::where('is_active', 1)->where('id', $currentProjectId)->value('id');
     $products = App\Models\Product::where('Project', $currentProjectId)
@@ -70,6 +61,20 @@
         ->where('product_variants.qty', '>', 0)
         ->select('products.Item', DB::raw('MIN(products.id) as id'))
         ->groupBy('products.Item')
+        ->get();
+    $procategorys = App\Models\Product::where('Project', $currentProjectId)
+        ->select('product_variants.qty', 'products.*')
+        ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+        ->where('product_variants.qty', '>', 0)
+        ->select('products.Procatgory', DB::raw('MIN(products.id) as id'))
+        ->groupBy('products.Procatgory')
+        ->get();
+    $puritys = App\Models\Product::where('Project', $currentProjectId)
+        ->select('product_variants.qty', 'products.*')
+        ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+        ->where('product_variants.qty', '>', 0)
+        ->select('product_variants.Purity', DB::raw('MIN(product_variants.id) as id'))
+        ->groupBy('product_variants.Purity')
         ->get();
 @endphp
 <input type="hidden" name="decryptedProjectId" id="decryptedProjectId" value="{{ $decryptedProjectId ?? '' }}">
@@ -117,20 +122,19 @@
                                 <button class="nav-link" id="mobProductFilterTab" data-bs-toggle="pill"
                                     data-bs-target="#mobileProductFilter" type="button" role="tab"
                                     aria-controls="mobileProductFilter" aria-selected="false">Product</button>
-                                {{-- <button class="nav-link" id="mobWeightFilter" data-bs-toggle="pill"
-                                    data-bs-target="#mobileWeightFilter" type="button" role="tab"
-                                    aria-controls="mobileWeightFilter" aria-selected="true">Weight
-                                    Range</button> --}}
                                 <button class="nav-link" id="mobProcategoryFilter" data-bs-toggle="pill"
                                     data-bs-target="#mobileprocategoryFilter" type="button" role="tab"
                                     aria-controls="mobileprocategoryFilter" aria-selected="true">Pro Category</button>
+                                <button class="nav-link" id="mobPurityFilter" data-bs-toggle="pill"
+                                    data-bs-target="#mobPurityFilter" type="button" role="tab"
+                                    aria-controls="mobPurityFilter" aria-selected="true">Purity</button>
                             </div>
                         </div>
                         <div class="mobile-filters-offcanvas__body-item-filter-inputs">
                             <div class="tab-content" id="mob-filters-tabContent">
                                 <div class="tab-pane fade show active" id="mobileProductFilter" role="tabpanel"
                                     aria-labelledby="mobileProductFilter" tabindex="0">
-                                    <div class="filter-inputs_wrapper">
+                                    <div class="filter-inputs_wrapper" id="mobile-product-filters">
                                         @foreach ($products as $item)
                                             <div class="form-check d-flex justify-content-between gap-2">
                                                 <div>
@@ -146,14 +150,41 @@
                                         @endforeach
                                     </div>
                                 </div>
-                                {{-- <div class="tab-pane fade" id="mobileWeightFilter" role="tabpanel"
-                                    aria-labelledby="mobWeightFilter" tabindex="0">
-                                    <div class="filter-inputs_wrapper" id="mobile-weight-filters">
-                                    </div>
-                                </div> --}}
                                 <div class="tab-pane fade" id="mobileprocategoryFilter" role="tabpanel"
                                     aria-labelledby="mobileprocategoryFilter" tabindex="0">
                                     <div class="filter-inputs_wrapper" id="mobile-procategory-filters">
+                                        @foreach ($procategorys as $item)
+                                            <div class="form-check d-flex justify-content-between gap-2">
+                                                <div>
+                                                    <input class="procategory form-check-input" type="checkbox"
+                                                        id="procategory{{ $item->id }}" name="procategory"
+                                                        data-id={{ $item->id }} value="{{ $item->Procatgory }}"
+                                                        onclick="getProCategory({{ $item->id }})">
+                                                    <label class="form-check-label"
+                                                        for="procategory{{ $item->id }}">
+                                                        {{ $item->Procatgory }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="mobilepurityilter" role="tabpanel"
+                                    aria-labelledby="mobilepurityilter" tabindex="0">
+                                    <div class="filter-inputs_wrapper" id="mobile-purity-filters">
+                                        @foreach ($puritys as $item)
+                                            <div class="form-check d-flex justify-content-between gap-2">
+                                                <div>
+                                                    <input class="purity form-check-input" type="checkbox"
+                                                        id="purity{{ $item->id }}" name="purity"
+                                                        data-id={{ $item->id }} value="{{ $item->Purity }}"
+                                                        onclick="getPurity({{ $item->id }})">
+                                                    <label class="form-check-label" for="purity{{ $item->id }}">
+                                                        {{ $item->Purity }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -277,7 +308,10 @@
                                             <div class="card-text fw-bold">Multiple Sizes Available</div>
 
                                             @php
-                                                $safeDesignNo = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($main->DesignNo)), '-');
+                                                $safeDesignNo = trim(
+                                                    preg_replace('/[^a-z0-9]+/', '-', strtolower($main->DesignNo)),
+                                                    '-',
+                                                );
                                             @endphp
 
                                             <!-- Trigger Button -->
@@ -358,7 +392,7 @@
                                                                                         <td>
                                                                                             @if ($attr === 'weight')
                                                                                                 {{ $variant[$attr] ?? '-' }}g
-                                                                                                @elseif ($attr === 'qty')
+                                                                                            @elseif ($attr === 'qty')
                                                                                                 {{ $variant[$attr] ?? 0 }}
                                                                                                 Pcs
                                                                                             @else
@@ -415,7 +449,9 @@
                                                                                             )
                                                                                                 ->where(
                                                                                                     'product_id',
-                                                                                                    $variant['productID'],
+                                                                                                    $variant[
+                                                                                                        'productID'
+                                                                                                    ],
                                                                                                 )
                                                                                                 ->get();
                                                                                             $currentcartcount = App\Models\Cart::where(

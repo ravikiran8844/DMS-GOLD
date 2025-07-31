@@ -22,8 +22,6 @@ function qtyplusminus() {
 
         var stock = parseInt(qtyInput.data("stock")) || 1;
 
-
-
         container.find(".qtyplus").click(function (e) {
             e.preventDefault();
             var currentVal = parseInt(qtyInput.val());
@@ -113,382 +111,12 @@ $(".top-dropdown-filters .btn").click(function () {
     // $(this).attr('aria-expanded', !isExpanded);
 });
 
-// function getWeightRange(id, page = 1) {
-//     $(".pagination-links").attr("hidden", true);
-//     var project = $("#decryptedProjectId").val();
-//     var procategory = $("#procategory").val();
-//     var product = $("#product").val();
-
-//     // Split the value into an array using the comma as a delimiter
-//     var procategoryArray = procategory.split(",");
-//     var productArray = product.split(",");
-
-//     var selectedWeightRanges = [];
-//     var weightToArray = [];
-
-//     // Iterate over all checkboxes with the class 'platingfilter'
-//     $(".weight_filter").each(function () {
-//         if (windowWidth > 300) {
-//             $("#pageloader").fadeIn();
-//         }
-//         var currentCheckbox = $(this);
-//         if (currentCheckbox.is(":checked")) {
-//             // Check if the value is already in the array
-//             if (!selectedWeightRanges.includes(currentCheckbox.val())) {
-//                 // Add the value to the selectedWeightRanges array
-//                 selectedWeightRanges.push(currentCheckbox.val());
-
-//                 // Get the corresponding weightTo value
-//                 weightToArray.push(
-//                     $("#weightto" + currentCheckbox.attr("data-id")).val()
-//                 );
-//             }
-//         }
-
-//         // Serialize the array into a string separated by a delimiter (comma)
-//         var selectedweightfrom = selectedWeightRanges.join(",");
-//         var selectedweightto = weightToArray.join(",");
-
-//         // Set the value of the hidden input field to the serialized string
-//         $("#hdweightfrom").val(selectedweightfrom);
-//         $("#hdweightto").val(selectedweightto);
-
-//         // To retrieve the array back from the string later:
-//         // Retrieve the value of the hidden input field
-//         var selectedweightfrom = $("#hdweightfrom").val();
-//         var selectedweightto = $("#hdweightto").val();
-
-//         // Split the string into an array using the delimiter (comma)
-//         var selectedweightfrom = selectedweightfrom.split(",");
-//         var selectedweightto = selectedweightto.split(",");
-//     });
-
-//     $("#product_page").empty();
-//     $.ajax({
-//         type: "GET",
-//         url: "/retailer/weightrange/" + id + "?page=" + page,
-//         headers: {
-//             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-//         },
-//         data: {
-//             selectedWeightRanges: selectedWeightRanges,
-//             weightToArray: weightToArray,
-//             procategoryArray: procategoryArray,
-//             productArray: productArray,
-//             project: project,
-//             _token: $('meta[name="csrf-token"]').attr("content"),
-//         },
-//         dataType: "json",
-//         success: function (result) {
-//             // Check if any checkbox is checked
-//             let isAnyCheckboxChecked = $(".weight_filter:checked").length > 0;
-//             // Assign value to #subCollectionData based on the checkbox state
-//             if (isAnyCheckboxChecked) {
-//                 $("#subCollectionData").val(
-//                     JSON.stringify(result.subcollectionsjson)
-//                 );
-//             } else {
-//                 $("#subCollectionData").val(
-//                     JSON.stringify(result.subcollectionsDefaultjson)
-//                 );
-//             }
-//             if (result.weightrange.data.length == 0) {
-//                 $("#checkboxhidden").attr("hidden", "");
-//                 $("#addtocarthidden").attr("hidden", "");
-//                 $("#product_page").attr("hidden", "");
-//                 $("#notfound").empty();
-//                 var notfound = `<img src='${baseurl}/emptycart.gif'>`;
-//                 $("#notfound").append(notfound);
-//                 if (windowWidth > 300) {
-//                     $("#pageloader").fadeOut();
-//                 }
-//             } else {
-//                 $("#checkboxhidden").removeAttr("hidden", "");
-//                 $("#addtocarthidden").removeAttr("hidden", "");
-//                 $("#product_page").removeAttr("hidden", "");
-//                 $.each(result.weightrange.data,function (key, value) {
-//                     $("#notfound").empty(); // Clear 'no results' notice if any
-//                     let encryptedId = $("#encrypt" + value.id).val();
-//                     let productDetailUrl = "/retailer/productdetail/" + encryptedId;
-//                     let secureImg = value.secureFilename;
-//                     let variantCount = value.variant_count ?? 1;
-//                     let variants = value.variants ?? [];
-                
-//                     let safeDesignNo = value.DesignNo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-//                     let productHTML = `
-//                     <div class="card shop-page_product-card">
-//                         <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
-//                             <a href="${productDetailUrl}">
-//                                 <img class="img-fluid prouduct_card-image load-secure-image" src="${baseurl}/load-loading.gif" data-secure="${secureImg}" width="255" height="255" alt="">
-//                             </a>
-//                             <div class="position-absolute card-purity purity-list">Purity: ${value.variant_purity ?? 'N/A'}</div>
-//                         </div>
-                
-//                         <div class="card-body d-flex flex-column">
-//                             <div class="card-title">
-//                                 <a href="${productDetailUrl}" class="text-decoration-none">${value.DesignNo}</a>
-//                             </div>`;
-                
-//                     // MULTIPLE VARIANTS
-//                     if (variantCount > 1 && variants.length > 1) {
-//                         productHTML += `
-//                         <div class="mt-3">
-//                             <div class="card-text fw-bold">Multiple Sizes Available</div>
-//                             <button class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#productModal-${safeDesignNo}">
-//                                 View All Options
-//                             </button>
-                
-//                             <!-- Modal -->
-//                             <div class="modal fade product-variants-modal" id="productModal-${safeDesignNo}" tabindex="-1" aria-hidden="true">
-//                                 <div class="modal-dialog modal-dialog-centered modal-xl">
-//                                     <div class="modal-content rounded-4 overflow-hidden">
-//                                         <div class="modal-body p-4 d-flex flex-column flex-lg-row gap-4">
-//                                             <div class="modal-image text-center flex-shrink-0" style="flex: 0 0 200px;">
-//                                                 <img class="img-fluid load-secure-image" src="${baseurl}/load-loading.gif" data-secure="${secureImg}" width="200" height="200" alt="${value.DesignNo}">
-//                                             </div>
-//                                             <div class="modal-details flex-grow-1 overflow-auto">
-//                                                 <h6 class="mb-2 fs-5" style="color:#7E7E7E;">Design Code: <span class="font-semibold text-dark">${value.DesignNo}</span></h6>
-//                                                 <p class="fw-medium fs-6 mb-4" style="color:#F78D1E;">Multiple Sizes Available</p>
-//                                                 <div class="overflow-auto">
-//                                                     <table class="table table-bordered text-center align-middle">
-//                                                         <thead class="table-dark border-0"><tr><th></th>`;
-                
-//                         variants.forEach((_, i) => {
-//                             productHTML += `<th>Variant #${i + 1}</th>`;
-//                         });
-                
-//                         productHTML += `</tr></thead><tbody>`;
-                
-//                         // Dynamic rows for variant attributes
-//                         const attrs = ['Purity', 'color', 'unit', 'style', 'making', 'size', 'weight', 'qty'];
-//                         const labels = ['Purity', 'Color', 'Unit', 'Style', 'Making %', 'Size', 'Weight', 'In Stock'];
-                        
-//                         attrs.forEach((attr, i) => {
-//                             productHTML += `<tr><td>${labels[i]}</td>`;
-//                             variants.forEach(variant => {
-//                                 let val = variant[attr] ?? '-';
-//                                 if (attr === 'Weight' && val !== '-') val += 'g';
-//                                 if (attr === 'Qty' && val !== '-') val += ' Pcs';
-//                                 productHTML += `<td>${val}</td>`;
-//                             });
-//                             productHTML += `</tr>`;
-//                         });
-                
-//                         // Quantity input row
-//                         productHTML += `<tr><td>Qty</td>`;
-//                         variants.forEach(variant => {
-//                             productHTML += `<td>
-//                                 <div class="input-group quantity-input-group quantity-container">
-//                                     <input type="button" value="-" class="qtyminus" field="quantity">
-//                                     <input type="text" name="mquantity${variant.productID}" id="mquantity${variant.productID}" value="1" class="qty">
-//                                     <input type="button" value="+" class="qtyplus" field="quantity">
-//                                 </div>
-//                             </td>`;
-//                         });
-//                         productHTML += `</tr>`;
-                
-//                         // Add to cart row
-//                         productHTML += `<tr><td>Add to Cart</td>`;
-//                         variants.forEach(variant => {
-//                             let inCart = result.cart[variant.productID]?.length > 0;
-//                             let cartQty = result.cartcount[variant.productID] ?? 0;
-//                             productHTML += `<td>
-//                                 <button onclick="addforcart(${variant.productID})" class="btn ${inCart ? 'added-to-cart-btn' : 'add-to-cart-btn'} spinner-button" data_id="card_id_${variant.productID}">
-//                                     <span class="submit-text">${inCart ? 'ADDED TO CART' : 'ADD TO CART'}</span>
-//                                     <span class="d-none spinner">
-//                                         <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
-//                                         <span role="status">Adding...</span>
-//                                     </span>
-//                                     <span id="applycurrentcartcount${variant.productID}" class="added-to-cart-badge ms-2">${cartQty}</span>
-//                                 </button>
-//                             </td>`;
-//                         });
-                
-//                         productHTML += `
-//                             </tr></tbody></table>
-//                         </div></div></div>
-//                             <button type="button" class="btn btn-link close-btn" data-bs-dismiss="modal">
-//                             <svg xmlns="http://www.w3.org/2000/svg" width="25"
-//                                                                 height="25" viewBox="0 0 25 25" fill="none">
-//                                                                 <path
-//                                                                     d="M12.375 23.75C10.8812 23.75 9.40205 23.4558 8.02198 22.8841C6.6419 22.3125 5.38793 21.4746 4.33166 20.4183C3.27539 19.3621 2.43752 18.1081 1.86587 16.728C1.29422 15.3479 1 13.8688 1 12.375C1 10.8812 1.29422 9.40205 1.86587 8.02197C2.43752 6.6419 3.27539 5.38793 4.33166 4.33166C5.38793 3.27539 6.6419 2.43752 8.02198 1.86587C9.40206 1.29422 10.8812 1 12.375 1C13.8688 1 15.3479 1.29422 16.728 1.86587C18.1081 2.43752 19.3621 3.2754 20.4183 4.33166C21.4746 5.38793 22.3125 6.6419 22.8841 8.02198C23.4558 9.40206 23.75 10.8812 23.75 12.375C23.75 13.8688 23.4558 15.3479 22.8841 16.728C22.3125 18.1081 21.4746 19.3621 20.4183 20.4183C19.3621 21.4746 18.1081 22.3125 16.728 22.8841C15.3479 23.4558 13.8688 23.75 12.375 23.75L12.375 23.75Z"
-//                                                                     stroke="#535353" stroke-width="1.47967"
-//                                                                     stroke-linecap="round" />
-//                                                                 <path d="M8.58203 8.58398L16.1654 16.1673"
-//                                                                     stroke="#535353" stroke-width="1.47967"
-//                                                                     stroke-linecap="round" />
-//                                                                 <path d="M16.168 8.58398L8.58464 16.1673"
-//                                                                     stroke="#535353" stroke-width="1.47967"
-//                                                                     stroke-linecap="round" />
-//                                                             </svg></button>
-//                         </div>
-//                     </div>
-//                 </div>`;
-//                     } else {
-//                         // SINGLE VARIANT
-//                         productHTML += `<div class="mt-3 grid cols-3 card-content_wrapper">`;
-                
-//                         const singleAttrs = [
-//                             { key: 'variant_unit', label: 'Unit' },
-//                             { key: 'variant_style', label: 'Style' },
-//                             { key: 'variant_making', label: 'Making %' },
-//                             { key: 'variant_color', label: 'Color' },
-//                             { key: 'variant_size', label: 'Size' },
-//                             { key: 'variant_weight', label: 'Weight', suffix: 'g' }
-//                         ];
-                
-//                         singleAttrs.forEach(attr => {
-//                             if (value[attr.key]) {
-//                                 productHTML += `
-//                                 <div class="d-flex flex-column gap-1">
-//                                     <div class="card-text text-dark">${attr.label}</div>
-//                                     <div class="product-card-badge">${value[attr.key]}${attr.suffix || ''}</div>
-//                                 </div>`;
-//                             }
-//                         });
-                
-//                         productHTML += `</div>
-//                             <div class="product-cart-qty-text mt-2">In Stock: <span>${value.variant_qty ?? '-'}</span> Pcs</div>
-//                             <div class="shop-page-add-to-cart-btn mt-3">
-//                                 <div class="d-flex align-items-center">
-//                                     <label class="me-2">Qty</label>
-//                                     <div class="input-group quantity-input-group quantity-container">
-//                                         <input type="button" value="-" class="qtyminus" field="quantity">
-//                                         <input type="text" name="quantity" id="quantity${value.id}" value="1" class="qty">
-//                                         <input type="button" value="+" class="qtyplus" field="quantity">
-//                                     </div>
-//                                 </div>
-//                                 <button onclick="addforcart(${value.id})" class="btn mt-3 ${result.cart[value.id]?.length ? 'added-to-cart-btn' : 'add-to-cart-btn'} spinner-button" data_id="card_id_${value.id}">
-//                                     <span class="submit-text">${result.cart[value.id]?.length ? 'ADDED TO CART' : 'ADD TO CART'}</span>
-//                                     <span class="d-none spinner">
-//                                         <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
-//                                         <span role="status">Adding...</span>
-//                                     </span>
-//                                     <span class="added-to-cart-badge ms-2">${result.cartcount[value.id] ?? ''}</span>
-//                                 </button>
-//                             </div>`;
-//                     }
-                
-//                     productHTML += `</div></div>`; // Close .card-body and .card
-//                     $("#product_page").append(productHTML);
-//                 });
-//                 $(".loader").fadeOut();
-//                 if (windowWidth > 300) {
-//                     $("#pageloader").fadeOut();
-//                 }
-//                 $("#pagination").empty();
-//                 // Append pagination links
-//                 var paginationHTML = `<div class="my-5 pagination-links">
-//                 <nav class="large-devices_pagination">
-//                     <div class="d-flex gap-3 flex-wrap justify-content-between">
-//                         <div>
-//                              Showing ${result.weightrange.from} - ${result.weightrange.to} of ${result.weightrange.total} results
-//                          </div>
-//                          <ul class="pagination">`;
-
-//                 if (result.weightrange.current_page == 1) {
-//                     paginationHTML += `<li class="page-item disabled">
-//                      <span class="page-link">Previous</span>
-//                  </li>`;
-//                 } else {
-//                     paginationHTML += `<li class="page-item">
-//                      <a class="page-link" href="javascript:void(0)" onclick="getProduct(${id},${
-//                         result.weightrange.current_page - 1
-//                     })" tabindex="-1">Previous</a>
-//                  </li>`;
-//                 }
-
-//                 for (
-//                     var page = Math.max(1, result.weightrange.current_page - 2);
-//                     page <=
-//                     Math.min(
-//                         result.weightrange.last_page,
-//                         result.weightrange.current_page + 2
-//                     );
-//                     page++
-//                 ) {
-//                     if (page == result.weightrange.current_page) {
-//                         paginationHTML += `<li class="page-item active">
-//                          <span class="page-link">${page}</span>
-//                      </li>`;
-//                     } else {
-//                         paginationHTML += `<li class="page-item">
-//                          <a class="page-link"  href="javascript:void(0)" onclick="getProduct(${id},${page})">${page}</a>
-//                      </li>`;
-//                     }
-//                 }
-
-//                 if (
-//                     result.weightrange.current_page ==
-//                     result.weightrange.last_page
-//                 ) {
-//                     paginationHTML += `<li class="page-item disabled">
-//                      <span class="page-link">Next</span>
-//                  </li>`;
-//                 } else {
-//                     paginationHTML += `<li class="page-item">
-//                      <a class="page-link"  href="javascript:void(0)" onclick="getProduct(${id},${
-//                         result.weightrange.current_page + 1
-//                     })">Next</a>
-//                  </li>`;
-//                 }
-
-//                 paginationHTML += `</ul></div></nav>
-//                 <nav class="small-devices_pagination d-none">
-//                     <div class="text-center">
-//                         <a class="btn btn-dark px-4 py-2" href="javascript:void(0)" onclick="getProduct(${id},${
-//                     result.weightrange.current_page + 1
-//                 })">See More
-//                             Products</a>
-//                     </div>
-//                 </nav></div>`;
-
-//                 $("#pagination").append(paginationHTML);
-//             }
-//             qtyplusminus();
-//             loadSecureImages();
-//             $(".card-checkbox").click(function () {
-//                 if ($(this).is(":checked")) {
-//                     $("#addalltocart").removeAttr("disabled");
-//                 } else {
-//                     $("#addalltocart").attr("disabled", "disabled");
-//                 }
-//             });
-
-//             // Add click event listener to wishlist-svg buttons
-//             const wishlistButtons = document.querySelectorAll(".wishlist-svg");
-
-//             wishlistButtons.forEach((button) => {
-//                 button.addEventListener("click", function () {
-//                     // Toggle the 'active' class to change the color on click
-//                     this.classList.toggle("active");
-//                 });
-//             });
-//             var weightlength = document.querySelectorAll(
-//                 ".weight_filter:checked"
-//             );
-
-//             if (isAnyCheckboxChecked) {
-//                 updateProCategoryFilters(result.procategoryjson);
-//                 updateMobileProCategoryFilters(result.procategoryjson);
-//             } else {
-//                 updateProCategoryFilters(result.procategoryDefaultjson);
-//                 updateMobileProCategoryFilters(result.procategoryDefaultjson);
-//             }
-//         },
-//     });
-// }
-
 function getProduct(id, page = 1) {
     $(".pagination-links").attr("hidden", true);
     var project_id = $("#decryptedProjectId").val();
-    var weightfrom = document.getElementById("hdweightfrom").value;
-    var weightto = document.getElementById("hdweightto").value;
     var procategory = $("#procategory").val();
 
     // Split the value into an array using the comma as a delimiter
-    var weightfrom = weightfrom.split(",");
-    var weightto = weightto.split(",");
     var procategoryArray = procategory.split(",");
 
     var selectedItem = [];
@@ -513,8 +141,6 @@ function getProduct(id, page = 1) {
         data: {
             selectedItem: selectedItem,
             project_id: project_id,
-            weightfrom: weightfrom,
-            weightto: weightto,
             procategoryArray: procategoryArray,
             _token: $('meta[name="csrf-token"]').attr("content"),
         },
@@ -524,12 +150,10 @@ function getProduct(id, page = 1) {
             let isAnyCheckboxChecked = $(".product:checked").length > 0;
             // Assign value to #subCollectionData based on the checkbox state
             if (isAnyCheckboxChecked) {
-                // $("#weights").val(JSON.stringify(result.weightJson));
                 $("#procategoryFilter").val(
                     JSON.stringify(result.procategoryjson)
                 );
             } else {
-                // $("#weights").val(JSON.stringify(result.defaultweightJson));
                 $("#procategoryFilter").val(
                     JSON.stringify(result.procategoryDefaultjson)
                 );
@@ -552,26 +176,33 @@ function getProduct(id, page = 1) {
                 $.each(result.itemwiseproduct.data, function (key, value) {
                     $("#notfound").empty(); // Clear 'no results' notice if any
                     let encryptedId = $("#encrypt" + value.id).val();
-                    let productDetailUrl = "/retailer/productdetail/" + encryptedId;
+                    let productDetailUrl =
+                        "/retailer/productdetail/" + encryptedId;
                     let secureImg = value.secureFilename;
                     let variantCount = value.variant_count ?? 1;
                     let variants = value.variants ?? [];
-                
-                    let safeDesignNo = value.DesignNo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+                    let safeDesignNo = value.DesignNo.toLowerCase()
+                        .replace(/[^a-z0-9]+/g, "-")
+                        .replace(/^-+|-+$/g, "");
                     let productHTML = `
                     <div class="card shop-page_product-card">
                         <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
                             <a href="${productDetailUrl}">
                                 <img class="img-fluid prouduct_card-image load-secure-image" src="${baseurl}/load-loading.gif" data-secure="${secureImg}" width="255" height="255" alt="">
                             </a>
-                            <div class="position-absolute card-purity purity-list">Purity: ${value.variant_purity ?? 'N/A'}</div>
+                            <div class="position-absolute card-purity purity-list">Purity: ${
+                                value.variant_purity ?? "N/A"
+                            }</div>
                         </div>
                 
                         <div class="card-body d-flex flex-column">
                             <div class="card-title">
-                                <a href="${productDetailUrl}" class="text-decoration-none">${value.DesignNo}</a>
+                                <a href="${productDetailUrl}" class="text-decoration-none">${
+                        value.DesignNo
+                    }</a>
                             </div>`;
-                
+
                     // MULTIPLE VARIANTS
                     if (variantCount > 1 && variants.length > 1) {
                         productHTML += `
@@ -595,31 +226,51 @@ function getProduct(id, page = 1) {
                                                 <div class="overflow-auto">
                                                     <table class="table table-bordered text-center align-middle">
                                                         <thead class="table-dark border-0"><tr><th></th>`;
-                
+
                         variants.forEach((_, i) => {
                             productHTML += `<th>Variant #${i + 1}</th>`;
                         });
-                
+
                         productHTML += `</tr></thead><tbody>`;
-                
+
                         // Dynamic rows for variant attributes
-                        const attrs = ['Purity', 'color', 'unit', 'style', 'making', 'size', 'weight', 'qty'];
-                        const labels = ['Purity', 'Color', 'Unit', 'Style', 'Making %', 'Size', 'Weight', 'In Stock'];
-                        
+                        const attrs = [
+                            "Purity",
+                            "color",
+                            "unit",
+                            "style",
+                            "making",
+                            "size",
+                            "weight",
+                            "qty",
+                        ];
+                        const labels = [
+                            "Purity",
+                            "Color",
+                            "Unit",
+                            "Style",
+                            "Making %",
+                            "Size",
+                            "Weight",
+                            "In Stock",
+                        ];
+
                         attrs.forEach((attr, i) => {
                             productHTML += `<tr><td>${labels[i]}</td>`;
-                            variants.forEach(variant => {
-                                let val = variant[attr] ?? '-';
-                                if (attr === 'Weight' && val !== '-') val += 'g';
-                                if (attr === 'Qty' && val !== '-') val += ' Pcs';
+                            variants.forEach((variant) => {
+                                let val = variant[attr] ?? "-";
+                                if (attr === "Weight" && val !== "-")
+                                    val += "g";
+                                if (attr === "Qty" && val !== "-")
+                                    val += " Pcs";
                                 productHTML += `<td>${val}</td>`;
                             });
                             productHTML += `</tr>`;
                         });
-                
+
                         // Quantity input row
                         productHTML += `<tr><td>Qty</td>`;
-                        variants.forEach(variant => {
+                        variants.forEach((variant) => {
                             productHTML += `<td>
                                 <div class="input-group quantity-input-group quantity-container">
                                     <input type="button" value="-" class="qtyminus" field="quantity">
@@ -629,24 +280,36 @@ function getProduct(id, page = 1) {
                             </td>`;
                         });
                         productHTML += `</tr>`;
-                
+
                         // Add to cart row
                         productHTML += `<tr><td>Add to Cart</td>`;
-                        variants.forEach(variant => {
-                            let inCart = result.cart[variant.productID]?.length > 0;
-                            let cartQty = result.cartcount[variant.productID] ?? 0;
+                        variants.forEach((variant) => {
+                            let inCart =
+                                result.cart[variant.productID]?.length > 0;
+                            let cartQty =
+                                result.cartcount[variant.productID] ?? 0;
                             productHTML += `<td>
-                                <button onclick="addforcart(${variant.productID})" class="btn ${inCart ? 'added-to-cart-btn' : 'add-to-cart-btn'} spinner-button" data_id="card_id_${variant.productID}">
-                                    <span class="submit-text">${inCart ? 'ADDED TO CART' : 'ADD TO CART'}</span>
+                                <button onclick="addforcart(${
+                                    variant.productID
+                                })" class="btn ${
+                                inCart ? "added-to-cart-btn" : "add-to-cart-btn"
+                            } spinner-button" data_id="card_id_${
+                                variant.productID
+                            }">
+                                    <span class="submit-text">${
+                                        inCart ? "ADDED TO CART" : "ADD TO CART"
+                                    }</span>
                                     <span class="d-none spinner">
                                         <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
                                         <span role="status">Adding...</span>
                                     </span>
-                                    <span id="applycurrentcartcount${variant.productID}" class="added-to-cart-badge ms-2">${cartQty}</span>
+                                    <span id="applycurrentcartcount${
+                                        variant.productID
+                                    }" class="added-to-cart-badge ms-2">${cartQty}</span>
                                 </button>
                             </td>`;
                         });
-                
+
                         productHTML += `
                             </tr></tbody></table>
                         </div></div></div>
@@ -670,52 +333,76 @@ function getProduct(id, page = 1) {
                     } else {
                         // SINGLE VARIANT
                         productHTML += `<div class="mt-3 grid cols-3 card-content_wrapper">`;
-                
+
                         const singleAttrs = [
-                            { key: 'variant_unit', label: 'Unit' },
-                            { key: 'variant_style', label: 'Style' },
-                            { key: 'variant_making', label: 'Making %' },
-                            { key: 'variant_color', label: 'Color' },
-                            { key: 'variant_size', label: 'Size' },
-                            { key: 'variant_weight', label: 'Weight', suffix: 'g' }
+                            { key: "variant_unit", label: "Unit" },
+                            { key: "variant_style", label: "Style" },
+                            { key: "variant_making", label: "Making %" },
+                            { key: "variant_color", label: "Color" },
+                            { key: "variant_size", label: "Size" },
+                            {
+                                key: "variant_weight",
+                                label: "Weight",
+                                suffix: "g",
+                            },
                         ];
-                
-                        singleAttrs.forEach(attr => {
+
+                        singleAttrs.forEach((attr) => {
                             if (value[attr.key]) {
                                 productHTML += `
                                 <div class="d-flex flex-column gap-1">
-                                    <div class="card-text text-dark">${attr.label}</div>
-                                    <div class="product-card-badge">${value[attr.key]}${attr.suffix || ''}</div>
+                                    <div class="card-text text-dark">${
+                                        attr.label
+                                    }</div>
+                                    <div class="product-card-badge">${
+                                        value[attr.key]
+                                    }${attr.suffix || ""}</div>
                                 </div>`;
                             }
                         });
-                
+
                         productHTML += `</div>
-                            <div class="product-cart-qty-text mt-2">In Stock: <span>${value.variant_qty ?? '-'}</span> Pcs</div>
+                            <div class="product-cart-qty-text mt-2">In Stock: <span>${
+                                value.variant_qty ?? "-"
+                            }</span> Pcs</div>
                             <div class="shop-page-add-to-cart-btn mt-3">
                                 <div class="d-flex align-items-center">
                                     <label class="me-2">Qty</label>
                                     <div class="input-group quantity-input-group quantity-container">
                                         <input type="button" value="-" class="qtyminus" field="quantity">
-                                        <input type="text" name="quantity" id="quantity${value.id}" value="1" class="qty">
+                                        <input type="text" name="quantity" id="quantity${
+                                            value.id
+                                        }" value="1" class="qty">
                                         <input type="button" value="+" class="qtyplus" field="quantity">
                                     </div>
                                 </div>
-                                <button onclick="addforcart(${value.id})" class="btn mt-3 ${result.cart[value.id]?.length ? 'added-to-cart-btn' : 'add-to-cart-btn'} spinner-button" data_id="card_id_${value.id}">
-                                    <span class="submit-text">${result.cart[value.id]?.length ? 'ADDED TO CART' : 'ADD TO CART'}</span>
+                                <button onclick="addforcart(${
+                                    value.id
+                                })" class="btn mt-3 ${
+                            result.cart[value.id]?.length
+                                ? "added-to-cart-btn"
+                                : "add-to-cart-btn"
+                        } spinner-button" data_id="card_id_${value.id}">
+                                    <span class="submit-text">${
+                                        result.cart[value.id]?.length
+                                            ? "ADDED TO CART"
+                                            : "ADD TO CART"
+                                    }</span>
                                     <span class="d-none spinner">
                                         <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
                                         <span role="status">Adding...</span>
                                     </span>
-                                    <span class="added-to-cart-badge ms-2">${result.cartcount[value.id] ?? ''}</span>
+                                    <span class="added-to-cart-badge ms-2">${
+                                        result.cartcount[value.id] ?? ""
+                                    }</span>
                                 </button>
                             </div>`;
                     }
-                
+
                     productHTML += `</div></div>`; // Close .card-body and .card
                     $("#product_page").append(productHTML);
                 });
-                
+
                 $(".loader").fadeOut();
                 if (windowWidth > 300) {
                     $("#pageloader").fadeOut();
@@ -812,13 +499,9 @@ function getProduct(id, page = 1) {
             });
 
             if (isAnyCheckboxChecked) {
-                // updateWeightFilters(result.weightJson);
-                // updateMobileWeightFilters(result.weightJson);
                 updateProCategoryFilters(result.procategoryjson);
                 updateMobileProCategoryFilters(result.procategoryjson);
             } else {
-                // updateWeightFilters(result.defaultweightJson);
-                // updateMobileWeightFilters(result.defaultweightJson);
                 updateProCategoryFilters(result.procategoryDefaultjson);
                 updateMobileProCategoryFilters(result.procategoryDefaultjson);
             }
@@ -830,13 +513,9 @@ function getProduct(id, page = 1) {
 function getProCategory(id, page = 1) {
     $(".pagination-links").attr("hidden", true);
     var project_id = $("#decryptedProjectId").val();
-    var weightfrom = document.getElementById("hdweightfrom").value;
-    var weightto = document.getElementById("hdweightto").value;
     var product = $("#product").val();
 
     // Split the value into an array using the comma as a delimiter
-    var weightfrom = weightfrom.split(",");
-    var weightto = weightto.split(",");
     var productArray = product.split(",");
 
     var selectedprocategory = [];
@@ -861,14 +540,11 @@ function getProCategory(id, page = 1) {
         data: {
             selectedprocategory: selectedprocategory,
             project_id: project_id,
-            weightfrom: weightfrom,
-            weightto: weightto,
             productArray: productArray,
             _token: $('meta[name="csrf-token"]').attr("content"),
         },
         dataType: "json",
         success: function (result) {
-          
             if (result.procategorywiseproduct.data.length == 0) {
                 $("#checkboxhidden").attr("hidden", "");
                 $("#addtocarthidden").attr("hidden", "");
@@ -883,32 +559,41 @@ function getProCategory(id, page = 1) {
                 $("#checkboxhidden").removeAttr("hidden", "");
                 $("#addtocarthidden").removeAttr("hidden", "");
                 $("#product_page").removeAttr("hidden", "");
-                $.each(result.procategorywiseproduct.data, function (key, value) {
-                    $("#notfound").empty(); // Clear 'no results' notice if any
-                    let encryptedId = $("#encrypt" + value.id).val();
-                    let productDetailUrl = "/retailer/productdetail/" + encryptedId;
-                    let secureImg = value.secureFilename;
-                    let variantCount = value.variant_count ?? 1;
-                    let variants = value.variants ?? [];
-                
-                    let safeDesignNo = value.DesignNo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-                    let productHTML = `
+                $.each(
+                    result.procategorywiseproduct.data,
+                    function (key, value) {
+                        $("#notfound").empty(); // Clear 'no results' notice if any
+                        let encryptedId = $("#encrypt" + value.id).val();
+                        let productDetailUrl =
+                            "/retailer/productdetail/" + encryptedId;
+                        let secureImg = value.secureFilename;
+                        let variantCount = value.variant_count ?? 1;
+                        let variants = value.variants ?? [];
+
+                        let safeDesignNo = value.DesignNo.toLowerCase()
+                            .replace(/[^a-z0-9]+/g, "-")
+                            .replace(/^-+|-+$/g, "");
+                        let productHTML = `
                     <div class="card shop-page_product-card">
                         <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
                             <a href="${productDetailUrl}">
                                 <img class="img-fluid prouduct_card-image load-secure-image" src="${baseurl}/load-loading.gif" data-secure="${secureImg}" width="255" height="255" alt="">
                             </a>
-                            <div class="position-absolute card-purity purity-list">Purity: ${value.variant_purity ?? 'N/A'}</div>
+                            <div class="position-absolute card-purity purity-list">Purity: ${
+                                value.variant_purity ?? "N/A"
+                            }</div>
                         </div>
                 
                         <div class="card-body d-flex flex-column">
                             <div class="card-title">
-                                <a href="${productDetailUrl}" class="text-decoration-none">${value.DesignNo}</a>
+                                <a href="${productDetailUrl}" class="text-decoration-none">${
+                            value.DesignNo
+                        }</a>
                             </div>`;
-                
-                    // MULTIPLE VARIANTS
-                    if (variantCount > 1 && variants.length > 1) {
-                        productHTML += `
+
+                        // MULTIPLE VARIANTS
+                        if (variantCount > 1 && variants.length > 1) {
+                            productHTML += `
                         <div class="mt-3">
                             <div class="card-text fw-bold">Multiple Sizes Available</div>
                             <button class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#productModal-${safeDesignNo}">
@@ -929,59 +614,93 @@ function getProCategory(id, page = 1) {
                                                 <div class="overflow-auto">
                                                     <table class="table table-bordered text-center align-middle">
                                                         <thead class="table-dark border-0"><tr><th></th>`;
-                
-                        variants.forEach((_, i) => {
-                            productHTML += `<th>Variant #${i + 1}</th>`;
-                        });
-                
-                        productHTML += `</tr></thead><tbody>`;
-                
-                        // Dynamic rows for variant attributes
-                        const attrs = ['Purity', 'color', 'unit', 'style', 'making', 'size', 'weight', 'qty'];
-                        const labels = ['Purity', 'Color', 'Unit', 'Style', 'Making %', 'Size', 'Weight', 'In Stock'];
-                        
-                        attrs.forEach((attr, i) => {
-                            productHTML += `<tr><td>${labels[i]}</td>`;
-                            variants.forEach(variant => {
-                                let val = variant[attr] ?? '-';
-                                if (attr === 'Weight' && val !== '-') val += 'g';
-                                if (attr === 'Qty' && val !== '-') val += ' Pcs';
-                                productHTML += `<td>${val}</td>`;
+
+                            variants.forEach((_, i) => {
+                                productHTML += `<th>Variant #${i + 1}</th>`;
                             });
-                            productHTML += `</tr>`;
-                        });
-                
-                        // Quantity input row
-                        productHTML += `<tr><td>Qty</td>`;
-                        variants.forEach(variant => {
-                            productHTML += `<td>
+
+                            productHTML += `</tr></thead><tbody>`;
+
+                            // Dynamic rows for variant attributes
+                            const attrs = [
+                                "Purity",
+                                "color",
+                                "unit",
+                                "style",
+                                "making",
+                                "size",
+                                "weight",
+                                "qty",
+                            ];
+                            const labels = [
+                                "Purity",
+                                "Color",
+                                "Unit",
+                                "Style",
+                                "Making %",
+                                "Size",
+                                "Weight",
+                                "In Stock",
+                            ];
+
+                            attrs.forEach((attr, i) => {
+                                productHTML += `<tr><td>${labels[i]}</td>`;
+                                variants.forEach((variant) => {
+                                    let val = variant[attr] ?? "-";
+                                    if (attr === "Weight" && val !== "-")
+                                        val += "g";
+                                    if (attr === "Qty" && val !== "-")
+                                        val += " Pcs";
+                                    productHTML += `<td>${val}</td>`;
+                                });
+                                productHTML += `</tr>`;
+                            });
+
+                            // Quantity input row
+                            productHTML += `<tr><td>Qty</td>`;
+                            variants.forEach((variant) => {
+                                productHTML += `<td>
                                 <div class="input-group quantity-input-group quantity-container">
                                     <input type="button" value="-" class="qtyminus" field="quantity">
                                     <input type="text" name="mquantity${variant.productID}" id="mquantity${variant.productID}" value="1" class="qty">
                                     <input type="button" value="+" class="qtyplus" field="quantity">
                                 </div>
                             </td>`;
-                        });
-                        productHTML += `</tr>`;
-                
-                        // Add to cart row
-                        productHTML += `<tr><td>Add to Cart</td>`;
-                        variants.forEach(variant => {
-                            let inCart = result.cart[variant.productID]?.length > 0;
-                            let cartQty = result.cartcount[variant.productID] ?? 0;
-                            productHTML += `<td>
-                                <button onclick="addforcart(${variant.productID})" class="btn ${inCart ? 'added-to-cart-btn' : 'add-to-cart-btn'} spinner-button" data_id="card_id_${variant.productID}">
-                                    <span class="submit-text">${inCart ? 'ADDED TO CART' : 'ADD TO CART'}</span>
+                            });
+                            productHTML += `</tr>`;
+
+                            // Add to cart row
+                            productHTML += `<tr><td>Add to Cart</td>`;
+                            variants.forEach((variant) => {
+                                let inCart =
+                                    result.cart[variant.productID]?.length > 0;
+                                let cartQty =
+                                    result.cartcount[variant.productID] ?? 0;
+                                productHTML += `<td>
+                                <button onclick="addforcart(${
+                                    variant.productID
+                                })" class="btn ${
+                                    inCart
+                                        ? "added-to-cart-btn"
+                                        : "add-to-cart-btn"
+                                } spinner-button" data_id="card_id_${
+                                    variant.productID
+                                }">
+                                    <span class="submit-text">${
+                                        inCart ? "ADDED TO CART" : "ADD TO CART"
+                                    }</span>
                                     <span class="d-none spinner">
                                         <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
                                         <span role="status">Adding...</span>
                                     </span>
-                                    <span id="applycurrentcartcount${variant.productID}" class="added-to-cart-badge ms-2">${cartQty}</span>
+                                    <span id="applycurrentcartcount${
+                                        variant.productID
+                                    }" class="added-to-cart-badge ms-2">${cartQty}</span>
                                 </button>
                             </td>`;
-                        });
-                
-                        productHTML += `
+                            });
+
+                            productHTML += `
                             </tr></tbody></table>
                         </div></div></div>
                             <button type="button" class="btn btn-link close-btn" data-bs-dismiss="modal">
@@ -1001,55 +720,80 @@ function getProCategory(id, page = 1) {
                         </div>
                     </div>
                 </div>`;
-                    } else {
-                        // SINGLE VARIANT
-                        productHTML += `<div class="mt-3 grid cols-3 card-content_wrapper">`;
-                
-                        const singleAttrs = [
-                            { key: 'variant_unit', label: 'Unit' },
-                            { key: 'variant_style', label: 'Style' },
-                            { key: 'variant_making', label: 'Making %' },
-                            { key: 'variant_color', label: 'Color' },
-                            { key: 'variant_size', label: 'Size' },
-                            { key: 'variant_weight', label: 'Weight', suffix: 'g' }
-                        ];
-                
-                        singleAttrs.forEach(attr => {
-                            if (value[attr.key]) {
-                                productHTML += `
+                        } else {
+                            // SINGLE VARIANT
+                            productHTML += `<div class="mt-3 grid cols-3 card-content_wrapper">`;
+
+                            const singleAttrs = [
+                                { key: "variant_unit", label: "Unit" },
+                                { key: "variant_style", label: "Style" },
+                                { key: "variant_making", label: "Making %" },
+                                { key: "variant_color", label: "Color" },
+                                { key: "variant_size", label: "Size" },
+                                {
+                                    key: "variant_weight",
+                                    label: "Weight",
+                                    suffix: "g",
+                                },
+                            ];
+
+                            singleAttrs.forEach((attr) => {
+                                if (value[attr.key]) {
+                                    productHTML += `
                                 <div class="d-flex flex-column gap-1">
-                                    <div class="card-text text-dark">${attr.label}</div>
-                                    <div class="product-card-badge">${value[attr.key]}${attr.suffix || ''}</div>
+                                    <div class="card-text text-dark">${
+                                        attr.label
+                                    }</div>
+                                    <div class="product-card-badge">${
+                                        value[attr.key]
+                                    }${attr.suffix || ""}</div>
                                 </div>`;
-                            }
-                        });
-                
-                        productHTML += `</div>
-                            <div class="product-cart-qty-text mt-2">In Stock: <span>${value.variant_qty ?? '-'}</span> Pcs</div>
+                                }
+                            });
+
+                            productHTML += `</div>
+                            <div class="product-cart-qty-text mt-2">In Stock: <span>${
+                                value.variant_qty ?? "-"
+                            }</span> Pcs</div>
                             <div class="shop-page-add-to-cart-btn mt-3">
                                 <div class="d-flex align-items-center">
                                     <label class="me-2">Qty</label>
                                     <div class="input-group quantity-input-group quantity-container">
                                         <input type="button" value="-" class="qtyminus" field="quantity">
-                                        <input type="text" name="quantity" id="quantity${value.id}" value="1" class="qty">
+                                        <input type="text" name="quantity" id="quantity${
+                                            value.id
+                                        }" value="1" class="qty">
                                         <input type="button" value="+" class="qtyplus" field="quantity">
                                     </div>
                                 </div>
-                                <button onclick="addforcart(${value.id})" class="btn mt-3 ${result.cart[value.id]?.length ? 'added-to-cart-btn' : 'add-to-cart-btn'} spinner-button" data_id="card_id_${value.id}">
-                                    <span class="submit-text">${result.cart[value.id]?.length ? 'ADDED TO CART' : 'ADD TO CART'}</span>
+                                <button onclick="addforcart(${
+                                    value.id
+                                })" class="btn mt-3 ${
+                                result.cart[value.id]?.length
+                                    ? "added-to-cart-btn"
+                                    : "add-to-cart-btn"
+                            } spinner-button" data_id="card_id_${value.id}">
+                                    <span class="submit-text">${
+                                        result.cart[value.id]?.length
+                                            ? "ADDED TO CART"
+                                            : "ADD TO CART"
+                                    }</span>
                                     <span class="d-none spinner">
                                         <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
                                         <span role="status">Adding...</span>
                                     </span>
-                                    <span class="added-to-cart-badge ms-2">${result.cartcount[value.id] ?? ''}</span>
+                                    <span class="added-to-cart-badge ms-2">${
+                                        result.cartcount[value.id] ?? ""
+                                    }</span>
                                 </button>
                             </div>`;
+                        }
+
+                        productHTML += `</div></div>`; // Close .card-body and .card
+                        $("#product_page").append(productHTML);
                     }
-                
-                    productHTML += `</div></div>`; // Close .card-body and .card
-                    $("#product_page").append(productHTML);
-                });
-                
+                );
+
                 $(".loader").fadeOut();
                 if (windowWidth > 300) {
                     $("#pageloader").fadeOut();
@@ -1149,94 +893,383 @@ function getProCategory(id, page = 1) {
     });
 }
 
-// function updateWeightFilters(weights) {
-//     // Parse the JSON string into a JavaScript object
-//     var weights = JSON.parse(weights);
+function getPurity(id, page = 1) {
+    $(".pagination-links").attr("hidden", true);
+    var project_id = $("#decryptedProjectId").val();
+    var purity = $("#purity").val();
 
-//     var container = document.getElementById("weight-filters-container");
-//     container.innerHTML = ""; // Clear existing filters if any
+    // Split the value into an array using the comma as a delimiter
+    var purityArray = purity.split(",");
 
-//     weights.forEach(function (weight, key) {
-//         var label = "";
+    var selectedpurity = [];
+    $(".purity").each(function () {
+        if (windowWidth > 300) {
+            $("#pageloader").fadeIn();
+        }
+        if ($(this).is(":checked")) {
+            selectedpurity.push($(this).val());
+        }
+    });
+    // Set the value of the hidden input field to the serialized string
+    $("#purity").val(selectedpurity);
 
-//         if (
-//             weight.weight_range_from === 20 &&
-//             weight.weight_range_to === 200000
-//         ) {
-//             label = "Above 20grams";
-//         } else if (Number.isInteger(weight.weight_range_from)) {
-//             label =
-//                 weight.weight_range_from +
-//                 " - " +
-//                 weight.weight_range_to +
-//                 "gms";
-//         } else {
-//             label =
-//                 weight.weight_range_from +
-//                 " - " +
-//                 weight.weight_range_to +
-//                 "gms";
-//         }
+    $("#product_page").empty();
+    $.ajax({
+        type: "GET",
+        url: "/retailer/puritywiseproduct/" + id + "?page=" + page,
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        data: {
+            selectedpurity: selectedpurity,
+            project_id: project_id,
+            purityArray: purityArray,
+            _token: $('meta[name="csrf-token"]').attr("content"),
+        },
+        dataType: "json",
+        success: function (result) {
+            if (result.puritywiseproduct.data.length == 0) {
+                $("#checkboxhidden").attr("hidden", "");
+                $("#addtocarthidden").attr("hidden", "");
+                $("#product_page").attr("hidden", "");
+                $("#notfound").empty();
+                var notfound = `<img src='${baseurl}/emptycart.gif'>`;
+                $("#notfound").append(notfound);
+                if (windowWidth > 300) {
+                    $("#pageloader").fadeOut();
+                }
+            } else {
+                $("#checkboxhidden").removeAttr("hidden", "");
+                $("#addtocarthidden").removeAttr("hidden", "");
+                $("#product_page").removeAttr("hidden", "");
+                $.each(result.puritywiseproduct.data, function (key, value) {
+                    $("#notfound").empty(); // Clear 'no results' notice if any
+                    let encryptedId = $("#encrypt" + value.id).val();
+                    let productDetailUrl =
+                        "/retailer/productdetail/" + encryptedId;
+                    let secureImg = value.secureFilename;
+                    let variantCount = value.variant_count ?? 1;
+                    let variants = value.variants ?? [];
 
-//         var filterHtml = `
-//                 <div class="form-check">
-//                     <input class="form-check-input weight_filter" type="checkbox"
-//                         id="weightfrom${weight.id}" name="weightfrom"
-//                         data-id="${weight.id}" value="${weight.weight_range_from}"
-//                         onclick="getWeightRange(${weight.id})">
-//                     <input class="weight_filter" type="hidden" name="weightto"
-//                         id="weightto${weight.id}" value="${weight.weight_range_to}">
-//                     <label class="form-check-label" for="weightfrom${weight.id}">
-//                         ${label}
-//                     </label>
-//                 </div>
-//             `;
-//         container.insertAdjacentHTML("beforeend", filterHtml);
-//     });
-// }
+                    let safeDesignNo = value.DesignNo.toLowerCase()
+                        .replace(/[^a-z0-9]+/g, "-")
+                        .replace(/^-+|-+$/g, "");
+                    let productHTML = `
+                    <div class="card shop-page_product-card">
+                        <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
+                            <a href="${productDetailUrl}">
+                                <img class="img-fluid prouduct_card-image load-secure-image" src="${baseurl}/load-loading.gif" data-secure="${secureImg}" width="255" height="255" alt="">
+                            </a>
+                            <div class="position-absolute card-purity purity-list">Purity: ${
+                                value.variant_purity ?? "N/A"
+                            }</div>
+                        </div>
+                
+                        <div class="card-body d-flex flex-column">
+                            <div class="card-title">
+                                <a href="${productDetailUrl}" class="text-decoration-none">${
+                        value.DesignNo
+                    }</a>
+                            </div>`;
 
-// function updateMobileWeightFilters(data) {
-//     // console.log("updated mobile weights", data);
-//     var weights = JSON.parse(data);
-//     const container = document.getElementById("mobile-weight-filters");
+                    // MULTIPLE VARIANTS
+                    if (variantCount > 1 && variants.length > 1) {
+                        productHTML += `
+                        <div class="mt-3">
+                            <div class="card-text fw-bold">Multiple Sizes Available</div>
+                            <button class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#productModal-${safeDesignNo}">
+                                View All Options
+                            </button>
+                
+                            <!-- Modal -->
+                            <div class="modal fade product-variants-modal" id="productModal-${safeDesignNo}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-xl">
+                                    <div class="modal-content rounded-4 overflow-hidden">
+                                        <div class="modal-body p-4 d-flex flex-column flex-lg-row gap-4">
+                                            <div class="modal-image text-center flex-shrink-0" style="flex: 0 0 200px;">
+                                                <img class="img-fluid load-secure-image" src="${baseurl}/load-loading.gif" data-secure="${secureImg}" width="200" height="200" alt="${value.DesignNo}">
+                                            </div>
+                                            <div class="modal-details flex-grow-1 overflow-auto">
+                                                <h6 class="mb-2 fs-5" style="color:#7E7E7E;">Design Code: <span class="font-semibold text-dark">${value.DesignNo}</span></h6>
+                                                <p class="fw-medium fs-6 mb-4" style="color:#F78D1E;">Multiple Sizes Available</p>
+                                                <div class="overflow-auto">
+                                                    <table class="table table-bordered text-center align-middle">
+                                                        <thead class="table-dark border-0"><tr><th></th>`;
 
-//     container.innerHTML = "";
-//     weights.forEach(function (weight, key) {
-//         if (
-//             weight.weight_range_from === 20 &&
-//             weight.weight_range_to === 200000
-//         ) {
-//             label = "Above 20grams";
-//         } else if (Number.isInteger(weight.weight_range_from)) {
-//             label =
-//                 weight.weight_range_from +
-//                 " - " +
-//                 weight.weight_range_to +
-//                 "gms";
-//         } else {
-//             label =
-//                 weight.weight_range_from +
-//                 " - " +
-//                 weight.weight_range_to +
-//                 "gms";
-//         }
+                        variants.forEach((_, i) => {
+                            productHTML += `<th>Variant #${i + 1}</th>`;
+                        });
 
-//         var filterHtml = `
-//                 <div class="form-check">
-//                     <input class="form-check-input weight_filter" type="checkbox"
-//                         id="weightfrommob${weight.id}" name="weightfrom"
-//                         data-id="${weight.id}" value="${weight.weight_range_from}"
-//                         onclick="getWeightRange(${weight.id})">
-//                     <input class="weight_filter" type="hidden" name="weightto"
-//                         id="weighttomob${weight.id}" value="${weight.weight_range_to}">
-//                     <label class="form-check-label" for="weightfrommob${weight.id}">
-//                         ${label}
-//                     </label>
-//                 </div>
-//             `;
-//         container.insertAdjacentHTML("beforeend", filterHtml);
-//     });
-// }
+                        productHTML += `</tr></thead><tbody>`;
+
+                        // Dynamic rows for variant attributes
+                        const attrs = [
+                            "Purity",
+                            "color",
+                            "unit",
+                            "style",
+                            "making",
+                            "size",
+                            "weight",
+                            "qty",
+                        ];
+                        const labels = [
+                            "Purity",
+                            "Color",
+                            "Unit",
+                            "Style",
+                            "Making %",
+                            "Size",
+                            "Weight",
+                            "In Stock",
+                        ];
+
+                        attrs.forEach((attr, i) => {
+                            productHTML += `<tr><td>${labels[i]}</td>`;
+                            variants.forEach((variant) => {
+                                let val = variant[attr] ?? "-";
+                                if (attr === "Weight" && val !== "-")
+                                    val += "g";
+                                if (attr === "Qty" && val !== "-")
+                                    val += " Pcs";
+                                productHTML += `<td>${val}</td>`;
+                            });
+                            productHTML += `</tr>`;
+                        });
+
+                        // Quantity input row
+                        productHTML += `<tr><td>Qty</td>`;
+                        variants.forEach((variant) => {
+                            productHTML += `<td>
+                                <div class="input-group quantity-input-group quantity-container">
+                                    <input type="button" value="-" class="qtyminus" field="quantity">
+                                    <input type="text" name="mquantity${variant.productID}" id="mquantity${variant.productID}" value="1" class="qty">
+                                    <input type="button" value="+" class="qtyplus" field="quantity">
+                                </div>
+                            </td>`;
+                        });
+                        productHTML += `</tr>`;
+
+                        // Add to cart row
+                        productHTML += `<tr><td>Add to Cart</td>`;
+                        variants.forEach((variant) => {
+                            let inCart =
+                                result.cart[variant.productID]?.length > 0;
+                            let cartQty =
+                                result.cartcount[variant.productID] ?? 0;
+                            productHTML += `<td>
+                                <button onclick="addforcart(${
+                                    variant.productID
+                                })" class="btn ${
+                                inCart ? "added-to-cart-btn" : "add-to-cart-btn"
+                            } spinner-button" data_id="card_id_${
+                                variant.productID
+                            }">
+                                    <span class="submit-text">${
+                                        inCart ? "ADDED TO CART" : "ADD TO CART"
+                                    }</span>
+                                    <span class="d-none spinner">
+                                        <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                                        <span role="status">Adding...</span>
+                                    </span>
+                                    <span id="applycurrentcartcount${
+                                        variant.productID
+                                    }" class="added-to-cart-badge ms-2">${cartQty}</span>
+                                </button>
+                            </td>`;
+                        });
+
+                        productHTML += `
+                            </tr></tbody></table>
+                        </div></div></div>
+                            <button type="button" class="btn btn-link close-btn" data-bs-dismiss="modal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25"
+                                                                height="25" viewBox="0 0 25 25" fill="none">
+                                                                <path
+                                                                    d="M12.375 23.75C10.8812 23.75 9.40205 23.4558 8.02198 22.8841C6.6419 22.3125 5.38793 21.4746 4.33166 20.4183C3.27539 19.3621 2.43752 18.1081 1.86587 16.728C1.29422 15.3479 1 13.8688 1 12.375C1 10.8812 1.29422 9.40205 1.86587 8.02197C2.43752 6.6419 3.27539 5.38793 4.33166 4.33166C5.38793 3.27539 6.6419 2.43752 8.02198 1.86587C9.40206 1.29422 10.8812 1 12.375 1C13.8688 1 15.3479 1.29422 16.728 1.86587C18.1081 2.43752 19.3621 3.2754 20.4183 4.33166C21.4746 5.38793 22.3125 6.6419 22.8841 8.02198C23.4558 9.40206 23.75 10.8812 23.75 12.375C23.75 13.8688 23.4558 15.3479 22.8841 16.728C22.3125 18.1081 21.4746 19.3621 20.4183 20.4183C19.3621 21.4746 18.1081 22.3125 16.728 22.8841C15.3479 23.4558 13.8688 23.75 12.375 23.75L12.375 23.75Z"
+                                                                    stroke="#535353" stroke-width="1.47967"
+                                                                    stroke-linecap="round" />
+                                                                <path d="M8.58203 8.58398L16.1654 16.1673"
+                                                                    stroke="#535353" stroke-width="1.47967"
+                                                                    stroke-linecap="round" />
+                                                                <path d="M16.168 8.58398L8.58464 16.1673"
+                                                                    stroke="#535353" stroke-width="1.47967"
+                                                                    stroke-linecap="round" />
+                                                            </svg></button>
+                        </div>
+                    </div>
+                </div>`;
+                    } else {
+                        // SINGLE VARIANT
+                        productHTML += `<div class="mt-3 grid cols-3 card-content_wrapper">`;
+
+                        const singleAttrs = [
+                            { key: "variant_unit", label: "Unit" },
+                            { key: "variant_style", label: "Style" },
+                            { key: "variant_making", label: "Making %" },
+                            { key: "variant_color", label: "Color" },
+                            { key: "variant_size", label: "Size" },
+                            {
+                                key: "variant_weight",
+                                label: "Weight",
+                                suffix: "g",
+                            },
+                        ];
+
+                        singleAttrs.forEach((attr) => {
+                            if (value[attr.key]) {
+                                productHTML += `
+                                <div class="d-flex flex-column gap-1">
+                                    <div class="card-text text-dark">${
+                                        attr.label
+                                    }</div>
+                                    <div class="product-card-badge">${
+                                        value[attr.key]
+                                    }${attr.suffix || ""}</div>
+                                </div>`;
+                            }
+                        });
+
+                        productHTML += `</div>
+                            <div class="product-cart-qty-text mt-2">In Stock: <span>${
+                                value.variant_qty ?? "-"
+                            }</span> Pcs</div>
+                            <div class="shop-page-add-to-cart-btn mt-3">
+                                <div class="d-flex align-items-center">
+                                    <label class="me-2">Qty</label>
+                                    <div class="input-group quantity-input-group quantity-container">
+                                        <input type="button" value="-" class="qtyminus" field="quantity">
+                                        <input type="text" name="quantity" id="quantity${
+                                            value.id
+                                        }" value="1" class="qty">
+                                        <input type="button" value="+" class="qtyplus" field="quantity">
+                                    </div>
+                                </div>
+                                <button onclick="addforcart(${
+                                    value.id
+                                })" class="btn mt-3 ${
+                            result.cart[value.id]?.length
+                                ? "added-to-cart-btn"
+                                : "add-to-cart-btn"
+                        } spinner-button" data_id="card_id_${value.id}">
+                                    <span class="submit-text">${
+                                        result.cart[value.id]?.length
+                                            ? "ADDED TO CART"
+                                            : "ADD TO CART"
+                                    }</span>
+                                    <span class="d-none spinner">
+                                        <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                                        <span role="status">Adding...</span>
+                                    </span>
+                                    <span class="added-to-cart-badge ms-2">${
+                                        result.cartcount[value.id] ?? ""
+                                    }</span>
+                                </button>
+                            </div>`;
+                    }
+
+                    productHTML += `</div></div>`; // Close .card-body and .card
+                    $("#product_page").append(productHTML);
+                });
+
+                $(".loader").fadeOut();
+                if (windowWidth > 300) {
+                    $("#pageloader").fadeOut();
+                }
+                $("#pagination").empty();
+                // Append pagination links
+                var paginationHTML = `<div class="my-5 pagination-links">
+                <nav class="large-devices_pagination">
+                    <div class="d-flex gap-3 flex-wrap justify-content-between">
+                        <div>
+                             Showing ${result.puritywiseproduct.from} - ${result.puritywiseproduct.to} of ${result.puritywiseproduct.total} results
+                         </div>
+                         <ul class="pagination">`;
+
+                if (result.puritywiseproduct.current_page == 1) {
+                    paginationHTML += `<li class="page-item disabled">
+                     <span class="page-link">Previous</span>
+                 </li>`;
+                } else {
+                    paginationHTML += `<li class="page-item">
+                     <a class="page-link" href="javascript:void(0)" onclick="getProduct(${id},${
+                        result.puritywiseproduct.current_page - 1
+                    })" tabindex="-1">Previous</a>
+                 </li>`;
+                }
+
+                for (
+                    var page = Math.max(
+                        1,
+                        result.puritywiseproduct.current_page - 2
+                    );
+                    page <=
+                    Math.min(
+                        result.puritywiseproduct.last_page,
+                        result.puritywiseproduct.current_page + 2
+                    );
+                    page++
+                ) {
+                    if (page == result.puritywiseproduct.current_page) {
+                        paginationHTML += `<li class="page-item active">
+                         <span class="page-link">${page}</span>
+                     </li>`;
+                    } else {
+                        paginationHTML += `<li class="page-item">
+                         <a class="page-link"  href="javascript:void(0)" onclick="getProduct(${id},${page})">${page}</a>
+                     </li>`;
+                    }
+                }
+
+                if (
+                    result.puritywiseproduct.current_page ==
+                    result.puritywiseproduct.last_page
+                ) {
+                    paginationHTML += `<li class="page-item disabled">
+                     <span class="page-link">Next</span>
+                 </li>`;
+                } else {
+                    paginationHTML += `<li class="page-item">
+                     <a class="page-link"  href="javascript:void(0)" onclick="getProduct(${id},${
+                        result.puritywiseproduct.current_page + 1
+                    })">Next</a>
+                 </li>`;
+                }
+
+                paginationHTML += `</ul></div></nav>
+                <nav class="small-devices_pagination d-none">
+                    <div class="text-center">
+                        <a class="btn btn-dark px-4 py-2" href="javascript:void(0)" onclick="getProduct(${id},${
+                    result.puritywiseproduct.current_page + 1
+                })">See More
+                            Products</a>
+                    </div>
+                </nav></div>`;
+
+                $("#pagination").append(paginationHTML);
+            }
+            qtyplusminus();
+            $(".card-checkbox").click(function () {
+                if ($(this).is(":checked")) {
+                    $("#addalltocart").removeAttr("disabled");
+                } else {
+                    $("#addalltocart").attr("disabled", "disabled");
+                }
+            });
+
+            // Add click event listener to wishlist-svg buttons
+            const wishlistButtons = document.querySelectorAll(".wishlist-svg");
+
+            wishlistButtons.forEach((button) => {
+                button.addEventListener("click", function () {
+                    // Toggle the 'active' class to change the color on click
+                    this.classList.toggle("active");
+                });
+            });
+            loadSecureImages();
+        },
+    });
+}
 
 function updateProductFilters(productsData) {
     let products = JSON.parse(productsData);
@@ -1330,54 +1363,56 @@ function updateMobileProCategoryFilters(procategorysData) {
     });
 }
 
+function updatePurityFilters(purityData) {
+    let purities = JSON.parse(purityData);
+    let container = document.getElementById("purity-filters-container");
+    if (container) {
+        container.innerHTML = ""; // Clear existing filters if any
+        purities.forEach(function (pure) {
+            var filterHtml = `
+    <div class="form-check">
+    
+    <input class="purity form-check-input" type="checkbox"
+    id="purity${pure.id}" name="purity" data-id="${pure.id}"
+    value="${pure.Purity}" onclick="getPurity(${pure.id})">
+    <label class="form-check-label" for="purity${pure.id}">
+    ${pure.Purity}
+    </label>
+    
+        </div>
+        `;
+            container.insertAdjacentHTML("beforeend", filterHtml);
+        });
+    }
+}
+
+function updateMobilePurityFilters(purityData) {
+    let puritieis = JSON.parse(purityData);
+
+    let container = document.getElementById("mobile-purity-filters");
+    container.innerHTML = ""; // Clear existing filters if any
+
+    puritieis.forEach(function (pure) {
+        let filterHtml = `
+        <div class="form-check d-flex justify-content-between gap-2">
+            <div>
+                <input class="purity form-check-input" type="checkbox"
+                    id="purity${pure.id}-mob" name="purity" data-id="${pure.id}"
+                    value="${pure.Purity}" onclick="getPurity(${pure.id})">
+                <label class="form-check-label" for="purity${pure.id}-mob">
+                    ${pure.Purity}
+                </label>
+            </div>
+        </div>
+    `;
+        container.insertAdjacentHTML("beforeend", filterHtml);
+    });
+}
+
 function clearFilters() {
     $("input[type='checkbox']").prop("checked", false);
     window.location.reload();
 }
-
-// function appendWeightFilters() {
-//     let weights = JSON.parse($("#weights").val());
-//     var container = document.getElementById("weight-filters-container");
-//     container.innerHTML = ""; // Clear existing filters if any
-
-//     weights?.forEach(function (weight, key) {
-//         var label = "";
-
-//         if (
-//             weight.weight_range_from === 20 &&
-//             weight.weight_range_to === 200000
-//         ) {
-//             label = "Above 20grams";
-//         } else if (Number.isInteger(weight.weight_range_from)) {
-//             label =
-//                 weight.weight_range_from +
-//                 " - " +
-//                 weight.weight_range_to +
-//                 "gms";
-//         } else {
-//             label =
-//                 weight.weight_range_from +
-//                 " - " +
-//                 weight.weight_range_to +
-//                 "gms";
-//         }
-
-//         var filterHtml = `
-//                 <div class="form-check">
-//                     <input class="form-check-input weight_filter" type="checkbox"
-//                         id="weightfrom${weight.id}" name="weightfrom"
-//                         data-id="${weight.id}" value="${weight.weight_range_from}"
-//                         onclick="getWeightRange(${weight.id})">
-//                     <input class="weight_filter" type="hidden" name="weightto"
-//                         id="weightto${weight.id}" value="${weight.weight_range_to}">
-//                     <label class="form-check-label" for="weightfrom${weight.id}">
-//                         ${label}
-//                     </label>
-//                 </div>
-//             `;
-//         container.insertAdjacentHTML("beforeend", filterHtml);
-//     });
-// }
 
 function appendProductFilters() {
     let products = JSON.parse($("#productFilter").val());
@@ -1433,11 +1468,37 @@ function appendProCategoryFilters() {
     }
 }
 
+function appendPurityFilters() {
+    let purities = JSON.parse($("#purityFilter").val());
+
+    let container = document.getElementById("purity-filters-container");
+    if (container) {
+        container.innerHTML = ""; // Clear existing filters if any
+
+        purities.forEach(function (purity) {
+            // Use the correct spelling from JSON
+            let puritylabel = purity.Purity;
+
+            var filterHtml = `
+                <div class="form-check">
+                    <input class="purity form-check-input" type="checkbox"
+                        id="purity${purity.id}" name="purity" data-id="${purity.id}"
+                        value="${puritylabel}" onclick="getPurity(${purity.id})">
+                    <label class="form-check-label" for="purity${purity.id}">
+                        ${puritylabel}
+                    </label>
+                </div>
+            `;
+            container.insertAdjacentHTML("beforeend", filterHtml);
+        });
+    }
+}
+
 $(document).ready(function () {
     // Call the function to append the filters
     appendProCategoryFilters();
     appendProductFilters();
-    // appendWeightFilters();
+    appendPurityFilters();
 });
 
 async function loadSecureImages() {

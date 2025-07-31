@@ -92,8 +92,8 @@ Route::prefix('retailer')->group(function () {
         //procategorywiseproductfilter
         Route::get('procategorywiseproduct/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'getProcategorywiseProduct'])->name('retailerprocategorynwiseproduct');
 
-        //classificatiowiseproduct
-        Route::get('classificationwiseproduct/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'classificationwiseproduct'])->name('retailerclassificationwiseproduct');
+        //puritywiseproduct
+        Route::get('puritywiseproduct/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'getPuritywiseProduct'])->name('retailerpuritywiseproduct');
 
         //jewelcategorywiseproduct
         Route::get('categorywiseproduct/{id}', [App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'categorywiseproduct'])->name('retailercategorywiseproduct');
