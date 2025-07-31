@@ -126,8 +126,8 @@
                                     data-bs-target="#mobileprocategoryFilter" type="button" role="tab"
                                     aria-controls="mobileprocategoryFilter" aria-selected="true">Pro Category</button>
                                 <button class="nav-link" id="mobPurityFilter" data-bs-toggle="pill"
-                                    data-bs-target="#mobPurityFilter" type="button" role="tab"
-                                    aria-controls="mobPurityFilter" aria-selected="true">Purity</button>
+                                    data-bs-target="#mobilepurityilter" type="button" role="tab"
+                                    aria-controls="mobilepurityilter" aria-selected="true">Purity</button>
                             </div>
                         </div>
                         <div class="mobile-filters-offcanvas__body-item-filter-inputs">
