@@ -1365,90 +1365,90 @@ class ReadyStockController extends Controller
         }
     }
 
-    public function weightrange(Request $request, $id)
-    {
-        ini_set('max_execution_time', 1800); // 30 minutes
+    // public function weightrange(Request $request, $id)
+    // {
+    //     ini_set('max_execution_time', 1800); // 30 minutes
 
-        // Validate and collect filters
-        $selectedWeightRangesFrom = (array) $request->input('selectedWeightRanges');
-        $selectedWeightRangesTo = (array) $request->input('weightToArray');
-        $procategories = (array) $request->input('procategoryArray');
-        $productItems = (array) $request->input('productArray');
-        $project = $request->input('project');
-        $isFilterApplied = !empty($id) && !empty($selectedWeightRangesFrom) && !empty($selectedWeightRangesTo);
+    //     // Validate and collect filters
+    //     $selectedWeightRangesFrom = (array) $request->input('selectedWeightRanges');
+    //     $selectedWeightRangesTo = (array) $request->input('weightToArray');
+    //     $procategories = (array) $request->input('procategoryArray');
+    //     $productItems = (array) $request->input('productArray');
+    //     $project = $request->input('project');
+    //     $isFilterApplied = !empty($id) && !empty($selectedWeightRangesFrom) && !empty($selectedWeightRangesTo);
 
-        // Start base product query
-        $products = $this->getproducts(Auth::user()->id);
+    //     // Start base product query
+    //     $products = $this->getproducts(Auth::user()->id);
 
-        if (!empty($project)) {
-            $products = $products->where('products.Project', $project);
-        }
+    //     if (!empty($project)) {
+    //         $products = $products->where('products.Project', $project);
+    //     }
 
-        if (!empty(array_filter($procategories))) {
-            $products = $products->whereIn('products.Procatgory', $procategories);
-        }
+    //     if (!empty(array_filter($procategories))) {
+    //         $products = $products->whereIn('products.Procatgory', $procategories);
+    //     }
 
-        if (!empty(array_filter($productItems))) {
-            $products = $products->whereIn('products.Item', $productItems);
-        }
+    //     if (!empty(array_filter($productItems))) {
+    //         $products = $products->whereIn('products.Item', $productItems);
+    //     }
 
-        if ($isFilterApplied && count($selectedWeightRangesFrom) === count($selectedWeightRangesTo)) {
-            $weightRanges = array_map(function ($from, $to) {
-                return ['from' => $from, 'to' => $to];
-            }, $selectedWeightRangesFrom, $selectedWeightRangesTo);
+    //     if ($isFilterApplied && count($selectedWeightRangesFrom) === count($selectedWeightRangesTo)) {
+    //         $weightRanges = array_map(function ($from, $to) {
+    //             return ['from' => $from, 'to' => $to];
+    //         }, $selectedWeightRangesFrom, $selectedWeightRangesTo);
 
-            $products = $products->where(function ($query) use ($weightRanges) {
-                foreach ($weightRanges as $range) {
-                    $query->orWhere(function ($q) use ($range) {
-                        $q->where('products.weight', '>=', $range['from'])
-                            ->where('products.weight', '<=', $range['to']);
-                    });
-                }
-            });
-        }
+    //         $products = $products->where(function ($query) use ($weightRanges) {
+    //             foreach ($weightRanges as $range) {
+    //                 $query->orWhere(function ($q) use ($range) {
+    //                     $q->where('products.weight', '>=', $range['from'])
+    //                         ->where('products.weight', '<=', $range['to']);
+    //                 });
+    //             }
+    //         });
+    //     }
 
-        $products = $products->where('products.qty', '>', 0)
-            ->orderBy('products.qty', 'DESC');
+    //     $products = $products->where('products.qty', '>', 0)
+    //         ->orderBy('products.qty', 'DESC');
 
-        // Pagination at DB level
-        $perPage = $this->paginate ?? 20;
-        $page = $request->get('page', 1);
-        $paginated = $products->paginate($perPage, ['*'], 'page', $page);
+    //     // Pagination at DB level
+    //     $perPage = $this->paginate ?? 20;
+    //     $page = $request->get('page', 1);
+    //     $paginated = $products->paginate($perPage, ['*'], 'page', $page);
 
-        // Encrypt image filenames
-        $secret = 'EmeraldAdmin';
-        $paginated->getCollection()->transform(function ($product) use ($secret) {
-            $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-            return $product;
-        });
+    //     // Encrypt image filenames
+    //     $secret = 'EmeraldAdmin';
+    //     $paginated->getCollection()->transform(function ($product) use ($secret) {
+    //         $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
+    //         return $product;
+    //     });
 
-        // Fetch all relevant product IDs to reduce DB hits
-        $productIds = $paginated->pluck('id')->toArray();
+    //     // Fetch all relevant product IDs to reduce DB hits
+    //     $productIds = $paginated->pluck('id')->toArray();
 
-        $userId = Auth::user()->id;
-        $cartItems = Cart::where('user_id', $userId)
-            ->whereIn('product_id', $productIds)
-            ->get()
-            ->groupBy('product_id');
+    //     $userId = Auth::user()->id;
+    //     $cartItems = Cart::where('user_id', $userId)
+    //         ->whereIn('product_id', $productIds)
+    //         ->get()
+    //         ->groupBy('product_id');
 
-        $cart = [];
-        $cartcount = [];
-        $counter = $perPage * ($page - 1);
+    //     $cart = [];
+    //     $cartcount = [];
+    //     $counter = $perPage * ($page - 1);
 
-        foreach ($paginated as $product) {
-            $productCartItems = $cartItems->get($product->id, collect());
-            $cart[$counter] = $productCartItems;
-            $cartcount[$counter] = $productCartItems->sum('qty');
-            $counter++;
-        }
+    //     foreach ($paginated as $product) {
+    //         $productCartItems = $cartItems->get($product->id, collect());
+    //         $cart[$counter] = $productCartItems;
+    //         $cartcount[$counter] = $productCartItems->sum('qty');
+    //         $counter++;
+    //     }
 
-        return response()->json([
-            'weightrange' => $paginated,
-            'cart' => $cart,
-            'cartcount' => $cartcount,
-            'stock' => $isFilterApplied ? 1 : null
-        ]);
-    }
+    //     return response()->json([
+    //         'weightrange' => $paginated,
+    //         'cart' => $cart,
+    //         'cartcount' => $cartcount,
+    //         'stock' => $isFilterApplied ? 1 : null
+    //     ]);
+    // }
 
     public function getItemwiseProduct(Request $request)
     {
@@ -1487,21 +1487,21 @@ class ReadyStockController extends Controller
             $itemwiseproduct->whereIn('products.Procatgory', $procategories);
         }
 
-        $selectedWeightRangesFrom = $request->input('weightfrom', []);
-        $selectedWeightRangesTo = $request->input('weightto', []);
-        if (!empty(array_filter($selectedWeightRangesFrom)) && !empty(array_filter($selectedWeightRangesTo))) {
-            $itemwiseproduct->where(function ($query) use ($selectedWeightRangesFrom, $selectedWeightRangesTo) {
-                foreach ($selectedWeightRangesFrom as $index => $from) {
-                    $to = $selectedWeightRangesTo[$index] ?? $from;
-                    $query->orWhereBetween('product_variants.weight', [$from, $to]);
-                }
-            });
-        }
+        // $selectedWeightRangesFrom = $request->input('weightfrom', []);
+        // $selectedWeightRangesTo = $request->input('weightto', []);
+        // if (!empty(array_filter($selectedWeightRangesFrom)) && !empty(array_filter($selectedWeightRangesTo))) {
+        //     $itemwiseproduct->where(function ($query) use ($selectedWeightRangesFrom, $selectedWeightRangesTo) {
+        //         foreach ($selectedWeightRangesFrom as $index => $from) {
+        //             $to = $selectedWeightRangesTo[$index] ?? $from;
+        //             $query->orWhereBetween('product_variants.weight', [$from, $to]);
+        //         }
+        //     });
+        // }
 
         // Clone the query to calculate min and max weight
-        $weightQuery = clone $itemwiseproduct;
-        $minWeight = $weightQuery->min('product_variants.weight');
-        $maxWeight = $weightQuery->max('product_variants.weight');
+        // $weightQuery = clone $itemwiseproduct;
+        // $minWeight = $weightQuery->min('product_variants.weight');
+        // $maxWeight = $weightQuery->max('product_variants.weight');
 
         $itemwiseproduct = $itemwiseproduct->orderBy('products.DesignNo', 'ASC');
 
@@ -1548,30 +1548,30 @@ class ReadyStockController extends Controller
         $itemwiseproduct = $paginated;
 
         // Ensure min <= max
-        if ($minWeight > $maxWeight) {
-            [$minWeight, $maxWeight] = [$maxWeight, $minWeight];
-        }
+        // if ($minWeight > $maxWeight) {
+        //     [$minWeight, $maxWeight] = [$maxWeight, $minWeight];
+        // }
 
-        // Matching weights
-        $matchingWeights = Weight::where('is_active', 1)
-            ->whereNull('deleted_at')
-            ->where(function ($query) use ($minWeight, $maxWeight) {
-                $query->where('weight_range_from', '<=', $maxWeight)
-                    ->where('weight_range_to', '>=', $minWeight);
-            })
-            ->pluck('id')
-            ->toArray();
+        // // Matching weights
+        // $matchingWeights = Weight::where('is_active', 1)
+        //     ->whereNull('deleted_at')
+        //     ->where(function ($query) use ($minWeight, $maxWeight) {
+        //         $query->where('weight_range_from', '<=', $maxWeight)
+        //             ->where('weight_range_to', '>=', $minWeight);
+        //     })
+        //     ->pluck('id')
+        //     ->toArray();
 
-        $weights = Weight::whereIn('id', $matchingWeights)
-            ->where('is_active', 1)
-            ->whereNull('deleted_at')
-            ->get();
-        $weightJson = $weights->toJson();
+        // $weights = Weight::whereIn('id', $matchingWeights)
+        //     ->where('is_active', 1)
+        //     ->whereNull('deleted_at')
+        //     ->get();
+        // $weightJson = $weights->toJson();
 
-        $defaultweights = Weight::where('is_active', 1)
-            ->whereNull('deleted_at')
-            ->get();
-        $defaultweightJson = $defaultweights->toJson();
+        // $defaultweights = Weight::where('is_active', 1)
+        //     ->whereNull('deleted_at')
+        //     ->get();
+        // $defaultweightJson = $defaultweights->toJson();
 
         // Procategory JSONs
         $procategoryIds = $itemwiseproduct->pluck('Procatgory')->filter()->unique()->toArray();
@@ -1618,8 +1618,8 @@ class ReadyStockController extends Controller
             'cartcount' => $cartcount,
             'procategoryjson' => $procategoryjson,
             'procategoryDefaultjson' => $procategoryDefaultjson,
-            'weightJson' => $weightJson,
-            'defaultweightJson' => $defaultweightJson
+            // 'weightJson' => $weightJson,
+            // 'defaultweightJson' => $defaultweightJson
         ]);
     }
 
@@ -1627,15 +1627,29 @@ class ReadyStockController extends Controller
     public function getProcategorywiseProduct(Request $request)
     {
         ini_set('max_execution_time', 1800); //3 minutes
+        $user_id = Auth::user()->id;
         $selectedprocategory = $request->input('selectedprocategory', []);
         $products = (array) $request->input('productArray');
         $getProcategory = Product::whereIn('Procatgory', $selectedprocategory)->pluck('Procatgory')->toArray();
 
-        $procategorywiseproduct = $this->getproducts(Auth::user()->id);
+        $procategorywiseproduct =  $this->getproducts($user_id)
+            ->join('product_variants', 'product_variants.product_id', '=', 'products.id')
+            ->select(
+                'products.*',
+                'product_variants.id as productID',
+                'product_variants.weight as variant_weight',
+                'product_variants.purity as variant_purity',
+                'product_variants.size as variant_size',
+                'product_variants.style as variant_style',
+                'product_variants.unit as variant_unit',
+                'product_variants.color as variant_color',
+                'product_variants.making as variant_making',
+                'product_variants.qty as variant_qty'
+            );
 
         if ($getProcategory) {
             $procategorywiseproduct->whereIn('products.Procatgory', $getProcategory)
-                ->where('products.qty', '>', 0);
+                ->where('product_variants.qty', '>', 0);
         }
 
         if (!empty($request->project_id)) {
@@ -1646,34 +1660,54 @@ class ReadyStockController extends Controller
             $procategorywiseproduct = $procategorywiseproduct->whereIn('products.Item', $products);
         }
 
-        $selectedWeightRangesFrom = $request->input('weightfrom', []);
-        $selectedWeightRangesTo = $request->input('weightto', []);
-        if (!empty(array_filter($selectedWeightRangesFrom)) && !empty(array_filter($selectedWeightRangesTo))) {
-            // Ensure both arrays have elements
-            if (!empty($selectedWeightRangesFrom) && !empty($selectedWeightRangesTo)) {
-                $procategorywiseproduct->where(function ($query) use ($selectedWeightRangesFrom, $selectedWeightRangesTo) {
-                    foreach ($selectedWeightRangesFrom as $index => $from) {
-                        $query->orWhereBetween('products.weight', [$from, $selectedWeightRangesTo[$index]]);
-                    }
-                });
-            }
-        }
+        // $selectedWeightRangesFrom = $request->input('weightfrom', []);
+        // $selectedWeightRangesTo = $request->input('weightto', []);
+        // if (!empty(array_filter($selectedWeightRangesFrom)) && !empty(array_filter($selectedWeightRangesTo))) {
+        //     // Ensure both arrays have elements
+        //     if (!empty($selectedWeightRangesFrom) && !empty($selectedWeightRangesTo)) {
+        //         $procategorywiseproduct->where(function ($query) use ($selectedWeightRangesFrom, $selectedWeightRangesTo) {
+        //             foreach ($selectedWeightRangesFrom as $index => $from) {
+        //                 $query->orWhereBetween('products.weight', [$from, $selectedWeightRangesTo[$index]]);
+        //             }
+        //         });
+        //     }
+        // }
 
-        // Clone the query to calculate the min and max weight before paginating
-        $weightQuery = clone $procategorywiseproduct;
-        $minWeight = $weightQuery->min('products.weight');
-        $maxWeight = $weightQuery->max('products.weight');
+        // // Clone the query to calculate the min and max weight before paginating
+        // $weightQuery = clone $procategorywiseproduct;
+        // $minWeight = $weightQuery->min('products.weight');
+        // $maxWeight = $weightQuery->max('products.weight');
 
         $procategorywiseproduct = $procategorywiseproduct
             ->orderBy('products.DesignNo', 'ASC');
 
+        // Fetch all products first
+        $rawProducts = $procategorywiseproduct->get();
         $secret = 'EmeraldAdmin';
 
-        $groupedProducts = $procategorywiseproduct->get()
-            ->map(function ($product) use ($secret) {
-                $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);
-                return $product;
+        // Group variants under each product
+        $groupedProducts = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
+
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'productID' => $item->productID,
+                    'Purity' => $item->variant_purity,
+                    'color' => $item->variant_color,
+                    'unit' => $item->variant_unit,
+                    'style' => $item->variant_style,
+                    'making' => $item->variant_making,
+                    'size' => $item->variant_size,
+                    'weight' => $item->variant_weight,
+                    'qty' => $item->variant_qty,
+                ];
             });
+
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
 
         $page = $request->get('page', 1);
         $perPage = $this->paginate;
@@ -1689,25 +1723,25 @@ class ReadyStockController extends Controller
         $procategorywiseproduct = $paginated;
 
         // Ensure min is always less than or equal to max
-        if ($minWeight > $maxWeight) {
-            [$minWeight, $maxWeight] = [$maxWeight, $minWeight];
-        }
+        // if ($minWeight > $maxWeight) {
+        //     [$minWeight, $maxWeight] = [$maxWeight, $minWeight];
+        // }
 
-        // Get weights that match minWeight and maxWeight
-        $matchingWeights = Weight::where('is_active', 1)
-            ->whereNull('deleted_at')
-            ->where(function ($query) use ($minWeight, $maxWeight) {
-                $query->where('weight_range_from', '<=', $maxWeight)
-                    ->where('weight_range_to', '>=', $minWeight);
-            })
-            ->pluck('id')
-            ->toArray();
+        // // Get weights that match minWeight and maxWeight
+        // $matchingWeights = Weight::where('is_active', 1)
+        //     ->whereNull('deleted_at')
+        //     ->where(function ($query) use ($minWeight, $maxWeight) {
+        //         $query->where('weight_range_from', '<=', $maxWeight)
+        //             ->where('weight_range_to', '>=', $minWeight);
+        //     })
+        //     ->pluck('id')
+        //     ->toArray();
 
-        $weights = Weight::whereIn('id', $matchingWeights)->where('is_active', 1)->whereNull('deleted_at')->get();
-        $weightJson = $weights->toJson();
+        // $weights = Weight::whereIn('id', $matchingWeights)->where('is_active', 1)->whereNull('deleted_at')->get();
+        // $weightJson = $weights->toJson();
 
-        $defaultweights = Weight::where('is_active', 1)->whereNull('deleted_at')->get();
-        $defaultweightJson = $defaultweights->toJson();
+        // $defaultweights = Weight::where('is_active', 1)->whereNull('deleted_at')->get();
+        // $defaultweightJson = $defaultweights->toJson();
 
         // Calculate the starting counter based on the current page
         $counter = 50 * ($page - 1);
@@ -1740,8 +1774,8 @@ class ReadyStockController extends Controller
             'procategorywiseproduct' => $procategorywiseproduct,
             'cart' => $cart,
             'cartcount' => $cartcount,
-            'weightJson' => $weightJson,
-            'defaultweightJson' => $defaultweightJson
+            // 'weightJson' => $weightJson,
+            // 'defaultweightJson' => $defaultweightJson
         ]);
     }
 }

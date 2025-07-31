@@ -12,19 +12,19 @@
 
         </div>
         @php
-            $usedWeights = App\Models\ProductVariant::where('qty', '>', 0)->pluck('weight')->toArray();
+            // $usedWeights = App\Models\ProductVariant::where('qty', '>', 0)->pluck('weight')->toArray();
 
-            $weights = App\Models\Weight::where(function ($query) use ($usedWeights) {
-                foreach ($usedWeights as $productWeight) {
-                    $query->orWhere(function ($q) use ($productWeight) {
-                        $q->where('weight_range_from', '<=', $productWeight)->where(
-                            'weight_range_to',
-                            '>=',
-                            $productWeight,
-                        );
-                    });
-                }
-            })->get();
+            // $weights = App\Models\Weight::where(function ($query) use ($usedWeights) {
+            //     foreach ($usedWeights as $productWeight) {
+            //         $query->orWhere(function ($q) use ($productWeight) {
+            //             $q->where('weight_range_from', '<=', $productWeight)->where(
+            //                 'weight_range_to',
+            //                 '>=',
+            //                 $productWeight,
+            //             );
+            //         });
+            //     }
+            // })->get();
             $currentProjectId = $project_id;
             $products = App\Models\Product::where('Project', $currentProjectId)
                 ->select('product_variants.qty','products.*')
@@ -45,7 +45,7 @@
         <input type="hidden" name="hdweightfrom" id="hdweightfrom" value="">
         <input type="hidden" name="hdweightto" id="hdweightto" value="">
         <input type="hidden" name="procategory" id="procategory" value="">
-        <input type="hidden" name="weights" id="weights" value="{{ $weights->toJson() }}">
+        {{-- <input type="hidden" name="weights" id="weights" value="{{ $weights->toJson() }}"> --}}
         <input type="hidden" name="productFilter" id="productFilter" value="{{ $products->toJson() }}">
         <input type="hidden" name="procategoryFilter" id="procategoryFilter" value="{{ $procategorys->toJson() }}">
 
@@ -65,7 +65,7 @@
                     </div>
                 </div>
 
-                <div class="accordion-item mt-3">
+                {{-- <div class="accordion-item mt-3">
                     <h2 class="accordion-header">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
                             data-bs-target="#weightRangeFilter" aria-expanded="true" aria-controls="weightRangeFilter">
@@ -78,7 +78,7 @@
                             <!-- Weight filters will be appended here -->
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="accordion-item mt-3">
                     <h2 class="accordion-header">

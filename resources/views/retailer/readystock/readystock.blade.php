@@ -53,15 +53,15 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
 @php
-    $usedWeights = App\Models\ProductVariant::where('qty', '>', 0)->pluck('weight')->toArray();
+    // $usedWeights = App\Models\ProductVariant::where('qty', '>', 0)->pluck('weight')->toArray();
 
-    $weights = App\Models\Weight::where(function ($query) use ($usedWeights) {
-        foreach ($usedWeights as $productWeight) {
-            $query->orWhere(function ($q) use ($productWeight) {
-                $q->where('weight_range_from', '<=', $productWeight)->where('weight_range_to', '>=', $productWeight);
-            });
-        }
-    })->get();
+    // $weights = App\Models\Weight::where(function ($query) use ($usedWeights) {
+    //     foreach ($usedWeights as $productWeight) {
+    //         $query->orWhere(function ($q) use ($productWeight) {
+    //             $q->where('weight_range_from', '<=', $productWeight)->where('weight_range_to', '>=', $productWeight);
+    //         });
+    //     }
+    // })->get();
     $currentProjectId = $project_id;
     $projectId = App\Models\Project::where('is_active', 1)->where('id', $currentProjectId)->value('id');
     $products = App\Models\Product::where('Project', $currentProjectId)
@@ -117,10 +117,10 @@
                                 <button class="nav-link" id="mobProductFilterTab" data-bs-toggle="pill"
                                     data-bs-target="#mobileProductFilter" type="button" role="tab"
                                     aria-controls="mobileProductFilter" aria-selected="false">Product</button>
-                                <button class="nav-link" id="mobWeightFilter" data-bs-toggle="pill"
+                                {{-- <button class="nav-link" id="mobWeightFilter" data-bs-toggle="pill"
                                     data-bs-target="#mobileWeightFilter" type="button" role="tab"
                                     aria-controls="mobileWeightFilter" aria-selected="true">Weight
-                                    Range</button>
+                                    Range</button> --}}
                                 <button class="nav-link" id="mobProcategoryFilter" data-bs-toggle="pill"
                                     data-bs-target="#mobileprocategoryFilter" type="button" role="tab"
                                     aria-controls="mobileprocategoryFilter" aria-selected="true">Pro Category</button>
@@ -146,11 +146,11 @@
                                         @endforeach
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="mobileWeightFilter" role="tabpanel"
+                                {{-- <div class="tab-pane fade" id="mobileWeightFilter" role="tabpanel"
                                     aria-labelledby="mobWeightFilter" tabindex="0">
                                     <div class="filter-inputs_wrapper" id="mobile-weight-filters">
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="tab-pane fade" id="mobileprocategoryFilter" role="tabpanel"
                                     aria-labelledby="mobileprocategoryFilter" tabindex="0">
                                     <div class="filter-inputs_wrapper" id="mobile-procategory-filters">
