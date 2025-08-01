@@ -393,7 +393,7 @@
                                                                                 <tr>
                                                                                     <td>{{ $labels[$i] }}</td>
                                                                                     @foreach ($main->variants as $variant)
-                                                                                        <td>
+                                                                                        <td @if ($attr === 'qty') style="color: #f78e21;" @endif>
                                                                                             @if ($attr === 'weight')
                                                                                                 {{ $variant[$attr] ?? '-' }}g
                                                                                             @elseif ($attr === 'qty')

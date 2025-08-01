@@ -224,7 +224,7 @@
                                                     <tr>
                                                         <td>{{ $labels[$fIndex] }}</td>
                                                         @foreach ($product->variants as $variant)
-                                                            <td>{{ $field === 'qty' ? $variant[$field] . ' ' . $variant['unit'] : $variant[$field] }}
+                                                            <td @if ($field === 'qty') style="color: #f78e21;" @endif>{{ $field === 'qty' ? $variant[$field] . ' ' . $variant['unit'] : $variant[$field] }}
                                                             </td>
                                                         @endforeach
                                                     </tr>
