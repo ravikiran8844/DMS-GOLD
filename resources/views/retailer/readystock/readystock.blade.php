@@ -76,20 +76,29 @@
         ->select('product_variants.Purity', DB::raw('MIN(product_variants.id) as id'))
         ->groupBy('product_variants.Purity')
         ->get();
+    $banners = App\Models\Banner::where('banner_position_id', 3)->get();
+    $mobbanners = App\Models\Banner::where('banner_position_id', 5)->get();
 @endphp
 <input type="hidden" name="decryptedProjectId" id="decryptedProjectId" value="{{ $decryptedProjectId ?? '' }}">
+@php
+    // Filter banners based on current project ID
+    $desktopBanner = $banners->firstWhere('project', $currentProjectId);
+    $mobileBanner = $mobbanners->firstWhere('project', $currentProjectId);
+@endphp
 
-<div>
-    <picture>
-        <source media="(min-width: 768px)" srcset="{{ asset('retailer/assets/img/shop/casting.webp') }}"
-            type="image/webp">
-        <source media="(max-width: 767px)" srcset="{{ asset('retailer/assets/img/shop/casting-mobile.webp') }}"
-            type="image/webp">
-        <img width="1920" height="340" class="img-fluid w-100"
-            src="{{ asset('retailer/assets/img/shop/casting.webp') }}" alt="banner">
-    </picture>
+@if($desktopBanner)
+    <div>
+        <picture>
+            <source media="(min-width: 768px)" srcset="{{ asset($desktopBanner->banner_image) }}" type="image/webp">
+            @if($mobileBanner)
+                <source media="(max-width: 767px)" srcset="{{ asset($mobileBanner->banner_image) }}" type="image/webp">
+            @endif
+            <img width="1920" height="340" class="img-fluid w-100"
+                src="{{ asset($desktopBanner->banner_image) }}" alt="banner">
+        </picture>
+    </div>
+@endif
 
-</div>
 
 <div class="container-fluid">
     <div class="mb-2 mt-4 text-center d-block d-lg-none">
@@ -136,7 +145,7 @@
                         </div>
                         <div class="mobile-filters-offcanvas__body-item-filter-inputs">
                             <div class="tab-content" id="mob-filters-tabContent">
-                            <div class="tab-pane show active" id="mobileProductFilter" role="tabpanel"
+                                <div class="tab-pane show active" id="mobileProductFilter" role="tabpanel"
                                     aria-labelledby="mobProductFilterTab" tabindex="0">
                                     <div class="filter-inputs_wrapper" id="mobile-product-filters">
                                         @foreach ($products as $item)
@@ -155,7 +164,7 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="mobileprocategoryFilter" role="tabpanel"
-                                aria-labelledby="mobProcategoryFilter" tabindex="0">
+                                    aria-labelledby="mobProcategoryFilter" tabindex="0">
                                     <div class="filter-inputs_wrapper" id="mobile-procategory-filters">
                                         @foreach ($procategorys as $item)
                                             <div class="form-check d-flex justify-content-between gap-2">
@@ -393,10 +402,11 @@
                                                                                 <tr>
                                                                                     <td>{{ $labels[$i] }}</td>
                                                                                     @foreach ($main->variants as $variant)
-                                                                                        <td @if ($attr === 'qty') style="color: #f78e21;" @endif>
+                                                                                        <td
+                                                                                            @if ($attr === 'qty') style="color: #f78e21;" @endif>
                                                                                             @if ($attr === 'weight')
                                                                                                 {{ $variant[$attr] ?? '-' }}g
-                                                                                            @elseif ($attr === 'qty')
+                                                                                                @elseif ($attr === 'qty')
                                                                                                 {{ $variant[$attr] ?? 0 }}
                                                                                                 Pcs
                                                                                             @else

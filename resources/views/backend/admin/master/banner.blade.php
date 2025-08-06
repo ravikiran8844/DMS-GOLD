@@ -22,10 +22,11 @@
                                 <label>Project <span class="text-danger">*</span></label>
                                 <select class="form-control" name="project" id="project" required>
                                     <option value="">select Project Name</option>
-                                    <option value="DMS" {{ old('project') == 'DMS' ? 'selected' : '' }}>
-                                        DMS</option>
-                                    <option value="RMS" {{ old('project') == 'RMS' ? 'selected' : '' }}>
-                                        RMS</option>
+                                    @foreach ($projects as $item)
+                                        <option value="{{ $item->project_name }}"
+                                            {{ old('project') == $item->project_name ? 'selected' : '' }}>
+                                            {{ $item->project_name }}</option>
+                                    @endforeach
                                 </select>
                                 @error('bannerposition')
                                     <div class="text-danger">{{ $errors->first('bannerposition') }}

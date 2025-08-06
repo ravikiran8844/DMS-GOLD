@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Master;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\BannerPosition;
+use App\Models\Project;
 use App\Traits\Common;
 use Exception;
 use Illuminate\Http\Request;
@@ -19,7 +20,8 @@ class BannerController extends Controller
     {
         if ($this->permissionCheck(Auth::user()->id, 'Banner')) {
             $bannerposition = BannerPosition::get();
-            return view('backend.admin.master.banner', compact('bannerposition'));
+            $projects = Project::where('is_active', 1)->get();
+            return view('backend.admin.master.banner', compact('bannerposition', 'projects'));
         } else {
             return view('backend.admin.error.restrict');
         }
