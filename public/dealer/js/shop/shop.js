@@ -646,7 +646,7 @@ function getCollectionWiseProducts(id, page = 1) {
                 $("#pagination").empty();
                 // Append pagination links
                 var paginationHTML = `<div class="my-5 pagination-links">
-                          <nav class="large-devices_pagination">
+                          <nav class="large-devices_pagination" style="padding-bottom: 100px;">
                               <div class="d-flex gap-3 flex-wrap justify-content-between">
                                   <div>
                                        Showing ${data.collectionwiseproduct.from} - ${data.collectionwiseproduct.to} of ${data.collectionwiseproduct.total} results
@@ -1006,7 +1006,7 @@ function getWeightRange(id, page = 1) {
                 $("#pagination").empty();
                 // Append pagination links
                 var paginationHTML = `<div class="my-5 pagination-links">
-                <nav class="large-devices_pagination">
+                <nav class="large-devices_pagination" style="padding-bottom: 100px;">
                     <div class="d-flex gap-3 flex-wrap justify-content-between">
                         <div>
                              Showing ${result.weightrange.from} - ${result.weightrange.to} of ${result.weightrange.total} results
@@ -1332,7 +1332,7 @@ function getsubcollectionproduct(id, page = 1) {
                 $("#pagination").empty();
                 // Append pagination links
                 var paginationHTML = `<div class="my-5 pagination-links">
-                <nav class="large-devices_pagination">
+                <nav class="large-devices_pagination" style="padding-bottom: 100px;">
                     <div class="d-flex gap-3 flex-wrap justify-content-between">
                         <div>
                              Showing ${result.subcollectionwiseproduct.from} - ${result.subcollectionwiseproduct.to} of ${result.subcollectionwiseproduct.total} results
@@ -1667,7 +1667,7 @@ function getclassificationproduct(page = 1) {
                 $("#pagination").empty();
                 // Append pagination links
                 var paginationHTML = `<div class="my-5 pagination-links">
-                <nav class="large-devices_pagination">
+                <nav class="large-devices_pagination" style="padding-bottom: 100px;">
                     <div class="d-flex gap-3 flex-wrap justify-content-between">
                         <div>
                              Showing ${result.classificationwiseproduct.from} - ${result.classificationwiseproduct.to} of ${result.classificationwiseproduct.total} results
@@ -2049,7 +2049,7 @@ function getcategoryproduct(id, page = 1) {
                 $("#pagination").empty();
                 // Append pagination links
                 var paginationHTML = `<div class="my-5 pagination-links">
-                <nav class="large-devices_pagination">
+                <nav class="large-devices_pagination" style="padding-bottom: 100px;">
                     <div class="d-flex gap-3 flex-wrap justify-content-between">
                         <div>
                              Showing ${result.categorywiseproduct.from} - ${result.categorywiseproduct.to} of ${result.categorywiseproduct.total} results
@@ -2398,7 +2398,7 @@ function getBoxProduct(id, page = 1) {
                 $("#pagination").empty();
                 // Append pagination links
                 var paginationHTML = `<div class="my-5 pagination-links">
-                <nav class="large-devices_pagination">
+                <nav class="large-devices_pagination" style="padding-bottom: 100px;">
                     <div class="d-flex gap-3 flex-wrap justify-content-between">
                         <div>
                              Showing ${result.boxwiseproduct.from} - ${result.boxwiseproduct.to} of ${result.boxwiseproduct.total} results
@@ -2740,7 +2740,7 @@ function getPurityProduct(id, page = 1) {
                 $("#pagination").empty();
                 // Append pagination links
                 var paginationHTML = `<div class="my-5 pagination-links">
-                <nav class="large-devices_pagination">
+                <nav class="large-devices_pagination" style="padding-bottom: 100px;">
                     <div class="d-flex gap-3 flex-wrap justify-content-between">
                         <div>
                              Showing ${result.puritywiseproduct.from} - ${result.puritywiseproduct.to} of ${result.puritywiseproduct.total} results

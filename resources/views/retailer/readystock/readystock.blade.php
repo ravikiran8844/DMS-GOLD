@@ -671,7 +671,7 @@
             <div id="pagination"></div>
             @if (!$product->isEmpty())
                 <div class="my-5 pagination-links">
-                    <nav class="large-devices_pagination">
+                    <nav class="large-devices_pagination" style="padding-bottom: 100px;">
                         <div class="d-flex gap-3 flex-wrap justify-content-between">
                             <div>
                                 Showing {{ $product->firstItem() }} - {{ $product->lastItem() }} of

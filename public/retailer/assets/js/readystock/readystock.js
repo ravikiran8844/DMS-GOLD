@@ -410,7 +410,7 @@ function getProduct(id, page = 1) {
                 $("#pagination").empty();
                 // Append pagination links
                 var paginationHTML = `<div class="my-5 pagination-links">
-                <nav class="large-devices_pagination">
+                <nav class="large-devices_pagination" style="padding-bottom: 100px;">
                     <div class="d-flex gap-3 flex-wrap justify-content-between">
                         <div>
                              Showing ${result.itemwiseproduct.from} - ${result.itemwiseproduct.to} of ${result.itemwiseproduct.total} results
@@ -801,7 +801,7 @@ function getProCategory(id, page = 1) {
                 $("#pagination").empty();
                 // Append pagination links
                 var paginationHTML = `<div class="my-5 pagination-links">
-                <nav class="large-devices_pagination">
+                <nav class="large-devices_pagination" style="padding-bottom: 100px;">
                     <div class="d-flex gap-3 flex-wrap justify-content-between">
                         <div>
                              Showing ${result.procategorywiseproduct.from} - ${result.procategorywiseproduct.to} of ${result.procategorywiseproduct.total} results
@@ -1179,7 +1179,7 @@ function getPurity(id, page = 1) {
                 $("#pagination").empty();
                 // Append pagination links
                 var paginationHTML = `<div class="my-5 pagination-links">
-                <nav class="large-devices_pagination">
+                <nav class="large-devices_pagination" style="padding-bottom: 100px;">
                     <div class="d-flex gap-3 flex-wrap justify-content-between">
                         <div>
                              Showing ${result.puritywiseproduct.from} - ${result.puritywiseproduct.to} of ${result.puritywiseproduct.total} results

@@ -42,7 +42,7 @@ Wishlist Page - Emerald RMS
             </div>
         </div>
         <div class="my-5 pagination-links">
-            <nav class="large-devices_pagination">
+            <nav class="large-devices_pagination" style="padding-bottom: 100px;">
                 <div class="d-flex justify-content-between">
                     <div>
                         Showing {{ $wishlist->firstItem() }} - {{ $wishlist->lastItem() }} of
