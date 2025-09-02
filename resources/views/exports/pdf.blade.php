@@ -15,7 +15,7 @@
             <tr>
                 <td colspan="2"
                     style="width: 100%; text-align: center; background-color: #0a312d; color: white; padding: 20px;">
-                    <img src="{{ public_path('/retailer/assets/img/pdf-logo.svg') }}" alt="Logo" width="150"
+                    <img src="{{ public_path('/retailer/assets/img/emerald-logo.png') }}" alt="Logo" width="150"
                         style="width: 100%; height: auto; max-width: 200px;" />
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 10px;">
                         <tr style="text-align: center;">
