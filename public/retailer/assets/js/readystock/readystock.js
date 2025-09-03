@@ -1283,7 +1283,7 @@ function updateProductFilters(productsData) {
     <input class="product form-check-input" type="checkbox"
     id="product${product.id}" name="product" data-id="${product.id}"
     value="${product.Item}" onclick="getProduct(${product.id})">
-    <label class="form-check-label" for="product${product.id}">
+    <label class="form-check-label">
     ${product.Item}
     </label>
     
@@ -1307,7 +1307,7 @@ function updateMobileProductFilters(productsData) {
                 <input class="product form-check-input" type="checkbox"
                     id="product${product.id}-mob" name="product" data-id="${product.id}"
                     value="${product.Item}" onclick="getproductProduct(${product.id})">
-                <label class="form-check-label" for="product${product.id}-mob">
+                <label class="form-check-label">
                     ${product.Item}
                 </label>
             </div>
@@ -1329,7 +1329,7 @@ function updateProCategoryFilters(procategorysData) {
     <input class="procategory form-check-input" type="checkbox"
     id="procategory${procat.id}" name="procategory" data-id="${procat.id}"
     value="${procat.Procatgory}" onclick="getProCategory(${procat.id})">
-    <label class="form-check-label" for="procategory${procat.id}">
+    <label class="form-check-label">
     ${procat.Procatgory}
     </label>
     
@@ -1353,7 +1353,7 @@ function updateMobileProCategoryFilters(procategorysData) {
                 <input class="procategory form-check-input" type="checkbox"
                     id="procategory${procat.id}-mob" name="procategory" data-id="${procat.id}"
                     value="${procat.Procatgory}" onclick="getProCategory(${procat.id})">
-                <label class="form-check-label" for="procategory${procat.id}-mob">
+                <label class="form-check-label">
                     ${procat.Procatgory}
                 </label>
             </div>
@@ -1375,7 +1375,7 @@ function updatePurityFilters(purityData) {
     <input class="purity form-check-input" type="checkbox"
     id="purity${pure.id}" name="purity" data-id="${pure.id}"
     value="${pure.Purity}" onclick="getPurity(${pure.id})">
-    <label class="form-check-label" for="purity${pure.id}">
+    <label class="form-check-label">
     ${pure.Purity}
     </label>
     
@@ -1399,7 +1399,7 @@ function updateMobilePurityFilters(purityData) {
                 <input class="purity form-check-input" type="checkbox"
                     id="purity${pure.id}-mob" name="purity" data-id="${pure.id}"
                     value="${pure.Purity}" onclick="getPurity(${pure.id})">
-                <label class="form-check-label" for="purity${pure.id}-mob">
+                <label class="form-check-label">
                     ${pure.Purity}
                 </label>
             </div>
@@ -1431,7 +1431,7 @@ function appendProductFilters() {
                 <input class="product form-check-input" type="checkbox"
                     id="product${product.id}" name="product" data-id="${product.id}"
                     value="${productabel}" onclick="getProduct(${product.id})">
-                <label class="form-check-label" for="product${product.id}">
+                <label class="form-check-label">
                     ${productabel}
                 </label>
  
@@ -1458,7 +1458,7 @@ function appendProCategoryFilters() {
                     <input class="procategory form-check-input" type="checkbox"
                         id="procategory${procategory.id}" name="procategory" data-id="${procategory.id}"
                         value="${procategorylabel}" onclick="getProCategory(${procategory.id})">
-                    <label class="form-check-label" for="procategory${procategory.id}">
+                    <label class="form-check-label">
                         ${procategorylabel}
                     </label>
                 </div>
@@ -1484,7 +1484,7 @@ function appendPurityFilters() {
                     <input class="purity form-check-input" type="checkbox"
                         id="purity${purity.id}" name="purity" data-id="${purity.id}"
                         value="${puritylabel}" onclick="getPurity(${purity.id})">
-                    <label class="form-check-label" for="purity${purity.id}">
+                    <label class="form-check-label">
                         ${puritylabel}
                     </label>
                 </div>
