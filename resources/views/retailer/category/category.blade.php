@@ -199,6 +199,249 @@
                     </div>
                 </a>
             </div>
+            <div class="col-12 mb-3">
+                <a href="{{ route('diamond') }}" class="text-decoration-none">
+                    <div class="card category-page-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between  align-items-center">
+                                <div class="d-flex gap-2 align-items-center">
+
+                                    {{-- <div class="category-page-card__img-wrapper">
+                                        <img width="50" height="50" class="img-fluid"
+                                            src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
+                                    </div> --}}
+                                    <div class="item-title">
+                                        DIAMOND
+                                    </div>
+                                </div>
+                                <div>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 18L15 12L9 6" stroke="#003836" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 mb-3">
+                <a href="{{ route('handmade') }}" class="text-decoration-none">
+                    <div class="card category-page-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between  align-items-center">
+                                <div class="d-flex gap-2 align-items-center">
+
+                                    {{-- <div class="category-page-card__img-wrapper">
+                                        <img width="50" height="50" class="img-fluid"
+                                            src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
+                                    </div> --}}
+                                    <div class="item-title">
+                                        HAND MADE
+                                    </div>
+                                </div>
+                                <div>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 18L15 12L9 6" stroke="#003836" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 mb-3">
+                <a href="{{ route('chain') }}" class="text-decoration-none">
+                    <div class="card category-page-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between  align-items-center">
+                                <div class="d-flex gap-2 align-items-center">
+
+                                    {{-- <div class="category-page-card__img-wrapper">
+                                        <img width="50" height="50" class="img-fluid"
+                                            src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
+                                    </div> --}}
+                                    <div class="item-title">
+                                        CHAIN
+                                    </div>
+                                </div>
+                                <div>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 18L15 12L9 6" stroke="#003836" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 mb-3">
+                <a href="{{ route('chainmix') }}" class="text-decoration-none">
+                    <div class="card category-page-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between  align-items-center">
+                                <div class="d-flex gap-2 align-items-center">
+
+                                    {{-- <div class="category-page-card__img-wrapper">
+                                        <img width="50" height="50" class="img-fluid"
+                                            src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
+                                    </div> --}}
+                                    <div class="item-title">
+                                        CHAIN MIX
+                                    </div>
+                                </div>
+                                <div>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 18L15 12L9 6" stroke="#003836" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 mb-3">
+                <a href="{{ route('emeraldgem') }}" class="text-decoration-none">
+                    <div class="card category-page-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between  align-items-center">
+                                <div class="d-flex gap-2 align-items-center">
+
+                                    {{-- <div class="category-page-card__img-wrapper">
+                                        <img width="50" height="50" class="img-fluid"
+                                            src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
+                                    </div> --}}
+                                    <div class="item-title">
+                                        EMERALD GEM JEW
+                                    </div>
+                                </div>
+                                <div>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 18L15 12L9 6" stroke="#003836" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 mb-3">
+                <a href="{{ route('italianchain') }}" class="text-decoration-none">
+                    <div class="card category-page-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between  align-items-center">
+                                <div class="d-flex gap-2 align-items-center">
+
+                                    {{-- <div class="category-page-card__img-wrapper">
+                                        <img width="50" height="50" class="img-fluid"
+                                            src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
+                                    </div> --}}
+                                    <div class="item-title">
+                                        ITALIAN CHAIN
+                                    </div>
+                                </div>
+                                <div>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 18L15 12L9 6" stroke="#003836" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 mb-3">
+                <a href="{{ route('ilabangles') }}" class="text-decoration-none">
+                    <div class="card category-page-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between  align-items-center">
+                                <div class="d-flex gap-2 align-items-center">
+
+                                    {{-- <div class="category-page-card__img-wrapper">
+                                        <img width="50" height="50" class="img-fluid"
+                                            src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
+                                    </div> --}}
+                                    <div class="item-title">
+                                        ILA BANGLES
+                                    </div>
+                                </div>
+                                <div>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 18L15 12L9 6" stroke="#003836" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 mb-3">
+                <a href="{{ route('mariya') }}" class="text-decoration-none">
+                    <div class="card category-page-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between  align-items-center">
+                                <div class="d-flex gap-2 align-items-center">
+
+                                    {{-- <div class="category-page-card__img-wrapper">
+                                        <img width="50" height="50" class="img-fluid"
+                                            src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
+                                    </div> --}}
+                                    <div class="item-title">
+                                        MARIYA
+                                    </div>
+                                </div>
+                                <div>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 18L15 12L9 6" stroke="#003836" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 mb-3">
+                <a href="{{ route('ishtaa') }}" class="text-decoration-none">
+                    <div class="card category-page-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between  align-items-center">
+                                <div class="d-flex gap-2 align-items-center">
+
+                                    {{-- <div class="category-page-card__img-wrapper">
+                                        <img width="50" height="50" class="img-fluid"
+                                            src="{{ asset('retailer/assets/img/img3.jpg') }}" alt="">
+                                    </div> --}}
+                                    <div class="item-title">
+                                        ISHTAA
+                                    </div>
+                                </div>
+                                <div>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 18L15 12L9 6" stroke="#003836" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
             {{-- <div class="col-12 mb-3">
                 <a href="{{ route('turkish') }}" class="text-decoration-none">
                     <div class="card category-page-card">

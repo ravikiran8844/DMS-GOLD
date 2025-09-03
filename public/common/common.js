@@ -300,9 +300,13 @@ function addforcart(id) {
             if (data.count_response) {
                 $('span[id="cartCount"]').text(data.count_response.count);
                 $("#navqty").text(data.count_qty + " Pcs");
-                $("#navweight").text(data.count_weight + "gms");
+                $("#navweight").text(
+                    parseFloat(data.count_weight).toFixed(2) + "gms"
+                );
                 $("#navqty-mob").text(data.count_qty + " Pcs");
-                $("#navweight-mob").text(data.count_weight + "gms");
+                $("#navweight-mob").text(
+                    parseFloat(data.count_weight).toFixed(2) + "gms"
+                );
             }
             if (data.notification_response.message) {
                 var type = data.notification_response.alert;

@@ -925,6 +925,836 @@ class ReadyStockController extends Controller
         ));
     }
 
+    public function diamond(Request $request)
+    {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.id as productID',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->where('products.project', Projects::DIAMOND)
+            ->orderBy('products.DesignNo', 'ASC');
+
+        $rawProducts = $productQuery->get();
+        $secret = 'EmeraldAdmin';
+
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
+
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'productID' => $item->productID,
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
+
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+
+        $paginated = new LengthAwarePaginator(
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::DIAMOND;
+        $allProduct = Product::select('products.id')
+            ->join('product_variants', 'product_variants.product_id', '=', 'products.id')
+            ->where('products.Project', Projects::DIAMOND)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
+
+        $stock = 1;
+        $breadcrum = 'DIAMOND';
+        $breadcrumUrl = route('diamond');
+        $decryptedProjectId = Projects::DIAMOND;
+
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
+    }
+
+    public function handmade(Request $request)
+    {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.id as productID',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->where('products.project', Projects::HANDMADE)
+            ->orderBy('products.DesignNo', 'ASC');
+
+        $rawProducts = $productQuery->get();
+        $secret = 'EmeraldAdmin';
+
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
+
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'productID' => $item->productID,
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
+
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+
+        $paginated = new LengthAwarePaginator(
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::HANDMADE;
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::HANDMADE)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
+        $stock = 1;
+        $breadcrum = 'HANDMADE';
+        $breadcrumUrl = route('handmade');
+        $decryptedProjectId = Projects::HANDMADE;
+
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
+    }
+
+    public function chain(Request $request)
+    {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.id as productID',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->where('products.project', Projects::CHAIN)
+            ->orderBy('products.DesignNo', 'ASC');
+
+        $rawProducts = $productQuery->get();
+        $secret = 'EmeraldAdmin';
+
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
+
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'productID' => $item->productID,
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
+
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+
+        $paginated = new LengthAwarePaginator(
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::CHAIN;
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::CHAIN)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
+        $stock = 1;
+        $breadcrum = 'CHAIN';
+        $breadcrumUrl = route('chain');
+        $decryptedProjectId = Projects::CHAIN;
+
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
+    }
+
+    public function chainmix(Request $request)
+    {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.id as productID',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->where('products.project', Projects::CHAINMIX)
+            ->orderBy('products.DesignNo', 'ASC');
+
+        $rawProducts = $productQuery->get();
+        $secret = 'EmeraldAdmin';
+
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
+
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'productID' => $item->productID,
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
+
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+
+        $paginated = new LengthAwarePaginator(
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::CHAINMIX;
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::CHAINMIX)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
+        $stock = 1;
+        $breadcrum = 'CHAINMIX';
+        $breadcrumUrl = route('chainmix');
+        $decryptedProjectId = Projects::CHAINMIX;
+
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
+    }
+
+    public function emeraldgem(Request $request)
+    {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.id as productID',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->where('products.project', Projects::EMERALDGEMSTONEJEW)
+            ->orderBy('products.DesignNo', 'ASC');
+
+        $rawProducts = $productQuery->get();
+        $secret = 'EmeraldAdmin';
+
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
+
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'productID' => $item->productID,
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
+
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+
+        $paginated = new LengthAwarePaginator(
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::EMERALDGEMSTONEJEW;
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::EMERALDGEMSTONEJEW)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
+        $stock = 1;
+        $breadcrum = 'EMERALDGEM';
+        $breadcrumUrl = route('emeraldgem');
+        $decryptedProjectId = Projects::EMERALDGEMSTONEJEW;
+
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
+    }
+
+    public function italianchain(Request $request)
+    {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.id as productID',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->where('products.project', Projects::ITALIANCHAIN)
+            ->orderBy('products.DesignNo', 'ASC');
+
+        $rawProducts = $productQuery->get();
+        $secret = 'EmeraldAdmin';
+
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
+
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'productID' => $item->productID,
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
+
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+
+        $paginated = new LengthAwarePaginator(
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::ITALIANCHAIN;
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::ITALIANCHAIN)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
+        $stock = 1;
+        $breadcrum = 'ITALIANCHAIN';
+        $breadcrumUrl = route('italianchain');
+        $decryptedProjectId = Projects::ITALIANCHAIN;
+
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
+    }
+
+    public function ilabangles(Request $request)
+    {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.id as productID',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->where('products.project', Projects::ILABANGLES)
+            ->orderBy('products.DesignNo', 'ASC');
+
+        $rawProducts = $productQuery->get();
+        $secret = 'EmeraldAdmin';
+
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
+
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'productID' => $item->productID,
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
+
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+
+        $paginated = new LengthAwarePaginator(
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::ILABANGLES;
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::ILABANGLES)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
+        $stock = 1;
+        $breadcrum = 'ILABANGLES';
+        $breadcrumUrl = route('ilabangles');
+        $decryptedProjectId = Projects::ILABANGLES;
+
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
+    }
+
+    public function mariya(Request $request)
+    {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.id as productID',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->where('products.project', Projects::MARIYA)
+            ->orderBy('products.DesignNo', 'ASC');
+
+        $rawProducts = $productQuery->get();
+        $secret = 'EmeraldAdmin';
+
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
+
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'productID' => $item->productID,
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
+
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+
+        $paginated = new LengthAwarePaginator(
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::MARIYA;
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::MARIYA)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
+        $stock = 1;
+        $breadcrum = 'MARIYA';
+        $breadcrumUrl = route('mariya');
+        $decryptedProjectId = Projects::MARIYA;
+
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
+    }
+
+    public function ishtaa(Request $request)
+    {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.id as productID',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0);
+            })
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->where('products.project', Projects::ISHTAA)
+            ->orderBy('products.DesignNo', 'ASC');
+
+        $rawProducts = $productQuery->get();
+        $secret = 'EmeraldAdmin';
+
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
+
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'productID' => $item->productID,
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
+
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+
+        $paginated = new LengthAwarePaginator(
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::ISHTAA;
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::ISHTAA)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
+        $stock = 1;
+        $breadcrum = 'ISHTAA';
+        $breadcrumUrl = route('ishtaa');
+        $decryptedProjectId = Projects::ISHTAA;
+
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
+    }
+
     public function getToken()
     {
         return Cache::remember('external_api_token', 300, function () {
@@ -1049,7 +1879,7 @@ class ReadyStockController extends Controller
                 ->first();
 
             // Get available stock
-            $stock = ProductVariant::where('id', $request->product_id)->value('qty');
+            $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
             if ($stock === null) {
                 $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
                 $productId = ProductVariant::where('product_id', $request->product_id)->value('id');
@@ -1143,7 +1973,7 @@ class ReadyStockController extends Controller
                 ->first();
 
             // Get available stock
-            $stock = ProductVariant::where('id', $request->product_id)->value('qty');
+            $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
             if ($stock === null) {
                 $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
                 $productId = ProductVariant::where('product_id', $request->product_id)->value('id');

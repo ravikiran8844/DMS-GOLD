@@ -71,6 +71,15 @@ Route::prefix('retailer')->group(function () {
         Route::get('stamping', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'stamping'])->name('stamping');
         Route::get('turkish', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'turkish'])->name('turkish');
         Route::get('unikraft', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'unikraft'])->name('unikraft');
+        Route::get('diamond', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'diamond'])->name('diamond');
+        Route::get('handmade', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'handmade'])->name('handmade');
+        Route::get('chain', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'chain'])->name('chain');
+        Route::get('chainmix', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'chainmix'])->name('chainmix');
+        Route::get('emeraldgem', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'emeraldgem'])->name('emeraldgem');
+        Route::get('italianchain', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'italianchain'])->name('italianchain');
+        Route::get('ilabangles', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'ilabangles'])->name('ilabangles');
+        Route::get('mariya', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'mariya'])->name('mariya');
+        Route::get('ishtaa', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'ishtaa'])->name('ishtaa');
         Route::get('productdetail/{id}', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'productDetail'])->name('retailerproductdetail');
         Route::post('addtocart', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'addToCart'])->name('retaileraddtocart');
         Route::post('addforcart', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'addForCart'])->name('retaileraddforcart');

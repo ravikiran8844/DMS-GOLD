@@ -42,6 +42,24 @@
         TURKISH
     @elseif($currentUrl == route('unikraft'))
         UNIKRAFT
+    @elseif($currentUrl == route('diamond'))
+        DIAMOND
+    @elseif($currentUrl == route('handmade'))
+        HAND MADE
+    @elseif($currentUrl == route('chain'))
+        CHAIN
+    @elseif($currentUrl == route('chainmix'))
+        CHIAN MIX
+    @elseif($currentUrl == route('emeraldgem'))
+        EMERALD GEM JEW
+    @elseif($currentUrl == route('italianchain'))
+        ITALIAN CHAIN
+    @elseif($currentUrl == route('ilabangles'))
+        ILA BANGLES
+    @elseif($currentUrl == route('mariya'))
+        MARIYA
+    @elseif($currentUrl == route('ishtaa'))
+        ISHTAA
     @elseif($currentUrl == route('retailersearch'))
         search
     @endif- Emerald RMS

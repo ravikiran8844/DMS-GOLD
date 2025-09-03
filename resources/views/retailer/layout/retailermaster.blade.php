@@ -72,6 +72,33 @@
                     <li class="nav-item">
                         <a href="{{ route('unikraft') }}">UNIKRAFT</a>
                     </li> --}}
+                    <li class="nav-item">
+                        <a href="{{ route('diamond') }}">DIAMOND</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('handmade') }}">HAND MADE</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('chain') }}">CHAIN</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('chainmix') }}">CHAIN MIX</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('emeraldgem') }}">EMERALD GEMSTONE JEW</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('italianchain') }}">ITALIAN CHAIN</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('ilabangles') }}">ILA BANGLES</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('mariya') }}">MARIYA</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('ishtaa') }}">ISHTAA</a>
+                    </li>
                 </ul>
             </div>
         </section>
@@ -163,7 +190,7 @@
             </a>
         </div>
     </div>
-    
+
     {{-- footer --}}
     {{-- <footer class="footer">
         @include('retailer.panel.footer')
@@ -491,10 +518,9 @@
     @endphp --}}
 
 
-    <a class="no-login-required" style=" position: fixed; bottom: 80px; right: 10px; z-index: 9999; "
-        target="_blank"
+    <a class="no-login-required" style=" position: fixed; bottom: 80px; right: 10px; z-index: 9999; " target="_blank"
         href="https://api.whatsapp.com/send?phone=919791714333&text=I%20have%20questions%20regarding%20Retailer%20Management%20System">
-        <img src="{{ asset('retailer/assets/img/whatsapp.png') }}" width="62" height="62" 
+        <img src="{{ asset('retailer/assets/img/whatsapp.png') }}" width="62" height="62"
             alt="whatsapp icon">
     </a>
 
