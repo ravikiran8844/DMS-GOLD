@@ -43,7 +43,7 @@
             </nav>
 
             <div class="main-menu-section d-none d-lg-block">
-                <ul class="container p-3 nav gap-3 justify-content-center text-white">
+                <ul class="container py-3 list-unstyled text-center text-white" style=" display: grid; grid-template-columns: repeat(8,auto); gap: 10px; ">
                     <li class="nav-item">
                         <a href="{{ route('retailerefreadystock') }}">EF</a>
                     </li>
