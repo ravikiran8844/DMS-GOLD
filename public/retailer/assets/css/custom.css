@@ -5960,3 +5960,9 @@ textarea {
 .rotate-180{
     transform: rotate(180deg);
 }
+
+@media (max-width:768px) {
+    body main{
+        padding-bottom: 80px;
+    } 
+}
