@@ -60,6 +60,8 @@
         MARIYA
     @elseif($currentUrl == route('ishtaa'))
         ISHTAA
+    @elseif($currentUrl == route('rings'))
+        RINGS
     @elseif($currentUrl == route('retailersearch'))
         search
     @endif- Emerald RMS

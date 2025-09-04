@@ -239,10 +239,10 @@ function populateCart() {
                         eid
                     );
                     row.innerHTML = `
-                        <td class="text-center"><a href="${productDetailUrl}">
+                        <td class="text-center">
                                 <img class="square bg-white p-2 load-secure-image" src="http://imageurl.ejindia.com/api/image/secure" data-secure="${
                                     item.secureFilename
-                                }"  width="60" height="60" alt=""></a>
+                                }"  width="60" height="60" alt="">
 
                         </td>
                         <td class="text-center">${item.DesignNo} 
@@ -320,9 +320,9 @@ function displayItems() {
                     itemDiv.innerHTML = `
                     <div class="d-flex">
                         <div class="me-2">
-                            <a href="${productDetailUrl}"><img class="mobile-cart-img square bg-white load-secure-image"  src="http://imageurl.ejindia.com/api/image/secure" data-secure="${
+                            <img class="mobile-cart-img square bg-white load-secure-image"  src="http://imageurl.ejindia.com/api/image/secure" data-secure="${
                         item.secureFilename
-                    }" width="80" height="80" alt=""></a>
+                    }" width="80" height="80" alt="">
                         </div>
                         
                             <div class="flex-grow-1">

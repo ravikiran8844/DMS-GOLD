@@ -80,6 +80,7 @@ Route::prefix('retailer')->group(function () {
         Route::get('ilabangles', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'ilabangles'])->name('ilabangles');
         Route::get('mariya', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'mariya'])->name('mariya');
         Route::get('ishtaa', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'ishtaa'])->name('ishtaa');
+        Route::get('rings', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'rings'])->name('rings');
         Route::get('productdetail/{id}', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'productDetail'])->name('retailerproductdetail');
         Route::post('addtocart', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'addToCart'])->name('retaileraddtocart');
         Route::post('addforcart', [\App\Http\Controllers\Retailer\EF\ReadyStockController::class, 'addForCart'])->name('retaileraddforcart');

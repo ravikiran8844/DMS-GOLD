@@ -1755,6 +1755,100 @@ class ReadyStockController extends Controller
         ));
     }
 
+    public function rings(Request $request)
+    {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1024M');
+        $user_id = Auth::user()->id;
+
+        // Fetch all matching products with variants
+        $productQuery = Product::select(
+            'products.*',
+            'product_variants.id as productID',
+            'product_variants.qty',
+            'product_variants.weight',
+            'product_variants.color',
+            'product_variants.size',
+            'product_variants.Purity',
+            'product_variants.style',
+            'product_variants.making',
+            'product_variants.unit',
+            'wishlists.is_favourite'
+        )
+            ->join('product_variants', function ($join) {
+                $join->on('products.id', '=', 'product_variants.product_id')
+                    ->where('product_variants.qty', '>', 0)
+                    ->where('product_variants.Purity', '22K-91.75');
+            })
+            ->leftJoin('wishlists', function ($join) use ($user_id) {
+                $join->on('wishlists.product_id', '=', 'products.id')
+                    ->where('wishlists.user_id', '=', $user_id);
+            })
+            ->where('products.project', Projects::CASTING)
+            ->where('products.Item', 'RINGS')
+            ->orderBy('products.DesignNo', 'ASC');
+
+        $rawProducts = $productQuery->get();
+        $secret = 'EmeraldAdmin';
+
+        // Group variants by product ID
+        $grouped = $rawProducts->groupBy('id')->map(function ($items) use ($secret) {
+            $base = $items->first();
+
+            $base->variants = $items->map(function ($item) {
+                return [
+                    'productID' => $item->productID,
+                    'Purity' => $item->Purity,
+                    'color' => $item->color,
+                    'unit' => $item->unit,
+                    'style' => $item->style,
+                    'making' => $item->making,
+                    'size' => $item->size,
+                    'weight' => $item->weight,
+                    'qty' => $item->qty,
+                ];
+            });
+
+            $base->secureFilename = $this->cryptoJsAesEncrypt($secret, $base->product_image);
+            $base->variant_count = $items->count();
+
+            return $base;
+        })->values();
+
+        // Manual pagination
+        $page = $request->get('page', 1);
+        $perPage = $this->paginate;
+
+        $paginated = new LengthAwarePaginator(
+            $grouped->forPage($page, $perPage),
+            $grouped->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $product = $paginated;
+        $project_id = Projects::CASTING;
+        $allProduct = Product::select('products.id')->join('product_variants', 'product_variants.product_id', 'products.id')
+            ->where('products.project', Projects::CASTING)
+            ->where('product_variants.qty', '>', 0)
+            ->get();
+        $stock = 1;
+        $breadcrum = 'RINGS';
+        $breadcrumUrl = route('rings');
+        $decryptedProjectId = Projects::CASTING;
+
+        return view('retailer.readystock.readystock', compact(
+            'allProduct',
+            'product',
+            'decryptedProjectId',
+            'project_id',
+            'breadcrum',
+            'breadcrumUrl',
+            'stock'
+        ));
+    }
+
     public function getToken()
     {
         return Cache::remember('external_api_token', 300, function () {
@@ -1879,10 +1973,10 @@ class ReadyStockController extends Controller
                 ->first();
 
             // Get available stock
-            $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
-            if ($stock === null) {
-                $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
-                $productId = ProductVariant::where('product_id', $request->product_id)->value('id');
+            $stock = ProductVariant::where('id', $request->product_id)->value('qty');
+            if ($stock > 0) {
+                $stock = ProductVariant::where('id', $request->product_id)->value('qty');
+                $productId = ProductVariant::where('id', $request->product_id)->value('id');
             } else {
                 $productId = $request->product_id;
             }
@@ -1973,10 +2067,10 @@ class ReadyStockController extends Controller
                 ->first();
 
             // Get available stock
-            $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
-            if ($stock === null) {
-                $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
-                $productId = ProductVariant::where('product_id', $request->product_id)->value('id');
+            $stock = ProductVariant::where('id', $request->product_id)->value('qty');
+            if ($stock > 0) {
+                $stock = ProductVariant::where('id', $request->product_id)->value('qty');
+                $productId = ProductVariant::where('id', $request->product_id)->value('id');
             } else {
                 $productId = $request->product_id;
             }

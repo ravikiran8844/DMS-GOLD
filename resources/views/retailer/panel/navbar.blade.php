@@ -20,7 +20,7 @@
     <div class="d-block d-xl-none">
         <ul class="d-flex align-items-center list-unstyled m-auto">
 
-            <li class="nav-item me-3">
+            {{-- <li class="nav-item me-3">
                 <a class="nav-link" aria-current="page" href="" data-bs-toggle="modal"
                     data-bs-target="#searchModal">
                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none"
@@ -33,7 +33,7 @@
                             fill="#3F3F3F" />
                     </svg>
                 </a>
-            </li>
+            </li> --}}
             <li class="position-relative me-3">
                 <a class="nav-link" href="{{ route('retailercart') }}">
                     <span>
@@ -66,7 +66,7 @@
     </div>
     <ul
         class="d-none d-xl-flex top-main-nav navbar-nav navbar-right  justify-content-end w-100 align-items-center ms-auto my-2 my-lg-0">
-        <li>
+        {{-- <li>
             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 23 23"
                     fill="none">
@@ -76,7 +76,7 @@
                 </svg>
                 <div class="mt-1">Search</div>
             </a>
-        </li>
+        </li> --}}
         <li>
             <a class="nav-link" href="{{ route('retailerwishlist') }}">
                 <svg width="28" height="29" viewBox="0 0 28 29" fill="none"

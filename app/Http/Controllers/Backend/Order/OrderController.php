@@ -140,18 +140,19 @@ class OrderController extends Controller
             'products.product_image',
             'products.id as product_id',
             'products.qty as available_qty',
-            'products.weight',
+            'order_details.weight',
             'order_details.qty as order_qty'
         )
-            ->join('products', 'products.id', '=', 'order_details.product_id')
+            ->join('product_variants', 'product_variants.id', '=', 'order_details.product_id')
+            ->join('products', 'products.id', '=', 'product_variants.product_id')
             ->whereIn('order_details.order_id', $order->pluck('id'))
             ->get()
             ->groupBy('order_id');
 
+// dd($productDetailsQuery);
         // Attach Products and Encrypt Image Filename
         $orderData = $order->map(function ($order) use ($productDetailsQuery, $secret) {
             $products = $productDetailsQuery->get($order->id);
-
             if ($products) {
                 $products = $products->map(function ($product) use ($secret) {
                     $product->secureFilename = $this->cryptoJsAesEncrypt($secret, $product->product_image);

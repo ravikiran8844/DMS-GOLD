@@ -8,51 +8,6 @@ var enddate =
 var table;
 var baseurl = window.location.origin;
 
-// $(document).ready(function () {
-//     FromDate = moment();
-//     ToDate = moment();
-
-//     $("#daterangefilter").daterangepicker(
-//         {
-//             ranges: {
-//                 Today: [moment(), moment()],
-//                 Yesterday: [
-//                     moment().subtract("days", 1),
-//                     moment().subtract("days", 1),
-//                 ],
-//                 "Last 7 Days": [moment().subtract("days", 6), moment()],
-//                 "Last 30 Days": [moment().subtract("days", 29), moment()],
-//                 "This Month": [
-//                     moment().startOf("month"),
-//                     moment().endOf("month"),
-//                 ],
-//                 "Last Month": [
-//                     moment().subtract("month", 1).startOf("month"),
-//                     moment().subtract("month", 1).endOf("month"),
-//                 ],
-//             },
-//             FromDate: moment(),
-//             ToDate: moment(),
-//         },
-//         getDate
-//     );
-
-//     getDate(FromDate, ToDate);
-// });
-
-// function getDate(start, end) {
-//     startdate = start.format("YYYY-MM-DD");
-//     enddate = end.format("YYYY-MM-DD");
-//     if (table) {
-//         table.draw();
-//     }
-//     $("#daterangefilter span").html(
-//         start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY")
-//     );
-
-//     //orderList
-//     orderList();
-// }
 $(document).ready(function () {
     orderList();
 });
@@ -206,29 +161,6 @@ function format(d) {
                 ${productsHtml}
             </tbody>
         </table>
-        <div class="d-flex flex-wrap align-items-center justify-content-between px-5 pt-2 border-1 border-bottom">
-            <div class="d-flex flex-wrap">
-                <div class="d-flex flex-column align-items-center mr-3">
-                    <label for="" class="mr-2" style="font-weight: 700;color: #000;">Select Dealer</label>
-                    <select class="form-control mb-4 select-dealers" name="dealer" id="dealer" required>
-                        <option value="">Select Dealer</option>
-                        ${createDealerOptions(d.preferred_dealer_id)}
-                    </select>
-                </div>
-                <div class="mb-4 mr-4">
-                    <label for="" class="mr-2" style="font-weight: 700;color: #000;">Remarks</label>
-                    <textarea class="form-control" style="width:350px;" name="admin_remarks" id="admin_remarks"></textarea>
-                </div>
-            </div>
-            <div>
-                <button type="button" class="btn btn-warning mb-4" onclick="proceed(${d.id});">Proceed Now</button>
-                <button type="button" class="btn btn-outline-dark mb-4" onclick="orderCancel(${d.id});">Cancel Order</button>
-            </div>
-        </div>
-        <div class="form-check px-5">
-            <input class="form-check-input" type="checkbox" value="" id="parent-checkbox-${d.id}">
-            <label class="form-check-label" for="parent-checkbox-${d.id}">Select All Items in Order</label>
-        </div>
     `;
 }
 
