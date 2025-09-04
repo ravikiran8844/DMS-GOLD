@@ -137,7 +137,7 @@
                             });
                         </script>
 
-                        <div style=" position: absolute; top: 10px; right: 10px; ">
+                        {{-- <div style=" position: absolute; top: 10px; right: 10px; ">
                             <button
                                 class="ml-2 custom-icon-btn wishlist-svg @if ($product->is_favourite == 1) active @endif"
                                 onclick="addtowishlist({{ $product->id }})">
@@ -148,7 +148,7 @@
                                         stroke="#003836" stroke-width="1.5" stroke-linejoin="round" />
                                 </svg>
                             </button>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="product-thumbnail_wrapper splide mt-3 d-none" id="thumbnail-slider">
                         <div class="splide__track">

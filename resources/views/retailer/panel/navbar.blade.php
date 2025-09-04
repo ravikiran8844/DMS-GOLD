@@ -77,7 +77,7 @@
                 <div class="mt-1">Search</div>
             </a>
         </li> --}}
-        <li>
+        {{-- <li>
             <a class="nav-link" href="{{ route('retailerwishlist') }}">
                 <svg width="28" height="29" viewBox="0 0 28 29" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +96,7 @@
 
                 <div class="mt-1">WISHLIST</div>
             </a>
-        </li>
+        </li> --}}
         <li class="position-relative me-3">
             <a class="nav-link" href="{{ route('retailercart') }}">
                 <span>

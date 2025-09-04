@@ -1785,7 +1785,7 @@ class ReadyStockController extends Controller
                     ->where('wishlists.user_id', '=', $user_id);
             })
             ->where('products.project', Projects::CASTING)
-            ->where('products.Item', 'RINGS')
+            ->where('products.Item', 'RING')
             ->orderBy('products.DesignNo', 'ASC');
 
         $rawProducts = $productQuery->get();
@@ -1968,15 +1968,16 @@ class ReadyStockController extends Controller
         try {
             $userId = Auth::user()->id;
 
+            $productvId = ProductVariant::where('product_id', $request->product_id)->value('id');
             $existingCartlist = Cart::where('user_id', $userId)
-                ->where('product_id', $request->product_id)
+                ->where('product_id', $productvId)
                 ->first();
 
             // Get available stock
-            $stock = ProductVariant::where('id', $request->product_id)->value('qty');
+            $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
             if ($stock > 0) {
-                $stock = ProductVariant::where('id', $request->product_id)->value('qty');
-                $productId = ProductVariant::where('id', $request->product_id)->value('id');
+                $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
+                $productId = ProductVariant::where('product_id', $request->product_id)->value('id');
             } else {
                 $productId = $request->product_id;
             }
@@ -2061,16 +2062,15 @@ class ReadyStockController extends Controller
         DB::beginTransaction();
         try {
             $userId = Auth::user()->id;
-
+            $productvId = ProductVariant::where('product_id', $request->product_id)->value('id');
             $existingCartlist = Cart::where('user_id', $userId)
-                ->where('product_id', $request->product_id)
+                ->where('product_id', $productvId)
                 ->first();
-
             // Get available stock
-            $stock = ProductVariant::where('id', $request->product_id)->value('qty');
+            $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
             if ($stock > 0) {
-                $stock = ProductVariant::where('id', $request->product_id)->value('qty');
-                $productId = ProductVariant::where('id', $request->product_id)->value('id');
+                $stock = ProductVariant::where('product_id', $request->product_id)->value('qty');
+                $productId = ProductVariant::where('product_id', $request->product_id)->value('id');
             } else {
                 $productId = $request->product_id;
             }
