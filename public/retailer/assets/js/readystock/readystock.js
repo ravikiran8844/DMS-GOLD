@@ -388,18 +388,19 @@ function getProduct(id, page = 1) {
                         });
 
                         productHTML += `
+                        </div>
                         <input type="hidden"
-        name="mweight${value.id}"
-        id="mweight${value.id}"
-        value="${value.variant_weight}">
-    <input type="hidden"
-        name="msize${value.id}"
-        id="msize${value.id}"
-        value="${value.variant_size}">
-    <input type="hidden"
-        name="mbox${value.id}"
-        id="mbox${value.id}"
-        value="${value.variant_style}">
+                                name="mweight${value.id}"
+                                id="mweight${value.id}"
+                                value="${value.variant_weight}">
+                            <input type="hidden"
+                                name="msize${value.id}"
+                                id="msize${value.id}"
+                                value="${value.variant_size}">
+                            <input type="hidden"
+                                name="mbox${value.id}"
+                                id="mbox${value.id}"
+                                value="${value.variant_style}">
                         <div class="product-cart-qty-text mt-2">In Stock: <span>${
                             value.variant_qty ?? "-"
                         }</span> Pcs</div>
@@ -816,6 +817,7 @@ function getProCategory(id, page = 1) {
                             });
 
                             productHTML += `
+                             </div>
                             <input type="hidden"
         name="mweight${value.id}"
         id="mweight${value.id}"
@@ -1235,6 +1237,7 @@ function getPurity(id, page = 1) {
                         });
 
                         productHTML += `
+                         </div>
                         <input type="hidden"
         name="mweight${value.id}"
         id="mweight${value.id}"
