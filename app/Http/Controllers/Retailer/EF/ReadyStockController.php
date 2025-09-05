@@ -2296,6 +2296,7 @@ class ReadyStockController extends Controller
         $user_id = Auth::user()->id;
         $selectedItem = $request->input('selectedItem', []);
         $procategories = (array) $request->input('procategoryArray');
+        $purities = (array) $request->input('purity');
         $getItem = Product::whereIn('Item', $selectedItem)->pluck('Item')->toArray();
 
         $itemwiseproduct = $this->getproducts($user_id)
@@ -2324,6 +2325,10 @@ class ReadyStockController extends Controller
 
         if (!empty(array_filter($procategories))) {
             $itemwiseproduct->whereIn('products.Procatgory', $procategories);
+        }
+
+        if (!empty(array_filter($purities))) {
+            $itemwiseproduct->whereIn('product_variants.Purity', $purities);
         }
 
         $itemwiseproduct = $itemwiseproduct->orderBy('products.DesignNo', 'ASC');
@@ -2384,11 +2389,13 @@ class ReadyStockController extends Controller
 
         $procategoryjson = $procategoryData->toJson();
 
-        $procategoryDefaultData = Product::where('qty', '>', 0)
-            ->whereNotNull('Procatgory')
-            ->where('Procatgory', '!=', '')
-            ->select('Procatgory', DB::raw('MIN(id) as id'))
-            ->groupBy('Procatgory')
+        $procategoryDefaultData = Product::join('product_variants', 'product_variants.product_id', '=', 'products.id')
+            ->where('products.Project', $request->project_id)
+            ->where('product_variants.qty', '>', 0)
+            ->whereNotNull('products.Procatgory')
+            ->where('products.Procatgory', '!=', '')
+            ->select('products.Procatgory', DB::raw('MIN(products.id) as id'))
+            ->groupBy('products.Procatgory')
             ->get();
         $procategoryDefaultjson = $procategoryDefaultData->toJson();
 
@@ -2425,6 +2432,7 @@ class ReadyStockController extends Controller
         $user_id = Auth::user()->id;
         $selectedprocategory = $request->input('selectedprocategory', []);
         $products = (array) $request->input('productArray');
+        $purity = (array) $request->input('purity');
         $getProcategory = Product::whereIn('Procatgory', $selectedprocategory)->pluck('Procatgory')->toArray();
 
         $procategorywiseproduct =  $this->getproducts($user_id)
@@ -2453,6 +2461,10 @@ class ReadyStockController extends Controller
 
         if (!empty(array_filter($products))) {
             $procategorywiseproduct = $procategorywiseproduct->whereIn('products.Item', $products);
+        }
+
+        if (!empty(array_filter($purity))) {
+            $procategorywiseproduct = $procategorywiseproduct->whereIn('product_variants.Purity', $purity);
         }
 
         $procategorywiseproduct = $procategorywiseproduct
@@ -2538,7 +2550,8 @@ class ReadyStockController extends Controller
         ini_set('max_execution_time', 1800); //3 minutes
         $user_id = Auth::user()->id;
         $selectedpurity = $request->input('selectedpurity', []);
-        $purities = (array) $request->input('purityArray');
+        $products = (array) $request->input('productArray');
+        $procategory = (array) $request->input('procategory');
         $getPurity = ProductVariant::whereIn('Purity', $selectedpurity)->pluck('Purity')->toArray();
 
         $puritywiseproduct =  $this->getproducts($user_id)
@@ -2565,8 +2578,12 @@ class ReadyStockController extends Controller
             $puritywiseproduct = $puritywiseproduct->where('products.Project', $request->project_id);
         }
 
-        if (!empty(array_filter($purities))) {
-            $puritywiseproduct = $puritywiseproduct->whereIn('product_variants.Purity', $purities);
+        if (!empty(array_filter($products))) {
+            $puritywiseproduct = $puritywiseproduct->whereIn('products.Item', $products);
+        }
+
+        if (!empty(array_filter($procategory))) {
+            $puritywiseproduct = $puritywiseproduct->whereIn('products.Procatgory', $procategory);
         }
 
         $puritywiseproduct = $puritywiseproduct

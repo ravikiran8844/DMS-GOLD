@@ -115,6 +115,7 @@ function getProduct(id, page = 1) {
     $(".pagination-links").attr("hidden", true);
     var project_id = $("#decryptedProjectId").val();
     var procategory = $("#procategory").val();
+    var purity = $("#purity").val();
 
     // Split the value into an array using the comma as a delimiter
     var procategoryArray = procategory.split(",");
@@ -141,6 +142,7 @@ function getProduct(id, page = 1) {
         data: {
             selectedItem: selectedItem,
             project_id: project_id,
+            purity: purity,
             procategoryArray: procategoryArray,
             _token: $('meta[name="csrf-token"]').attr("content"),
         },
@@ -186,6 +188,18 @@ function getProduct(id, page = 1) {
                         .replace(/[^a-z0-9]+/g, "-")
                         .replace(/^-+|-+$/g, "");
                     let productHTML = `
+                    <input type="hidden" name="weight${value.id}" id="weight${
+                        value.id
+                    }"
+                                value="${value.weight}">
+                            <input type="hidden" name="size${
+                                value.id
+                            }" id="size${value.id}"
+                                value="${value.size}">
+                            <input type="hidden" name="box${value.id}" id="box${
+                        value.id
+                    }"
+                                value="${value.style}">
                     <div class="card shop-page_product-card">
                         <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
                             <a href="${productDetailUrl}">
@@ -272,6 +286,18 @@ function getProduct(id, page = 1) {
                         productHTML += `<tr><td>Qty</td>`;
                         variants.forEach((variant) => {
                             productHTML += `<td>
+                              <input type="hidden"
+                                    name="mweight${variant.productID}"
+                                    id="mweight${variant.productID}"
+                                    value="${variant.weight}">
+                                <input type="hidden"
+                                    name="msize${variant.productID}"
+                                    id="msize${variant.productID}"
+                                    value="${variant.size}">
+                                <input type="hidden"
+                                    name="mbox${variant.productID}"
+                                    id="mbox${variant.productID}"
+                                    value="${variant.style}">
                                 <div class="input-group quantity-input-group quantity-container">
                                     <input type="button" value="-" class="qtyminus" field="quantity">
                                     <input type="text" name="mquantity${variant.productID}" id="mquantity${variant.productID}" value="1" class="qty">
@@ -361,10 +387,22 @@ function getProduct(id, page = 1) {
                             }
                         });
 
-                        productHTML += `</div>
-                            <div class="product-cart-qty-text mt-2">In Stock: <span>${
-                                value.variant_qty ?? "-"
-                            }</span> Pcs</div>
+                        productHTML += `
+                        <input type="hidden"
+        name="mweight${value.id}"
+        id="mweight${value.id}"
+        value="${value.variant_weight}">
+    <input type="hidden"
+        name="msize${value.id}"
+        id="msize${value.id}"
+        value="${value.variant_size}">
+    <input type="hidden"
+        name="mbox${value.id}"
+        id="mbox${value.id}"
+        value="${value.variant_style}">
+                        <div class="product-cart-qty-text mt-2">In Stock: <span>${
+                            value.variant_qty ?? "-"
+                        }</span> Pcs</div>
                             <div class="shop-page-add-to-cart-btn mt-3">
                                 <div class="d-flex align-items-center">
                                     <label class="me-2">Qty</label>
@@ -514,6 +552,7 @@ function getProCategory(id, page = 1) {
     $(".pagination-links").attr("hidden", true);
     var project_id = $("#decryptedProjectId").val();
     var product = $("#product").val();
+    var purity = $("#purity").val();
 
     // Split the value into an array using the comma as a delimiter
     var productArray = product.split(",");
@@ -540,6 +579,7 @@ function getProCategory(id, page = 1) {
         data: {
             selectedprocategory: selectedprocategory,
             project_id: project_id,
+            purity: purity,
             productArray: productArray,
             _token: $('meta[name="csrf-token"]').attr("content"),
         },
@@ -574,6 +614,18 @@ function getProCategory(id, page = 1) {
                             .replace(/[^a-z0-9]+/g, "-")
                             .replace(/^-+|-+$/g, "");
                         let productHTML = `
+                        <input type="hidden" name="weight${
+                            value.id
+                        }" id="weight${value.id}"
+                                value="${value.weight}">
+                            <input type="hidden" name="size${
+                                value.id
+                            }" id="size${value.id}"
+                                value="${value.size}">
+                            <input type="hidden" name="box${value.id}" id="box${
+                            value.id
+                        }"
+                                value="${value.style}">
                     <div class="card shop-page_product-card">
                         <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
                             <a href="${productDetailUrl}">
@@ -660,6 +712,18 @@ function getProCategory(id, page = 1) {
                             productHTML += `<tr><td>Qty</td>`;
                             variants.forEach((variant) => {
                                 productHTML += `<td>
+                                <input type="hidden"
+                                    name="mweight${variant.productID}"
+                                    id="mweight${variant.productID}"
+                                    value="${variant.weight}">
+                                <input type="hidden"
+                                    name="msize${variant.productID}"
+                                    id="msize${variant.productID}"
+                                    value="${variant.size}">
+                                <input type="hidden"
+                                    name="mbox${variant.productID}"
+                                    id="mbox${variant.productID}"
+                                    value="${variant.style}">
                                 <div class="input-group quantity-input-group quantity-container">
                                     <input type="button" value="-" class="qtyminus" field="quantity">
                                     <input type="text" name="mquantity${variant.productID}" id="mquantity${variant.productID}" value="1" class="qty">
@@ -751,7 +815,19 @@ function getProCategory(id, page = 1) {
                                 }
                             });
 
-                            productHTML += `</div>
+                            productHTML += `
+                            <input type="hidden"
+        name="mweight${value.id}"
+        id="mweight${value.id}"
+        value="${value.variant_weight}">
+    <input type="hidden"
+        name="msize${value.id}"
+        id="msize${value.id}"
+        value="${value.variant_size}">
+    <input type="hidden"
+        name="mbox${value.id}"
+        id="mbox${value.id}"
+        value="${value.variant_style}">
                             <div class="product-cart-qty-text mt-2">In Stock: <span>${
                                 value.variant_qty ?? "-"
                             }</span> Pcs</div>
@@ -897,6 +973,8 @@ function getPurity(id, page = 1) {
     $(".pagination-links").attr("hidden", true);
     var project_id = $("#decryptedProjectId").val();
     var purity = $("#purity").val();
+    var productArray = $("#product").val();
+    var procategory = $("#procategory").val();
 
     // Split the value into an array using the comma as a delimiter
     var purityArray = purity.split(",");
@@ -924,6 +1002,8 @@ function getPurity(id, page = 1) {
             selectedpurity: selectedpurity,
             project_id: project_id,
             purityArray: purityArray,
+            procategory: procategory,
+            productArray: productArray,
             _token: $('meta[name="csrf-token"]').attr("content"),
         },
         dataType: "json",
@@ -955,6 +1035,18 @@ function getPurity(id, page = 1) {
                         .replace(/[^a-z0-9]+/g, "-")
                         .replace(/^-+|-+$/g, "");
                     let productHTML = `
+                    <input type="hidden" name="weight${value.id}" id="weight${
+                        value.id
+                    }"
+                                value="${value.weight}">
+                            <input type="hidden" name="size${
+                                value.id
+                            }" id="size${value.id}"
+                                value="${value.size}">
+                            <input type="hidden" name="box${value.id}" id="box${
+                        value.id
+                    }"
+                                value="${value.style}">
                     <div class="card shop-page_product-card">
                         <div class="card-img-top d-flex align-items-center justify-content-center position-relative">
                             <a href="${productDetailUrl}">
@@ -1041,6 +1133,18 @@ function getPurity(id, page = 1) {
                         productHTML += `<tr><td>Qty</td>`;
                         variants.forEach((variant) => {
                             productHTML += `<td>
+                            <input type="hidden"
+                                    name="mweight${variant.productID}"
+                                    id="mweight${variant.productID}"
+                                    value="${variant.weight}">
+                                <input type="hidden"
+                                    name="msize${variant.productID}"
+                                    id="msize${variant.productID}"
+                                    value="${variant.size}">
+                                <input type="hidden"
+                                    name="mbox${variant.productID}"
+                                    id="mbox${variant.productID}"
+                                    value="${variant.style}">
                                 <div class="input-group quantity-input-group quantity-container">
                                     <input type="button" value="-" class="qtyminus" field="quantity">
                                     <input type="text" name="mquantity${variant.productID}" id="mquantity${variant.productID}" value="1" class="qty">
@@ -1130,7 +1234,19 @@ function getPurity(id, page = 1) {
                             }
                         });
 
-                        productHTML += `</div>
+                        productHTML += `
+                        <input type="hidden"
+        name="mweight${value.id}"
+        id="mweight${value.id}"
+        value="${value.variant_weight}">
+    <input type="hidden"
+        name="msize${value.id}"
+        id="msize${value.id}"
+        value="${value.variant_size}">
+    <input type="hidden"
+        name="mbox${value.id}"
+        id="mbox${value.id}"
+        value="${value.variant_style}">
                             <div class="product-cart-qty-text mt-2">In Stock: <span>${
                                 value.variant_qty ?? "-"
                             }</span> Pcs</div>
@@ -1320,70 +1436,107 @@ function updateMobileProductFilters(productsData) {
 function updateProCategoryFilters(procategorysData) {
     let procategorys = JSON.parse(procategorysData);
     let container = document.getElementById("procategory-filters-container");
+
+    // Get previously selected values (from hidden input OR localStorage)
+    let previouslySelected = ($("#procategory").val() || "").split(",");
+    // Or use localStorage for persistence:
+    // let previouslySelected = JSON.parse(localStorage.getItem("selectedProCats") || "[]");
+
     if (container) {
         container.innerHTML = ""; // Clear existing filters if any
+
+        // ✅ Sort so checked ones come first
+        procategorys.sort((a, b) => {
+            let aChecked = previouslySelected.includes(a.Procatgory);
+            let bChecked = previouslySelected.includes(b.Procatgory);
+            return aChecked === bChecked ? 0 : aChecked ? -1 : 1;
+        });
+
         procategorys.forEach(function (procat) {
-            var filterHtml = `
-    <div class="form-check">
-    
-    <input class="procategory form-check-input" type="checkbox"
-    id="procategory${procat.id}" name="procategory" data-id="${procat.id}"
-    value="${procat.Procatgory}" onclick="getProCategory(${procat.id})">
-    <label class="form-check-label">
-    ${procat.Procatgory}
-    </label>
-    
-        </div>
-        `;
+            let isChecked = previouslySelected.includes(procat.Procatgory);
+
+            let filterHtml = `
+                <div class="form-check d-flex align-items-center gap-2">
+                    <input class="procategory form-check-input" type="checkbox"
+                        id="procategory${procat.id}" 
+                        name="procategory" 
+                        data-id="${procat.id}"
+                        value="${procat.Procatgory}" 
+                        onclick="getProCategory(${procat.id})"
+                        ${isChecked ? "checked" : ""}>
+                    <label class="form-check-label">
+                        ${procat.Procatgory}
+                    </label>
+                </div>
+            `;
             container.insertAdjacentHTML("beforeend", filterHtml);
         });
     }
+
+    // Save checked categories whenever user selects
+    $(".procategory").on("change", function () {
+        let selected = $(".procategory:checked")
+            .map(function () {
+                return $(this).val();
+            })
+            .get();
+
+        $("#procategory").val(selected.join(","));
+        localStorage.setItem("selectedProCats", JSON.stringify(selected));
+    });
 }
 
 function updateMobileProCategoryFilters(procategorysData) {
     let procategorys = JSON.parse(procategorysData);
-
     let container = document.getElementById("mobile-procategory-filters");
-    container.innerHTML = ""; // Clear existing filters if any
 
-    procategorys.forEach(function (procat) {
-        let filterHtml = `
-        <div class="form-check d-flex justify-content-between gap-2">
-            <div>
-                <input class="procategory form-check-input" type="checkbox"
-                    id="procategory${procat.id}-mob" name="procategory" data-id="${procat.id}"
-                    value="${procat.Procatgory}" onclick="getProCategory(${procat.id})">
-                <label class="form-check-label">
-                    ${procat.Procatgory}
-                </label>
-            </div>
-        </div>
-    `;
-        container.insertAdjacentHTML("beforeend", filterHtml);
-    });
-}
+    // Get previously selected values (from hidden input OR localStorage)
+    let previouslySelected = ($("#procategory").val() || "").split(",");
+    // Or use localStorage directly:
+    // let previouslySelected = JSON.parse(localStorage.getItem("selectedProCats") || "[]");
 
-function updatePurityFilters(purityData) {
-    let purities = JSON.parse(purityData);
-    let container = document.getElementById("purity-filters-container");
     if (container) {
         container.innerHTML = ""; // Clear existing filters if any
-        purities.forEach(function (pure) {
-            var filterHtml = `
-    <div class="form-check">
-    
-    <input class="purity form-check-input" type="checkbox"
-    id="purity${pure.id}" name="purity" data-id="${pure.id}"
-    value="${pure.Purity}" onclick="getPurity(${pure.id})">
-    <label class="form-check-label">
-    ${pure.Purity}
-    </label>
-    
-        </div>
-        `;
+
+        // ✅ Sort so checked ones come first
+        procategorys.sort((a, b) => {
+            let aChecked = previouslySelected.includes(a.Procatgory);
+            let bChecked = previouslySelected.includes(b.Procatgory);
+            return aChecked === bChecked ? 0 : aChecked ? -1 : 1;
+        });
+
+        procategorys.forEach(function (procat) {
+            let isChecked = previouslySelected.includes(procat.Procatgory);
+
+            let filterHtml = `
+                <div class="form-check d-flex align-items-center gap-2">
+                    <input class="procategory form-check-input" type="checkbox"
+                        id="procategory${procat.id}-mob" 
+                        name="procategory" 
+                        data-id="${procat.id}"
+                        value="${procat.Procatgory}" 
+                        onclick="getProCategory(${procat.id})"
+                        ${isChecked ? "checked" : ""}>
+                    <label class="form-check-label">
+                        ${procat.Procatgory}
+                    </label>
+                </div>
+            `;
             container.insertAdjacentHTML("beforeend", filterHtml);
         });
     }
+
+    // Save checked categories to hidden input & localStorage
+    $(".procategory").on("change", function () {
+        let selected = $(".procategory:checked")
+            .map(function () {
+                return $(this).val();
+            })
+            .get();
+
+        $("#procategory").val(selected.join(","));
+        localStorage.setItem("selectedProCats", JSON.stringify(selected));
+    });
 }
 
 function updateMobilePurityFilters(purityData) {

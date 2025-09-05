@@ -12,6 +12,7 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Imports\ImportStockUpdate;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\StockImport;
 
 class ImportStockJob implements ShouldQueue
@@ -49,7 +50,7 @@ class ImportStockJob implements ShouldQueue
             $processedProductIds = $import->getProcessedProductIds();
             Log::debug('Processed product IDs: ', $processedProductIds);
             // Reset qty to 0 for all products not processed in this import
-            Product::whereNotIn('id', $processedProductIds)->update(['qty' => 0]);
+            ProductVariant::whereNotIn('id', $processedProductIds)->update(['qty' => 0]);
             // Update import status to completed
             StockImport::where('file_path', $this->filePath)->update(['status' => 'completed']);
             // Optionally log success or notify admin/user
