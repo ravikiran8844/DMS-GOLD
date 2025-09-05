@@ -4,7 +4,8 @@
         <tr>
             <th colspan="5"></th>
             <th colspan="5" style="text-align: center;">
-                <img src="{{ public_path('mobile-logo.png') }}" alt="Description of Logo" width="50" height="50">
+                <img src="{{ public_path('retailer\assets\img\mobile-logo.svg') }}" alt="Description of Logo"
+                    width="50" height="50">
             </th>
         </tr>
         <tr>
